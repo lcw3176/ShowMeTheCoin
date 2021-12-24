@@ -24,7 +24,7 @@ public class PriceService {
     @Value("${upBit.accessKey}")
     private String accessKey;
 
-    public float getDogePrice() throws ParseException {
+    public float getPrice() throws ParseException {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         String jwtToken = JWT.create()
                 .withClaim("access_key", accessKey)
@@ -42,7 +42,7 @@ public class PriceService {
                 .scheme("https")
                 .host("api.upbit.com")
                 .path("/v1/ticker")
-                .queryParam("markets", "KRW-DOGE")
+                .queryParam("markets", "KRW-NEAR")
                 .build(true);
 
         RestTemplate restTemplate = new RestTemplate();
