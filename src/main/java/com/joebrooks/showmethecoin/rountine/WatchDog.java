@@ -39,7 +39,7 @@ public class WatchDog {
 
     @Scheduled(fixedDelay = 1000)
     public void observePrice() throws ParseException, UnsupportedEncodingException, NoSuchAlgorithmException {
-        float nowPrice = priceService.getDogePrice();
+        float nowPrice = priceService.getPrice();
         float myMoney = checkCashService.getLeftMoney();
 
         if(myMoney <= minPrice){
