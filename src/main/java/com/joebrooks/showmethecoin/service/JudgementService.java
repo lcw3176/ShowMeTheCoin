@@ -21,7 +21,17 @@ public class JudgementService {
     }
 
     public float howMuchBuy(float nowCoinPrice){
-       return minPrice / nowCoinPrice;
+       float volume = minPrice / nowCoinPrice;
+       if(volume * nowCoinPrice < minPrice){
+           while(true){
+               volume += 0.0001;
+
+               if(volume * nowCoinPrice >= minPrice){
+                    break;
+               }
+           }
+       }
+        return volume;
     }
 
     public boolean isProperToSell(float lastTradePrice, float nowCoinPrice){
