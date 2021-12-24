@@ -20,7 +20,7 @@ public class WatchDog {
     private static float lastTradePrice = 20000;
     private boolean isSellingMode = false;
 
-    private float totalVolume = 0;
+    private int totalVolume = 0;
     private float firstTradePrice = 0;
     private int dealCount = 0;
 
@@ -47,7 +47,7 @@ public class WatchDog {
         if(isSellingMode && totalVolume >= 0){
             if(judgementService.isProperToSell(firstTradePrice, nowPrice)){
                 int price = (int)nowPrice;
-                sellService.Sell(totalVolume, price);
+//                sellService.Sell(totalVolume, price);
 
                 DailyCoinScore.setSellingMoney(DailyCoinScore.getSellingMoney() + (price * totalVolume));
                 totalVolume = 0;
@@ -64,20 +64,16 @@ public class WatchDog {
                         .myCash(myMoney)
                         .build());
 
-                slackService.sendMessage(message);
+//                slackService.sendMessage(message);
             }
 
         } else if(myMoney > minPrice){
             if(judgementService.isProperToBuy(lastTradePrice, nowPrice, myMoney)){
-                float volume = judgementService.howMuchBuy(nowPrice);
+                int volume = judgementService.howMuchBuy(nowPrice);
                 int price = (int)nowPrice;
 
-                if(volume * price > myMoney){
-                    isSellingMode = true;
-                    return;
-                }
-
-                buyService.Buy(volume, price);
+                System.out.println(volume * price);
+//                buyService.Buy(volume, price);
 
                 if(dealCount == 0){
                     firstTradePrice = price;
@@ -96,7 +92,7 @@ public class WatchDog {
                         .myCash(myMoney)
                         .build());
 
-                slackService.sendMessage(message);
+//                slackService.sendMessage(message);
             }
         }
     }

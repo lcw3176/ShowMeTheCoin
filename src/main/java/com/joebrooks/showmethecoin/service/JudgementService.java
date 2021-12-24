@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class JudgementService {
 
-    private float minPrice = 5000;
+    private float minPrice = 5400;
 
     public boolean isProperToBuy(float lastTradePrice, float nowCoinPrice, float myMoney){
 
@@ -20,18 +20,8 @@ public class JudgementService {
         return false;
     }
 
-    public float howMuchBuy(float nowCoinPrice){
-       float volume = minPrice / nowCoinPrice;
-       if(volume * nowCoinPrice < minPrice){
-           while(true){
-               volume += 0.0001;
-
-               if(volume * nowCoinPrice > minPrice){
-                    break;
-               }
-           }
-       }
-        return volume;
+    public int howMuchBuy(float nowCoinPrice){
+        return (int) Math.floor(minPrice / nowCoinPrice);
     }
 
     public boolean isProperToSell(float lastTradePrice, float nowCoinPrice){
