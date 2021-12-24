@@ -21,7 +21,7 @@ public class WatchDog {
     private static float lastTradePrice = 20000;
     private boolean isSellingMode = false;
 
-    private int totalVolume = 0;
+    private float totalVolume = 0;
     private float firstTradePrice = 0;
     private int dealCount = 0;
 

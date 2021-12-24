@@ -29,7 +29,7 @@ public class BuyService {
 
     public void Buy(float volume, int price) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         HashMap<String, String> params = new HashMap<>();
-        params.put("market", "KRW-NEAR");
+        params.put("market", "KRW-DOGE");
         params.put("side", "bid");
         params.put("volume", Float.toString(volume));
         params.put("price", Integer.toString(price));
