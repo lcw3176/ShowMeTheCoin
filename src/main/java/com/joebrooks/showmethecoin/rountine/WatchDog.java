@@ -5,6 +5,7 @@ import com.joebrooks.showmethecoin.domain.DailyCoinScore;
 import com.joebrooks.showmethecoin.service.*;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,10 +16,15 @@ import java.security.NoSuchAlgorithmException;
 @RequiredArgsConstructor
 public class WatchDog {
 
-    private static float lastTradePrice = 5000;
+    @Value("{upBit.minPrice}")
+    private float minPrice;
+
+    private static float lastTradePrice = 20000;
     private boolean isSellingMode = false;
-    private final float minCash = 5000;
+
     private int totalVolume = 0;
+    private float firstTradePrice = 0;
+    private int dealCount = 0;
 
     private final PriceService priceService;
     private final CheckCashService checkCashService;
@@ -36,20 +42,23 @@ public class WatchDog {
         float nowPrice = priceService.getDogePrice();
         float myMoney = checkCashService.getLeftMoney();
 
-        if(myMoney <= minCash){
+        if(myMoney <= minPrice){
             isSellingMode = true;
         }
 
         if(isSellingMode){
-            if(judgementService.isProperToSell(lastTradePrice, nowPrice)){
+            if(judgementService.isProperToSell(firstTradePrice, nowPrice)){
                 int price = (int)nowPrice;
-                sellService.SellDoge(totalVolume, price);
+                sellService.Sell(totalVolume, price);
 
                 DailyCoinScore.setSellingMoney(DailyCoinScore.getSellingMoney() + (price * totalVolume));
                 totalVolume = 0;
+                dealCount = 0;
                 lastTradePrice = price;
 
                 isSellingMode = false;
+
+                myMoney = checkCashService.getLeftMoney();
 
                 String message = makeMessageService.makeSellMessage(CoinTradeInfo.builder()
                         .price(price)
@@ -62,13 +71,20 @@ public class WatchDog {
 
         } else {
             if(judgementService.isProperToBuy(lastTradePrice, nowPrice, myMoney)){
-                int volume = judgementService.howMuchBuy(nowPrice);
+                float volume = judgementService.howMuchBuy(nowPrice);
                 int price = (int)nowPrice;
-                buyService.BuyDoge(volume, price);
+                buyService.Buy(volume, price);
+
+                if(dealCount == 0){
+                    firstTradePrice = price;
+                }
 
                 DailyCoinScore.setBuyingMoney(DailyCoinScore.getBuyingMoney() + (price * volume));
                 totalVolume += volume;
                 lastTradePrice = price;
+                dealCount++;
+
+                myMoney = checkCashService.getLeftMoney();
 
                 String message = makeMessageService.makeBuyMessage(CoinTradeInfo.builder()
                         .price(price)
