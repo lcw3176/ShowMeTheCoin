@@ -16,8 +16,7 @@ import java.security.NoSuchAlgorithmException;
 @RequiredArgsConstructor
 public class WatchDog {
 
-    @Value("{upBit.minPrice}")
-    private float minPrice;
+    private float minPrice = 5400;
 
     private static float lastTradePrice = 20000;
     private boolean isSellingMode = false;
