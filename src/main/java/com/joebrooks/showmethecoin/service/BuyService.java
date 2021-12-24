@@ -27,11 +27,11 @@ public class BuyService {
     @Value("${upBit.accessKey}")
     private String accessKey;
 
-    public void BuyDoge(int volume, int price) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public void Buy(float volume, int price) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         HashMap<String, String> params = new HashMap<>();
-        params.put("market", "KRW-DOGE");
+        params.put("market", "KRW-NEAR");
         params.put("side", "bid");
-        params.put("volume", Integer.toString(volume));
+        params.put("volume", Float.toString(volume));
         params.put("price", Integer.toString(price));
         params.put("ord_type", "limit");
 
