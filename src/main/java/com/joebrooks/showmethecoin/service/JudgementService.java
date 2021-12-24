@@ -26,7 +26,7 @@ public class JudgementService {
            while(true){
                volume += 0.0001;
 
-               if(volume * nowCoinPrice >= minPrice){
+               if(volume * nowCoinPrice > minPrice){
                     break;
                }
            }

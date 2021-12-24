@@ -5,7 +5,6 @@ import com.joebrooks.showmethecoin.domain.DailyCoinScore;
 import com.joebrooks.showmethecoin.service.*;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +44,7 @@ public class WatchDog {
             isSellingMode = true;
         }
 
-        if(isSellingMode && totalVolume != 0){
+        if(isSellingMode && totalVolume >= 0){
             if(judgementService.isProperToSell(firstTradePrice, nowPrice)){
                 int price = (int)nowPrice;
                 sellService.Sell(totalVolume, price);
@@ -72,6 +71,11 @@ public class WatchDog {
             if(judgementService.isProperToBuy(lastTradePrice, nowPrice, myMoney)){
                 float volume = judgementService.howMuchBuy(nowPrice);
                 int price = (int)nowPrice;
+
+                if(volume * price > myMoney){
+                    isSellingMode = true;
+                    return;
+                }
 
                 buyService.Buy(volume, price);
 
