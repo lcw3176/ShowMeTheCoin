@@ -16,7 +16,7 @@ import java.security.NoSuchAlgorithmException;
 @RequiredArgsConstructor
 public class WatchDog {
 
-    private float minPrice = 5400;
+    private float minPrice = 5000;
 
     private static float lastTradePrice = 20000;
     private boolean isSellingMode = false;
@@ -45,7 +45,7 @@ public class WatchDog {
             isSellingMode = true;
         }
 
-        if(isSellingMode){
+        if(isSellingMode && totalVolume != 0){
             if(judgementService.isProperToSell(firstTradePrice, nowPrice)){
                 int price = (int)nowPrice;
                 sellService.Sell(totalVolume, price);
@@ -68,10 +68,11 @@ public class WatchDog {
                 slackService.sendMessage(message);
             }
 
-        } else {
+        } else if(myMoney > minPrice){
             if(judgementService.isProperToBuy(lastTradePrice, nowPrice, myMoney)){
                 float volume = judgementService.howMuchBuy(nowPrice);
                 int price = (int)nowPrice;
+
                 buyService.Buy(volume, price);
 
                 if(dealCount == 0){

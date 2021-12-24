@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class JudgementService {
 
-    private float minPrice = 5400;
+    private float minPrice = 5000;
 
     public boolean isProperToBuy(float lastTradePrice, float nowCoinPrice, float myMoney){
 
