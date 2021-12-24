@@ -42,7 +42,7 @@ public class PriceService {
                 .scheme("https")
                 .host("api.upbit.com")
                 .path("/v1/ticker")
-                .queryParam("markets", "KRW-DOGE")
+                .queryParam("markets", "KRW-SAND")
                 .build(true);
 
         RestTemplate restTemplate = new RestTemplate();
