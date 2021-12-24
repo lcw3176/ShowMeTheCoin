@@ -1,11 +1,13 @@
 package com.joebrooks.showmethecoin.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JudgementService {
 
-    private final float minPrice = 5000;
+    @Value("{upBit.minPrice}")
+    private float minPrice;
 
     public boolean isProperToBuy(float lastTradePrice, float nowCoinPrice, float myMoney){
 
@@ -20,8 +22,8 @@ public class JudgementService {
         return false;
     }
 
-    public int howMuchBuy(float nowCoinPrice){
-       return (int) Math.floor(minPrice / nowCoinPrice);
+    public float howMuchBuy(float nowCoinPrice){
+       return minPrice / nowCoinPrice;
     }
 
     public boolean isProperToSell(float lastTradePrice, float nowCoinPrice){
