@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class CoinTradeInfo {
-    private int volume;
+    private float volume;
     private float price;
     private float myCash;
 }
