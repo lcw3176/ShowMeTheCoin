@@ -36,7 +36,7 @@ public class WatchDog {
     private Queue<String> orderQueue = new LinkedList<>();
     private Queue<String> messageQueue = new LinkedList<>();
 
-    private String nowCoin = "KRW-NEAR";
+    private String nowCoin = "KRW-MANA";
 
     @Scheduled(fixedDelay = 1000)
     public void observingMachine() throws ParseException, UnsupportedEncodingException, NoSuchAlgorithmException {
