@@ -18,9 +18,9 @@ import java.util.HashMap;
 public class CoinService {
 
     // return uuid
-    public String buy(float volume, float price) throws NoSuchAlgorithmException, UnsupportedEncodingException, ParseException {
+    public String buy(String coinName, float volume, float price) throws NoSuchAlgorithmException, UnsupportedEncodingException, ParseException {
         HashMap<String, String> params = new HashMap<>();
-        params.put("market", "KRW-DOGE");
+        params.put("market", coinName);
         params.put("side", "bid");
         params.put("volume", Float.toString(volume));
         params.put("price", Float.toString(price));
@@ -34,9 +34,9 @@ public class CoinService {
         return jsonObject.get("uuid").toString();
     }
 
-    public void sell(float volume, float price) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public void sell(String coinName, float volume, float price) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         HashMap<String, String> params = new HashMap<>();
-        params.put("market", "KRW-DOGE");
+        params.put("market", coinName);
         params.put("side", "ask");
         params.put("volume", Float.toString(volume));
         params.put("price", Float.toString(price));
