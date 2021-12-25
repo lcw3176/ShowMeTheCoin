@@ -24,7 +24,7 @@ public class WatchDog {
 
     private float tradePrice = 8130;
     private float totalVolume = 0;
-    private int timer = 0;
+//    private int timer = 0;
     private float adder = (float) 0.002;
 
     private boolean isCancelling = false;
@@ -81,13 +81,13 @@ public class WatchDog {
                     DailyCoinScore.setSellingMoney(DailyCoinScore.getSellingMoney() + (totalVolume * sellPrice));
 
                     tradePrice = nowPrice;
-                    timer = 0;
+//                    timer = 0;
                 }
             }
         }
 
         isOrdering = false;
-        timer++;
+//        timer++;
     }
 
     @Scheduled(fixedDelay = 5000)
