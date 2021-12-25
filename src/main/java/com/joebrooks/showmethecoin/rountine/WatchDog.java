@@ -27,6 +27,7 @@ public class WatchDog {
     private float totalVolume = 0;
 
     private boolean isCancelling = false;
+    private boolean isOrdering = false;
 
     private final CoinService coinService;
     private final MyInfoService myInfoService;
@@ -40,6 +41,7 @@ public class WatchDog {
 
         float nowPrice = coinService.getPrice("KRW-DOGE");
         float myMoney = myInfoService.getLeftMoney();
+        isOrdering = true;
 
         if(isCancelling){
             return;
@@ -62,8 +64,6 @@ public class WatchDog {
             if(tradePrice + moderator < nowPrice){
                 ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(orderQueue.peek());
 
-
-
                 if(OrderParseUtil.isOrderComplete(orderInfo)){
                     float sellPrice = tradePrice + moderator;
 
@@ -75,10 +75,17 @@ public class WatchDog {
                 }
             }
         }
+
+        isOrdering = false;
     }
 
     @Scheduled(fixedDelay = 5000)
     public void messageMachine() throws UnsupportedEncodingException, NoSuchAlgorithmException, ParseException {
+
+        if(isOrdering){
+            return;
+        }
+
         if(messageQueue.size() > 0){
             String uuid = messageQueue.poll();
             ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(uuid);
