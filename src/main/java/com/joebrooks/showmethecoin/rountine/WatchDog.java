@@ -25,6 +25,7 @@ public class WatchDog {
     private float tradePrice = 20000;
     private float moderator = 2;
     private float totalVolume = 0;
+    private int timer = 0;
 
     private boolean isCancelling = false;
     private boolean isOrdering = false;
@@ -72,11 +73,14 @@ public class WatchDog {
 
                     messageQueue.add(orderQueue.poll());
                     DailyCoinScore.setSellingMoney(DailyCoinScore.getSellingMoney() + (totalVolume * sellPrice));
+
+                    timer = 0;
                 }
             }
         }
 
         isOrdering = false;
+        timer++;
     }
 
     @Scheduled(fixedDelay = 5000)
@@ -116,9 +120,9 @@ public class WatchDog {
         }
     }
 
-    @Scheduled(fixedDelay = 90000)
+    @Scheduled(fixedDelay = 360000)
     public void adjustPriceMachine() throws UnsupportedEncodingException, NoSuchAlgorithmException, ParseException {
-        if(orderQueue.size() > 0){
+        if(orderQueue.size() > 0 && timer > 1800){
             isCancelling = true;
 
             String uuid = orderQueue.poll();
@@ -127,6 +131,7 @@ public class WatchDog {
 
             if(myInfoService.cancelOrder(uuid)){
                 isCancelling = false;
+                timer = 0;
             }
         }
     }
