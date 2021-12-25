@@ -72,13 +72,11 @@ public class WatchDog {
                 ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(orderQueue.peek());
 
                 if(OrderParseUtil.isOrderComplete(orderInfo)){
-                    float sellPrice = (float) (Math.ceil(tradePrice + adjust) - Math.ceil(tradePrice + adjust) % 10);
-
-                    coinService.sell(nowCoin, totalVolume, sellPrice);
+                    coinService.sell(nowCoin, totalVolume, nowPrice);
                     totalVolume = 0;
 
                     messageQueue.add(orderQueue.poll());
-                    DailyCoinScore.setSellingMoney(DailyCoinScore.getSellingMoney() + (totalVolume * sellPrice));
+                    DailyCoinScore.setSellingMoney(DailyCoinScore.getSellingMoney() + (totalVolume * nowPrice));
 
                     tradePrice = nowPrice;
 //                    timer = 0;
