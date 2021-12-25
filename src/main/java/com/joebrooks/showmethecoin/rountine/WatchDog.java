@@ -51,7 +51,7 @@ public class WatchDog {
         
         if(orderQueue.size() == 0){  // 구매시점
             if(tradePrice > nowPrice){
-                float volume = (float) Math.floor(myMoney / nowPrice);
+                float volume = myMoney / nowPrice;
                 String uuid = coinService.buy(nowCoin, volume, nowPrice);
 
                 totalVolume += volume;
