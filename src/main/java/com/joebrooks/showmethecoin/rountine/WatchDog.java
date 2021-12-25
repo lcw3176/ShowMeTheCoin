@@ -36,7 +36,7 @@ public class WatchDog {
     private Queue<String> orderQueue = new LinkedList<>();
     private Queue<String> messageQueue = new LinkedList<>();
 
-    private String nowCoin = "KRW-MANA";
+    private String nowCoin = "KRW-DOGE";
 
     @Scheduled(fixedDelay = 1000)
     public void observingMachine() throws ParseException, UnsupportedEncodingException, NoSuchAlgorithmException {
@@ -50,9 +50,9 @@ public class WatchDog {
         }
         
         if(orderQueue.size() == 0){  // 구매시점
-            if(tradePrice > nowPrice){
+            if(tradePrice >= nowPrice){
                 float volume = (float)(Math.ceil(myMoney / nowPrice * 100000) / 100000);
-                volume *= 0.999;
+                volume *= 0.96;
 
                 String uuid = coinService.buy(nowCoin, volume, nowPrice);
 
