@@ -23,7 +23,7 @@ import java.util.Queue;
 @RequiredArgsConstructor
 public class WatchDog {
 
-    private float tradePrice = 8130;
+    private float tradePrice = 0;
     private float totalVolume = 0;
 //    private int timer = 0;
     private float adder = (float) 0.002;
@@ -61,7 +61,7 @@ public class WatchDog {
         if(orderQueue.size() == 0 && myMoney > minPrice){  // 구매시점
             if(Math.ceil(tradePrice - adjust) - Math.ceil(tradePrice - adjust) % 10 >= nowPrice){
                 float volume = (float)(Math.ceil(myMoney / nowPrice * 100000) / 100000);
-                volume *= 0.96;
+                volume *= 0.97;
 
                 String uuid = coinService.buy(nowCoin, volume, nowPrice);
 
