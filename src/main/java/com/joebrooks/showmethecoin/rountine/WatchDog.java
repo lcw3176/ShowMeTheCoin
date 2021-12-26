@@ -23,10 +23,12 @@ import java.util.Queue;
 @RequiredArgsConstructor
 public class WatchDog {
 
-    private float tradePrice = 0;
+    private float buyPrice = 0;
     private float totalVolume = 0;
+    private float sellPrice = 0;
+
 //    private int timer = 0;
-    private float adder = (float) 0.002;
+//    private float adder = (float) 0.002;
 
     private boolean isCancelling = false;
     private boolean isOrdering = false;
@@ -43,7 +45,7 @@ public class WatchDog {
 
     @PostConstruct
     public void setTradePrice() throws ParseException {
-        tradePrice = coinService.getPrice(nowCoin);
+        sellPrice = coinService.getPrice(nowCoin);
     }
 
     @Scheduled(fixedDelay = 1000)
@@ -52,39 +54,40 @@ public class WatchDog {
         float nowPrice = coinService.getPrice(nowCoin);
         float myMoney = myInfoService.getLeftMoney();
         isOrdering = true;
-        float adjust = nowPrice * adder;
+//        float adjust = nowPrice * adder;
 
         if(isCancelling){
             return;
         }
 
         if(orderQueue.size() == 0 && myMoney > minPrice){  // 구매시점
-            if(Math.ceil(tradePrice - adjust) - Math.ceil(tradePrice - adjust) % 10 >= nowPrice){
+            if(Math.abs(nowPrice - sellPrice) <= 10){
                 float volume = (float)(Math.ceil(myMoney / nowPrice * 100000) / 100000);
-                volume *= 0.97;
+                volume *= 0.98;
 
                 String uuid = coinService.buy(nowCoin, volume, nowPrice);
 
                 totalVolume += volume;
                 orderQueue.add(uuid);
-                messageQueue.add(uuid);
+//                messageQueue.add(uuid);
 
-                tradePrice = nowPrice;
+                buyPrice = nowPrice;
 
                 DailyCoinScore.setBuyingMoney(DailyCoinScore.getBuyingMoney() + (volume * nowPrice));
             }
         } else if(orderQueue.size() > 0) {      // 판매시점
-            if(Math.ceil(tradePrice + adjust) - Math.ceil(tradePrice + adjust) % 10 < nowPrice){
+            if(nowPrice - buyPrice >= 20){
                 ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(orderQueue.peek());
 
                 if(OrderParseUtil.isOrderComplete(orderInfo)){
                     coinService.sell(nowCoin, totalVolume, nowPrice);
                     totalVolume = 0;
 
-                    messageQueue.add(orderQueue.poll());
+                    orderQueue.poll();
+//                    messageQueue.add(orderQueue.poll());
                     DailyCoinScore.setSellingMoney(DailyCoinScore.getSellingMoney() + (totalVolume * nowPrice));
 
-                    tradePrice = nowPrice;
+                    sellPrice = nowPrice;
 //                    timer = 0;
                 }
             }
@@ -94,42 +97,42 @@ public class WatchDog {
 //        timer++;
     }
 
-    @Scheduled(fixedDelay = 5000)
-    public void messageMachine() throws UnsupportedEncodingException, NoSuchAlgorithmException, ParseException {
-
-        if(isOrdering){
-            return;
-        }
-
-        if(messageQueue.size() > 0){
-            String uuid = messageQueue.poll();
-            ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(uuid);
-
-            if(OrderParseUtil.isOrderComplete(orderInfo)){
-                float tradedPrice = OrderParseUtil.getPriceWhenTraded(orderInfo);
-                float myMoney = myInfoService.getLeftMoney();
-                float volume = OrderParseUtil.getVolumeWhenTraded(orderInfo);
-                boolean wasBought = OrderParseUtil.wasBought(orderInfo);
-
-                CoinTradeInfo coinTradeInfo = CoinTradeInfo.builder()
-                        .price(tradedPrice)
-                        .myCash(myMoney)
-                        .volume(volume)
-                        .build();
-
-                String message;
-
-                if(wasBought){  // 구매했을 때
-                    message =  MessageUtil.makeBuyMessage(coinTradeInfo);
-                } else {  // 판매했을 때
-                    message =  MessageUtil.makeSellMessage(coinTradeInfo);
-                }
-
-                slackService.sendMessage(message);
-            }
-
-        }
-    }
+//    @Scheduled(fixedDelay = 5000)
+//    public void messageMachine() throws UnsupportedEncodingException, NoSuchAlgorithmException, ParseException {
+//
+//        if(isOrdering){
+//            return;
+//        }
+//
+//        if(messageQueue.size() > 0){
+//            String uuid = messageQueue.poll();
+//            ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(uuid);
+//
+//            if(OrderParseUtil.isOrderComplete(orderInfo)){
+//                float tradedPrice = OrderParseUtil.getPriceWhenTraded(orderInfo);
+//                float myMoney = myInfoService.getLeftMoney();
+//                float volume = OrderParseUtil.getVolumeWhenTraded(orderInfo);
+//                boolean wasBought = OrderParseUtil.wasBought(orderInfo);
+//
+//                CoinTradeInfo coinTradeInfo = CoinTradeInfo.builder()
+//                        .price(tradedPrice)
+//                        .myCash(myMoney)
+//                        .volume(volume)
+//                        .build();
+//
+//                String message;
+//
+//                if(wasBought){  // 구매했을 때
+//                    message =  MessageUtil.makeBuyMessage(coinTradeInfo);
+//                } else {  // 판매했을 때
+//                    message =  MessageUtil.makeSellMessage(coinTradeInfo);
+//                }
+//
+//                slackService.sendMessage(message);
+//            }
+//
+//        }
+//    }
 
 //    @Scheduled(fixedDelay = 360000)
 //    public void adjustPriceMachine() throws UnsupportedEncodingException, NoSuchAlgorithmException, ParseException {
