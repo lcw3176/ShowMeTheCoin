@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
@@ -39,6 +40,11 @@ public class WatchDog {
     private Queue<String> messageQueue = new LinkedList<>();
 
     private String nowCoin = "KRW-SAND";
+
+    @PostConstruct
+    public void setTradePrice() throws ParseException {
+        tradePrice = coinService.getPrice(nowCoin);
+    }
 
     @Scheduled(fixedDelay = 1000)
     public void observingMachine() throws ParseException, UnsupportedEncodingException, NoSuchAlgorithmException {
