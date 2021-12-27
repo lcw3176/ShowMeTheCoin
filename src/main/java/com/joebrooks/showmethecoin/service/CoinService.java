@@ -34,7 +34,7 @@ public class CoinService {
         return jsonObject.get("uuid").toString();
     }
 
-    public void sell(String coinName, float volume, float price) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public String sell(String coinName, float volume, float price) throws NoSuchAlgorithmException, UnsupportedEncodingException, ParseException {
         HashMap<String, String> params = new HashMap<>();
         params.put("market", coinName);
         params.put("side", "ask");
@@ -42,7 +42,12 @@ public class CoinService {
         params.put("price", Float.toString(price));
         params.put("ord_type", "limit");
 
-        RequestUtil.sendOrder(params);
+        ResponseEntity<String> entity = RequestUtil.sendOrder(params);
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObject = (JSONObject)jsonParser.parse(entity.getBody());
+
+        return jsonObject.get("uuid").toString();
     }
 
 
