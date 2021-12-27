@@ -25,10 +25,11 @@ public class WatchDog {
     private float tradePrice = 0;
     private float totalVolume = 0;
 //    private int timer = 0;
-    private float adder = (float) 0.005;
+//    private float adder = (float) 0.005;
     private int maxOrder = 3;
     private int orderCount = 0;
     private float firstTradePrice = 0;
+    private final float threshold = 5;
 
     private boolean isCancelling = false;
     private boolean isOrdering = false;
@@ -42,7 +43,7 @@ public class WatchDog {
     private Stack<String> sellStack = new Stack<>();
 //    private Queue<String> messageQueue = new LinkedList<>();
 
-    private String nowCoin = "KRW-SAND";
+    private String nowCoin = "KRW-HIVE";
 
     @PostConstruct
     public void setTradePrice() throws ParseException {
@@ -65,8 +66,8 @@ public class WatchDog {
         float nowPrice = coinService.getPrice(nowCoin);
         float myMoney = myInfoService.getLeftMoney();
         isOrdering = true;
-        float adjust = nowPrice * adder;
-        float adjustedSellPrice = (float)(Math.ceil(tradePrice + adjust) - Math.ceil(tradePrice + adjust) % 10);
+//        float adjust = nowPrice * adder;
+//        float adjustedSellPrice = (float)(Math.ceil(tradePrice + adjust) - Math.ceil(tradePrice + adjust) % 10);
 
         if(isCancelling){
             return;
@@ -86,7 +87,7 @@ public class WatchDog {
                 }
             }
 
-            if(tradePrice - 5 >= nowPrice){
+            if(tradePrice - threshold >= nowPrice){
                 float volume = (float)(Math.ceil(minPrice / nowPrice * 100000) / 100000);
 
                 String uuid = coinService.buy(nowCoin, volume, nowPrice);
@@ -107,7 +108,7 @@ public class WatchDog {
             }
 
 
-        } else if(orderCount >= maxOrder || nowPrice > adjustedSellPrice) {      // 판매시점
+        } else if(orderCount >= maxOrder && nowPrice > firstTradePrice + threshold) {      // 판매시점
             ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(orderStack.peek());
 
             if(OrderParseUtil.isOrderComplete(orderInfo)){
