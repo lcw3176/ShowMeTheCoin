@@ -108,7 +108,7 @@ public class WatchDog {
             }
 
 
-        } else if(orderCount >= maxOrder && nowPrice > firstTradePrice + threshold) {      // 판매시점
+        } else if(orderCount >= maxOrder && nowPrice > firstTradePrice + (threshold * 2)) {      // 판매시점
             ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(orderStack.peek());
 
             if(OrderParseUtil.isOrderComplete(orderInfo)){
