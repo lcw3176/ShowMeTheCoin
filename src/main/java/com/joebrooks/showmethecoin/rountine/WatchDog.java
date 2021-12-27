@@ -1,11 +1,9 @@
 package com.joebrooks.showmethecoin.rountine;
 
-import com.joebrooks.showmethecoin.domain.CoinTradeInfo;
 import com.joebrooks.showmethecoin.domain.DailyCoinScore;
 import com.joebrooks.showmethecoin.service.CoinService;
 import com.joebrooks.showmethecoin.service.MyInfoService;
 import com.joebrooks.showmethecoin.service.SlackService;
-import com.joebrooks.showmethecoin.util.MessageUtil;
 import com.joebrooks.showmethecoin.util.OrderParseUtil;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
@@ -18,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 @Component
 @RequiredArgsConstructor
@@ -26,24 +25,38 @@ public class WatchDog {
     private float tradePrice = 0;
     private float totalVolume = 0;
 //    private int timer = 0;
-    private float adder = (float) 0.002;
+    private float adder = (float) 0.005;
+    private int maxOrder = 3;
+    private int orderCount = 0;
+    private float firstTradePrice = 0;
 
     private boolean isCancelling = false;
     private boolean isOrdering = false;
 
     private final CoinService coinService;
     private final MyInfoService myInfoService;
-    private final SlackService slackService;
+//    private final SlackService slackService;
 
-    private final float minPrice = 5000;
-    private Queue<String> orderQueue = new LinkedList<>();
-    private Queue<String> messageQueue = new LinkedList<>();
+    private final float minPrice = 9500;
+    private Stack<String> orderStack = new Stack<>();
+    private Stack<String> sellStack = new Stack<>();
+//    private Queue<String> messageQueue = new LinkedList<>();
 
     private String nowCoin = "KRW-SAND";
 
     @PostConstruct
     public void setTradePrice() throws ParseException {
         tradePrice = coinService.getPrice(nowCoin);
+    }
+
+
+    @Scheduled(fixedDelay = 600000)
+    public void resetTradePrice() throws ParseException {
+        float nowPrice = coinService.getPrice(nowCoin);
+
+        if(Math.abs(tradePrice - nowPrice)  > 20 && orderCount == 0){
+            tradePrice = nowPrice;
+        }
     }
 
     @Scheduled(fixedDelay = 1000)
@@ -53,40 +66,63 @@ public class WatchDog {
         float myMoney = myInfoService.getLeftMoney();
         isOrdering = true;
         float adjust = nowPrice * adder;
+        float adjustedSellPrice = (float)(Math.ceil(tradePrice + adjust) - Math.ceil(tradePrice + adjust) % 10);
 
         if(isCancelling){
             return;
         }
 
-        if(orderQueue.size() == 0 && myMoney > minPrice){  // 구매시점
-            if(Math.ceil(tradePrice - adjust) - Math.ceil(tradePrice - adjust) % 10 >= nowPrice){
-                float volume = (float)(Math.ceil(myMoney / nowPrice * 100000) / 100000);
-                volume *= 0.98;
+
+        if(orderCount < maxOrder && myMoney >= minPrice){  // 구매시점
+//            float adjustedBuyPrice = (float) (Math.ceil(tradePrice - adjust) - Math.ceil(tradePrice - adjust) % 10);
+
+            if(sellStack.size() > 0){
+                ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(sellStack.peek());
+
+                if(OrderParseUtil.isOrderComplete(orderInfo)){
+                    sellStack.clear();
+                } else {
+                    return;
+                }
+            }
+
+            if(tradePrice - 5 >= nowPrice){
+                float volume = (float)(Math.ceil(minPrice / nowPrice * 100000) / 100000);
 
                 String uuid = coinService.buy(nowCoin, volume, nowPrice);
 
+                if(totalVolume == 0){
+                    firstTradePrice = nowPrice;
+                }
+
                 totalVolume += volume;
-                orderQueue.add(uuid);
+                orderStack.add(uuid);
 //                messageQueue.add(uuid);
 
                 tradePrice = nowPrice;
 
                 DailyCoinScore.setBuyingMoney(DailyCoinScore.getBuyingMoney() + (volume * nowPrice));
+
+                orderCount++;
             }
-        } else if(orderQueue.size() > 0) {      // 판매시점
-            if(Math.ceil(tradePrice + adjust) - Math.ceil(tradePrice + adjust) % 10 < nowPrice){
-                ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(orderQueue.peek());
 
-                if(OrderParseUtil.isOrderComplete(orderInfo)){
-                    coinService.sell(nowCoin, totalVolume, nowPrice);
-                    totalVolume = 0;
-                    orderQueue.poll();
+
+        } else if(orderCount >= maxOrder || nowPrice > adjustedSellPrice) {      // 판매시점
+            ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(orderStack.peek());
+
+            if(OrderParseUtil.isOrderComplete(orderInfo)){
+                String uuid = coinService.sell(nowCoin, totalVolume, nowPrice);
+                totalVolume = 0;
+                orderStack.clear();
 //                    messageQueue.add(orderQueue.poll());
-                    DailyCoinScore.setSellingMoney(DailyCoinScore.getSellingMoney() + (totalVolume * nowPrice));
+                DailyCoinScore.setSellingMoney(DailyCoinScore.getSellingMoney() + (totalVolume * nowPrice));
 
-                    tradePrice = nowPrice;
+                tradePrice = firstTradePrice;
+//                    tradePrice = nowPrice;
 //                    timer = 0;
-                }
+                orderCount = 0;
+
+                sellStack.add(uuid);
             }
         }
 
