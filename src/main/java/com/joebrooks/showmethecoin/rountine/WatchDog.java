@@ -22,7 +22,7 @@ import java.util.Stack;
 @RequiredArgsConstructor
 public class WatchDog {
 
-    private float tradePrice = 0;
+    private float tradePrice = 2235;
     private float totalVolume = 0;
 //    private int timer = 0;
 //    private float adder = (float) 0.005;
@@ -32,7 +32,7 @@ public class WatchDog {
     private final float threshold = 5;
 
     private boolean isCancelling = false;
-    private boolean isOrdering = false;
+//    private boolean isOrdering = false;
 
     private final CoinService coinService;
     private final MyInfoService myInfoService;
@@ -45,27 +45,27 @@ public class WatchDog {
 
     private String nowCoin = "KRW-HIVE";
 
-    @PostConstruct
-    public void setTradePrice() throws ParseException {
-        tradePrice = coinService.getPrice(nowCoin);
-    }
+//    @PostConstruct
+//    public void setTradePrice() throws ParseException {
+//        tradePrice = coinService.getPrice(nowCoin);
+//    }
 
 
-    @Scheduled(fixedDelay = 600000)
-    public void resetTradePrice() throws ParseException {
-        float nowPrice = coinService.getPrice(nowCoin);
-
-        if(Math.abs(tradePrice - nowPrice)  > 20 && orderCount == 0){
-            tradePrice = nowPrice;
-        }
-    }
+//    @Scheduled(fixedDelay = 600000)
+//    public void resetTradePrice() throws ParseException {
+//        float nowPrice = coinService.getPrice(nowCoin);
+//
+//        if(Math.abs(tradePrice - nowPrice)  > 20 && orderCount == 0){
+//            tradePrice = nowPrice;
+//        }
+//    }
 
     @Scheduled(fixedDelay = 1000)
     public void observingMachine() throws ParseException, UnsupportedEncodingException, NoSuchAlgorithmException {
 
         float nowPrice = coinService.getPrice(nowCoin);
         float myMoney = myInfoService.getLeftMoney();
-        isOrdering = true;
+//        isOrdering = true;
 //        float adjust = nowPrice * adder;
 //        float adjustedSellPrice = (float)(Math.ceil(tradePrice + adjust) - Math.ceil(tradePrice + adjust) % 10);
 
@@ -92,7 +92,7 @@ public class WatchDog {
 
                 String uuid = coinService.buy(nowCoin, volume, nowPrice);
 
-                if(totalVolume == 0){
+                if(orderCount == 0){
                     firstTradePrice = nowPrice;
                 }
 
@@ -127,7 +127,7 @@ public class WatchDog {
             }
         }
 
-        isOrdering = false;
+//        isOrdering = false;
 //        timer++;
     }
 //
