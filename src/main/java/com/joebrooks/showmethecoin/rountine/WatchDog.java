@@ -58,8 +58,8 @@ public class WatchDog {
 
         float nowPrice = coinService.getPrice(nowCoin);
         ResponseEntity balanceInfo = myInfoService.getBalance();
-        float myMoney = OrderParseUtil.getBalance(balanceInfo, "KRW");
-        float balanceMyCoin =  OrderParseUtil.getBalance(balanceInfo, nowCoin.split("-")[1]);
+        float myMoney = OrderParseUtil.getAvailableBalance(balanceInfo, "KRW");
+        float balanceMyCoin =  OrderParseUtil.getLockedBalance(balanceInfo, nowCoin.split("-")[1]);
 
         System.out.println("now : " + nowPrice);
         System.out.println("myMoney : " + myMoney);
