@@ -1,5 +1,6 @@
 package com.joebrooks.showmethecoin.service;
 
+import com.joebrooks.showmethecoin.util.OrderParseUtil;
 import com.joebrooks.showmethecoin.util.RequestUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -17,7 +18,7 @@ import java.security.NoSuchAlgorithmException;
 public class MyInfoService {
 
 
-    public float getLeftMoney() throws ParseException {
+    public float getMoneyBalance() throws ParseException {
         UriComponents uri = UriComponentsBuilder.newInstance()
                 .scheme("https")
                 .host("api.upbit.com")
@@ -26,11 +27,19 @@ public class MyInfoService {
 
         ResponseEntity<String> responseEntity = RequestUtil.sendGet(uri);
 
-        JSONParser jsonParser = new JSONParser();
-        JSONArray jsonArray = (JSONArray)jsonParser.parse(responseEntity.getBody());
-        String price = ((JSONObject)jsonArray.get(0)).get("balance").toString();
+        return OrderParseUtil.getBalance(responseEntity, "KRW");
+    }
 
-        return Float.parseFloat(price);
+    public float getCoinBalance(String coinName) throws ParseException {
+        UriComponents uri = UriComponentsBuilder.newInstance()
+                .scheme("https")
+                .host("api.upbit.com")
+                .path("/v1/accounts")
+                .build(true);
+
+        ResponseEntity<String> responseEntity = RequestUtil.sendGet(uri);
+
+        return OrderParseUtil.getBalance(responseEntity, "coinName");
     }
 
     public ResponseEntity<String> getOrderInfo(String uuid) throws UnsupportedEncodingException, NoSuchAlgorithmException {
