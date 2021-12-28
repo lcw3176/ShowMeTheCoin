@@ -93,6 +93,10 @@ public class PurchasingManager {
 
 
         } else if((orderCount >= maxOrder || nowPrice > firstTradePrice + (threshold * 6)) && nowPrice > firstTradePrice + (threshold * 2)) {      // 판매시점
+            if(orderStack.size() == 0){
+                return;
+            }
+
             ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(orderStack.peek());
 
             if(OrderParseUtil.isOrderComplete(orderInfo)){
