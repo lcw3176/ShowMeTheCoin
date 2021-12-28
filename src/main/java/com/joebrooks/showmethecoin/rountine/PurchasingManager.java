@@ -18,10 +18,9 @@ import java.util.Stack;
 public class PurchasingManager {
 
     private float tradePrice = 2235;
-    private float totalVolume = 0;
     private int maxOrder = 3;
     private int orderCount = 0;
-    private float firstTradePrice = 0;
+    private float firstTradePrice = tradePrice;
     private final float threshold = 5;
 
     private boolean isCancelling = false;
@@ -93,7 +92,7 @@ public class PurchasingManager {
             }
 
 
-        } else if((orderCount >= maxOrder || nowPrice > firstTradePrice + (threshold * 6))&& nowPrice > firstTradePrice + (threshold * 2)) {      // 판매시점
+        } else if((orderCount >= maxOrder || nowPrice > firstTradePrice + (threshold * 6)) && nowPrice > firstTradePrice + (threshold * 2)) {      // 판매시점
             ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(orderStack.peek());
 
             if(OrderParseUtil.isOrderComplete(orderInfo)){
