@@ -99,6 +99,10 @@ public class PurchasingManager {
             if(OrderParseUtil.isOrderComplete(orderInfo)){
                 float balanceMyCoin = OrderParseUtil.getAvailableBalance(balanceInfo, nowCoin.split("-")[1]);
 
+                if(balanceMyCoin == 0){
+                    return;
+                }
+
                 String uuid = coinService.sell(nowCoin, balanceMyCoin, nowPrice);
                 orderStack.clear();
                 tradePrice = firstTradePrice;
