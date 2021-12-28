@@ -17,7 +17,7 @@ import java.util.Stack;
 @RequiredArgsConstructor
 public class PurchasingManager {
 
-    private float tradePrice = 2235;
+    private float tradePrice = 2240;
     private int maxOrder = 3;
     private int orderCount = 0;
     private float firstTradePrice = tradePrice;
