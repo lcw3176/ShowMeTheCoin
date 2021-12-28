@@ -93,7 +93,7 @@ public class PurchasingManager {
             }
 
 
-        } else if(orderCount >= maxOrder && nowPrice > firstTradePrice + (threshold * 2)) {      // 판매시점
+        } else if((orderCount >= maxOrder || nowPrice > firstTradePrice + (threshold * 6))&& nowPrice > firstTradePrice + (threshold * 2)) {      // 판매시점
             ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(orderStack.peek());
 
             if(OrderParseUtil.isOrderComplete(orderInfo)){
@@ -105,7 +105,7 @@ public class PurchasingManager {
 
                 String uuid = coinService.sell(nowCoin, balanceMyCoin, nowPrice);
                 orderStack.clear();
-                tradePrice = firstTradePrice;
+                tradePrice = nowPrice - (threshold * 2);
                 orderCount = 0;
 
                 sellStack.add(uuid);
