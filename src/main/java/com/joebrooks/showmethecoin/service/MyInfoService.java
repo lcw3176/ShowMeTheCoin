@@ -39,7 +39,7 @@ public class MyInfoService {
 
         ResponseEntity<String> responseEntity = RequestUtil.sendGet(uri);
 
-        return OrderParseUtil.getBalance(responseEntity, coinName);
+        return OrderParseUtil.getBalance(responseEntity, coinName.split("-")[1]);
     }
 
     public ResponseEntity<String> getOrderInfo(String uuid) throws UnsupportedEncodingException, NoSuchAlgorithmException {
