@@ -17,7 +17,7 @@ import java.util.Stack;
 @RequiredArgsConstructor
 public class PurchasingManager {
 
-    private float tradePrice = 2090;
+    private float tradePrice = 7540;
     private int maxOrder = 3;
     private int orderCount = 0;
     private float firstTradePrice = tradePrice;
@@ -30,12 +30,12 @@ public class PurchasingManager {
     private final MyInfoService myInfoService;
 //    private final SlackService slackService;
 
-    private final float minPrice = 9500;
+    private final float minPrice = 9300;
     private Stack<String> orderStack = new Stack<>();
     private Stack<String> sellStack = new Stack<>();
 //    private Queue<String> messageQueue = new LinkedList<>();
 
-    private String nowCoin = "KRW-HIVE";
+    private String nowCoin = "KRW-SAND";
 
 //    @PostConstruct
 //    public void setTradePrice() throws ParseException {
