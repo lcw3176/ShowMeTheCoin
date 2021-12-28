@@ -45,7 +45,7 @@ public class OrderParseUtil {
             }
         }
 
-        return Float.parseFloat(Optional.ofNullable(price).orElse("0.0"));
+        return Float.parseFloat(Optional.ofNullable(price).orElse("0"));
     }
 
     public static float getPriceWhenTraded(ResponseEntity<String> responseEntity) throws ParseException {
