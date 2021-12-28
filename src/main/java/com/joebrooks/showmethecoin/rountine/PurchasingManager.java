@@ -97,7 +97,7 @@ public class PurchasingManager {
             ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(orderStack.peek());
 
             if(OrderParseUtil.isOrderComplete(orderInfo)){
-                float balanceMyCoin = OrderParseUtil.getLockedBalance(balanceInfo, nowCoin.split("-")[1]);
+                float balanceMyCoin = OrderParseUtil.getAvailableBalance(balanceInfo, nowCoin.split("-")[1]);
 
                 String uuid = coinService.sell(nowCoin, balanceMyCoin, nowPrice);
                 orderStack.clear();
