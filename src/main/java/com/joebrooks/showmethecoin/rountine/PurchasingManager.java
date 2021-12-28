@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.sound.midi.SysexMessage;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Stack;
@@ -17,7 +18,7 @@ import java.util.Stack;
 @RequiredArgsConstructor
 public class PurchasingManager {
 
-    private float tradePrice = 7540;
+    private float tradePrice = 7560;
     private int maxOrder = 3;
     private int orderCount = 0;
     private float firstTradePrice = tradePrice;
@@ -30,7 +31,7 @@ public class PurchasingManager {
     private final MyInfoService myInfoService;
 //    private final SlackService slackService;
 
-    private final float minPrice = 9300;
+    private final float minPrice = 5300;
     private Stack<String> orderStack = new Stack<>();
     private Stack<String> sellStack = new Stack<>();
 //    private Queue<String> messageQueue = new LinkedList<>();
@@ -93,6 +94,8 @@ public class PurchasingManager {
 
 
         } else if((orderCount >= maxOrder || nowPrice > firstTradePrice + (threshold * 6)) && nowPrice > firstTradePrice + (threshold * 2)) {      // 판매시점
+
+            System.out.println("판매");
             if(orderStack.size() == 0){
                 return;
             }
@@ -101,8 +104,9 @@ public class PurchasingManager {
 
             if(OrderParseUtil.isOrderComplete(orderInfo)){
                 float balanceMyCoin = OrderParseUtil.getAvailableBalance(balanceInfo, nowCoin.split("-")[1]);
+                float data = OrderParseUtil.getLockedBalance(balanceInfo, nowCoin.split("-")[1]);
 
-                if(balanceMyCoin == 0){
+                if(balanceMyCoin <= 0){
                     return;
                 }
 
