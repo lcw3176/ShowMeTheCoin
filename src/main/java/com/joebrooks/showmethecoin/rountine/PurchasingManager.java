@@ -18,7 +18,7 @@ import java.util.Stack;
 @RequiredArgsConstructor
 public class PurchasingManager {
 
-    private float tradePrice = 7560;
+    private float tradePrice = 7565;
     private int orderCount = 0;
     private float firstTradePrice = tradePrice;
     private final float threshold = 5;
@@ -92,7 +92,7 @@ public class PurchasingManager {
             }
 
 
-        } else if(nowPrice > firstTradePrice + (threshold * 6) || nowPrice > firstTradePrice + (threshold * 2)) {      // 판매시점
+        } else if(nowPrice > firstTradePrice + (threshold * 6) || (nowPrice > firstTradePrice + (threshold * 2) && orderCount >= 4)) {      // 판매시점
 
             if(orderStack.size() == 0){
                 return;
@@ -102,7 +102,6 @@ public class PurchasingManager {
 
             if(OrderParseUtil.isOrderComplete(orderInfo)){
                 float balanceMyCoin = OrderParseUtil.getAvailableBalance(balanceInfo, nowCoin.split("-")[1]);
-                float data = OrderParseUtil.getLockedBalance(balanceInfo, nowCoin.split("-")[1]);
 
                 if(balanceMyCoin <= 0){
                     return;
