@@ -15,7 +15,7 @@ import java.util.Stack;
 
 @Component
 @RequiredArgsConstructor
-public class WatchDog {
+public class PurchasingManager {
 
     private float tradePrice = 2235;
     private float totalVolume = 0;
@@ -58,57 +58,55 @@ public class WatchDog {
 
         float nowPrice = coinService.getPrice(nowCoin);
         ResponseEntity balanceInfo = myInfoService.getBalance();
-        float myMoney = OrderParseUtil.getAvailableBalance(balanceInfo, "KRW");
-        float balanceMyCoin =  OrderParseUtil.getLockedBalance(balanceInfo, nowCoin.split("-")[1]);
+        float availableMyMoney = OrderParseUtil.getAvailableBalance(balanceInfo, "KRW");
 
-        System.out.println("now : " + nowPrice);
-        System.out.println("myMoney : " + myMoney);
-        System.out.println("balanceCoin : " + balanceMyCoin);
+
 //        if(isCancelling){
 //            return;
 //        }
 //
 //
-//        if(orderCount < maxOrder && myMoney >= minPrice){  // 구매시점
-//
-//            if(sellStack.size() > 0){
-//                ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(sellStack.peek());
-//
-//                if(OrderParseUtil.isOrderComplete(orderInfo)){
-//                    sellStack.clear();
-//                } else {
-//                    return;
-//                }
-//            }
-//
-//            if(tradePrice - threshold >= nowPrice){
-//                float volume = (float)(Math.ceil(minPrice / nowPrice * 100000) / 100000);
-//
-//                String uuid = coinService.buy(nowCoin, volume, nowPrice);
-//
-//                if(orderCount == 0){
-//                    firstTradePrice = nowPrice;
-//                }
-//
-//                orderStack.add(uuid);
-//                tradePrice = nowPrice;
-//                orderCount++;
-//            }
-//
-//
-//        } else if(orderCount >= maxOrder && nowPrice > firstTradePrice + (threshold * 2)) {      // 판매시점
-//            ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(orderStack.peek());
-//
-//            if(OrderParseUtil.isOrderComplete(orderInfo)){
-//                float coinBalance = myInfoService.getCoinBalance(nowCoin);
-//                String uuid = coinService.sell(nowCoin, coinBalance, nowPrice);
-//                orderStack.clear();
-//                tradePrice = firstTradePrice;
-//                orderCount = 0;
-//
-//                sellStack.add(uuid);
-//            }
-//        }
+        if(orderCount < maxOrder && availableMyMoney >= minPrice){  // 구매시점
+
+            if(sellStack.size() > 0){
+                ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(sellStack.peek());
+
+                if(OrderParseUtil.isOrderComplete(orderInfo)){
+                    sellStack.clear();
+                } else {
+                    return;
+                }
+            }
+
+            if(tradePrice - threshold >= nowPrice){
+                float volume = (float)(Math.ceil(minPrice / nowPrice * 100000) / 100000);
+
+                String uuid = coinService.buy(nowCoin, volume, nowPrice);
+
+                if(orderCount == 0){
+                    firstTradePrice = nowPrice;
+                }
+
+                orderStack.add(uuid);
+                tradePrice = nowPrice;
+                orderCount++;
+            }
+
+
+        } else if(orderCount >= maxOrder && nowPrice > firstTradePrice + (threshold * 2)) {      // 판매시점
+            ResponseEntity<String> orderInfo = myInfoService.getOrderInfo(orderStack.peek());
+
+            if(OrderParseUtil.isOrderComplete(orderInfo)){
+                float balanceMyCoin = OrderParseUtil.getLockedBalance(balanceInfo, nowCoin.split("-")[1]);
+
+                String uuid = coinService.sell(nowCoin, balanceMyCoin, nowPrice);
+                orderStack.clear();
+                tradePrice = firstTradePrice;
+                orderCount = 0;
+
+                sellStack.add(uuid);
+            }
+        }
     }
 
 //    @Scheduled(fixedDelay = 5000)
