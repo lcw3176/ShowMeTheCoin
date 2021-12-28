@@ -18,29 +18,16 @@ import java.security.NoSuchAlgorithmException;
 public class MyInfoService {
 
 
-    public float getMoneyBalance() throws ParseException {
+    public ResponseEntity<String> getBalance() throws ParseException {
         UriComponents uri = UriComponentsBuilder.newInstance()
                 .scheme("https")
                 .host("api.upbit.com")
                 .path("/v1/accounts")
                 .build(true);
 
-        ResponseEntity<String> responseEntity = RequestUtil.sendGet(uri);
-
-        return OrderParseUtil.getBalance(responseEntity, "KRW");
+        return RequestUtil.sendGet(uri);
     }
 
-    public float getCoinBalance(String coinName) throws ParseException {
-        UriComponents uri = UriComponentsBuilder.newInstance()
-                .scheme("https")
-                .host("api.upbit.com")
-                .path("/v1/accounts")
-                .build(true);
-
-        ResponseEntity<String> responseEntity = RequestUtil.sendGet(uri);
-
-        return OrderParseUtil.getBalance(responseEntity, coinName.split("-")[1]);
-    }
 
     public ResponseEntity<String> getOrderInfo(String uuid) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         return RequestUtil.getOrderInfo(uuid);
