@@ -2,10 +2,8 @@ package com.joebrooks.showmethecoin.rountine;
 
 import com.joebrooks.showmethecoin.service.CoinService;
 import com.joebrooks.showmethecoin.service.MyInfoService;
-import com.joebrooks.showmethecoin.util.OrderParseUtil;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
