@@ -17,7 +17,7 @@ import java.util.Stack;
 @RequiredArgsConstructor
 public class PurchasingManager {
 
-    private float tradePrice = 2240;
+    private float tradePrice = 2090;
     private int maxOrder = 3;
     private int orderCount = 0;
     private float firstTradePrice = tradePrice;
@@ -108,7 +108,7 @@ public class PurchasingManager {
 
                 String uuid = coinService.sell(nowCoin, balanceMyCoin, nowPrice);
                 orderStack.clear();
-                tradePrice = nowPrice - (threshold * 2);
+                tradePrice = firstTradePrice;
                 orderCount = 0;
 
                 sellStack.add(uuid);
