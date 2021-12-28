@@ -2,8 +2,10 @@ package com.joebrooks.showmethecoin.rountine;
 
 import com.joebrooks.showmethecoin.service.CoinService;
 import com.joebrooks.showmethecoin.service.MyInfoService;
+import com.joebrooks.showmethecoin.util.OrderParseUtil;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -55,8 +57,9 @@ public class WatchDog {
     public void observingMachine() throws ParseException, UnsupportedEncodingException, NoSuchAlgorithmException {
 
         float nowPrice = coinService.getPrice(nowCoin);
-        float myMoney = myInfoService.getMoneyBalance();
-        float balanceMyCoin =  myInfoService.getCoinBalance(nowCoin);
+        ResponseEntity balanceInfo = myInfoService.getBalance();
+        float myMoney = OrderParseUtil.getBalance(balanceInfo, "KRW");
+        float balanceMyCoin =  OrderParseUtil.getBalance(balanceInfo, nowCoin.split("-")[1]);
 
         System.out.println("now : " + nowPrice);
         System.out.println("myMoney : " + myMoney);
