@@ -23,6 +23,7 @@ public class OrderParseUtil {
         String price = null;
 
         for(Object i : jsonArray){
+            System.out.println(((JSONObject)i).get("currency"));
             if(((JSONObject)i).get("currency").equals(coinName)){
                 price = ((JSONObject)i).get("balance").toString();
             }
