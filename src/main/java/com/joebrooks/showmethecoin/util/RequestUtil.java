@@ -18,29 +18,8 @@ import java.util.UUID;
 
 public class RequestUtil {
 
-    private static String secretKey = System.getenv("upBit_secretKey");
-    private static String accessKey = System.getenv("upBit_accessKey");
 
-
-    public static ResponseEntity<String> sendGet(UriComponents uri){
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        String jwtToken = JWT.create()
-                .withClaim("access_key", accessKey)
-                .withClaim("nonce", UUID.randomUUID().toString())
-                .sign(algorithm);
-
-        String authenticationToken = "Bearer " + jwtToken;
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Authorization", authenticationToken);
-
-        HttpEntity<String> entity = new HttpEntity<String>("", headers);
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
-    }
-
-    public static ResponseEntity<String> sendOrder(HashMap<String, String> params) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    private static String getQueryHash(HashMap<String, String> params) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         ArrayList<String> queryElements = new ArrayList<>();
 
         for(Map.Entry<String, String> entity : params.entrySet()) {
@@ -54,33 +33,11 @@ public class RequestUtil {
 
         String queryHash = String.format("%0128x", new BigInteger(1, md.digest()));
 
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        String jwtToken = JWT.create()
-                .withClaim("access_key", accessKey)
-                .withClaim("nonce", UUID.randomUUID().toString())
-                .withClaim("query_hash", queryHash)
-                .withClaim("query_hash_alg", "SHA512")
-                .sign(algorithm);
-
-        String authenticationToken = "Bearer " + jwtToken;
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Authorization", authenticationToken);
-
-        HttpEntity<HashMap<String, String>> entity = new HttpEntity<>(params, headers);
-        UriComponents uri = UriComponentsBuilder.newInstance()
-                .scheme("https")
-                .host("api.upbit.com")
-                .path("/v1/orders")
-                .build(true);
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        return restTemplate.exchange(uri.toString(), HttpMethod.POST, entity, String.class);
+        return queryHash;
     }
 
-    public static ResponseEntity<String> getOrderInfo(String uuid) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+
+    private static String getQueryHash(String uuid) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         HashMap<String, String> params = new HashMap<>();
         params.put("uuid", uuid);
 
@@ -96,21 +53,35 @@ public class RequestUtil {
 
         String queryHash = String.format("%0128x", new BigInteger(1, md.digest()));
 
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        String jwtToken = JWT.create()
-                .withClaim("access_key", accessKey)
-                .withClaim("nonce", UUID.randomUUID().toString())
-                .withClaim("query_hash", queryHash)
-                .withClaim("query_hash_alg", "SHA512")
-                .sign(algorithm);
+        return queryHash;
+    }
 
-        String authenticationToken = "Bearer " + jwtToken;
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Authorization", authenticationToken);
+    public static ResponseEntity<String> sendGet(UriComponents uri){
+        HttpEntity<String> entity = new HttpEntity<String>("", getHeaders());
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, String.class);
+    }
 
-        HttpEntity<String> entity = new HttpEntity<String>("", headers);
+    public static ResponseEntity<String> sendOrder(HashMap<String, String> params) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        String queryHash = getQueryHash(params);
+
+        HttpEntity<HashMap<String, String>> entity = new HttpEntity<>(params, getHeaders(queryHash));
+        UriComponents uri = UriComponentsBuilder.newInstance()
+                .scheme("https")
+                .host("api.upbit.com")
+                .path("/v1/orders")
+                .build(true);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        return restTemplate.exchange(uri.toString(), HttpMethod.POST, entity, String.class);
+    }
+
+    public static ResponseEntity<String> getOrderInfo(String uuid) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+
+
+        HttpEntity<String> entity = new HttpEntity<String>("", getHeaders(queryHash));
         RestTemplate restTemplate = new RestTemplate();
 
         UriComponents uri = UriComponentsBuilder.newInstance()
@@ -139,21 +110,7 @@ public class RequestUtil {
 
         String queryHash = String.format("%0128x", new BigInteger(1, md.digest()));
 
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        String jwtToken = JWT.create()
-                .withClaim("access_key", accessKey)
-                .withClaim("nonce", UUID.randomUUID().toString())
-                .withClaim("query_hash", queryHash)
-                .withClaim("query_hash_alg", "SHA512")
-                .sign(algorithm);
-
-        String authenticationToken = "Bearer " + jwtToken;
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Authorization", authenticationToken);
-
-        HttpEntity<String> entity = new HttpEntity<String>("", headers);
+        HttpEntity<String> entity = new HttpEntity<String>("", getHeaders(queryHash));
         RestTemplate restTemplate = new RestTemplate();
 
         UriComponents uri = UriComponentsBuilder.newInstance()
