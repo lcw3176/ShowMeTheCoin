@@ -20,7 +20,7 @@ public class ClientConfig {
     @Bean
     public WebClient client() {
 
-        String baseUrl = "https://api.upbit.com/v1/";
+        String baseUrl = "https://api.upbit.com/v1";
 
         HttpClient httpClient = HttpClient.create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
