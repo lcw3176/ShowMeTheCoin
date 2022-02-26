@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.global.candles;
+package com.joebrooks.showmethecoin.infra.upbit.candles;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

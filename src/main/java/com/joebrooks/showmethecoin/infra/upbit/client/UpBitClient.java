@@ -1,5 +1,6 @@
-package com.joebrooks.showmethecoin.global.client;
+package com.joebrooks.showmethecoin.infra.upbit.client;
 
+import com.joebrooks.showmethecoin.infra.httpClient.ClientConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
@@ -14,13 +15,13 @@ import java.util.function.Supplier;
 
 @Component
 @RequiredArgsConstructor
-public class ClientRequest {
+public class UpBitClient {
+    private final String baseUrl = "https://api.upbit.com/v1";
+    private final ClientConfig client;
 
-    private final WebClient client;
-
-    public <T> List<LinkedHashMap<String, Object>> getAndReceiveList(String path, Class<T> clazz) {
+    public <T> List<LinkedHashMap<String, Object>> getToList(String path, Class<T> clazz) {
         try {
-            return client.get()
+            return client.getClient(baseUrl).get()
                     .uri(path)
                     .accept(MediaType.APPLICATION_JSON)
                     .acceptCharset(StandardCharsets.UTF_8)
@@ -36,7 +37,7 @@ public class ClientRequest {
 
     public  <T> T get(String path, Class<T> clazz) {
         try {
-            return client.get()
+            return client.getClient(baseUrl).get()
                     .uri(path)
                     .accept(MediaType.APPLICATION_JSON)
                     .acceptCharset(StandardCharsets.UTF_8)
@@ -53,7 +54,7 @@ public class ClientRequest {
 
     public  <T> T post(String path, Object body, Class<T> clazz, Supplier<T> onTimeout) {
         try{
-            return client.post()
+            return client.getClient(baseUrl).post()
                     .uri(path)
                     .accept(MediaType.APPLICATION_JSON)
                     .acceptCharset(StandardCharsets.UTF_8)
