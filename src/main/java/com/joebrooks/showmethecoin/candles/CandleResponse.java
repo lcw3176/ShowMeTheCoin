@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.infra.upbit.candles;
+package com.joebrooks.showmethecoin.candles;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Candle implements Comparable<Candle>{
+public class CandleResponse implements Comparable<CandleResponse>{
 
     @JsonProperty("market")
     private String market;
@@ -51,7 +51,7 @@ public class Candle implements Comparable<Candle>{
 
 
     @Override
-    public int compareTo(Candle o) {
+    public int compareTo(CandleResponse o) {
         if(this.getTimeStamp() > o.getTimeStamp()){
             return -1;
         } else if(this.getTradePrice() < o.getTimeStamp()){
