@@ -1,7 +1,6 @@
-package com.joebrooks.showmethecoin.presentation;
+package com.joebrooks.showmethecoin.strategy;
 
-import com.joebrooks.showmethecoin.application.indicator.IndicatorService;
-import com.joebrooks.showmethecoin.infra.upbit.coin.CoinType;
+import com.joebrooks.showmethecoin.common.upbit.CoinType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,10 +12,10 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/indicator")
-public class IndicatorController {
+@RequestMapping("/strategy")
+public class StrategyController {
 
-    private final IndicatorService indicatorService;
+    private final StrategyService strategyService;
 
     @GetMapping("/{detail}/{coinType}")
     public ResponseEntity getRsi(@PathVariable("detail") Optional<String> detail,
@@ -30,7 +29,7 @@ public class IndicatorController {
         });
 
 
-        return ResponseEntity.ok(indicatorService.execute(detail.get(), CoinType.valueOf(coinType.get().toUpperCase())));
+        return ResponseEntity.ok(strategyService.execute(detail.get(), CoinType.valueOf(coinType.get().toUpperCase())));
     }
 
 }

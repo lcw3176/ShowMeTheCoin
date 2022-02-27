@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.domain.indicator;
+package com.joebrooks.showmethecoin.strategy;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,5 +7,5 @@ import lombok.Getter;
 @Getter
 public class RSI {
     private double rsi;
-    private Recommend recommend;
+    private RecommendAction recommend; // fixme 제거
 }
