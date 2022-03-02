@@ -1,149 +1,139 @@
-<div class="box">
-    <div class="columns level">
-        <div class="column is-2 level-item has-text-centered">
-            <div>
-                <p class="heading">거래가격</p>
-                <p class="title is-5" id="tradePrice"></p>
-            </div>
-        </div>
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="commons/common-header"></th:block>
+</head>
+<body>
+<th:block th:replace="commons/common-navbar"></th:block>
 
-        <div class="column is-2 level-item has-text-centered">
-            <div>
-                <p class="heading">조회시간</p>
-                <p class="title is-5" id="time"></p>
-            </div>
-        </div>
+<div class="container is-fluid">
+    <div class="box">
 
-        <div class="column is-2 level-item has-text-centered">
-            <div>
-                <p class="heading">구매시 이득 확률</p>
-                <p class="title is-6" id="purchase"></p>
-            </div>
-        </div>
-
-        <div class="column is-2 level-item has-text-centered">
-            <div>
-                <p class="heading">판매시 이득 확률</p>
-                <p class="title is-6" id="sell"></p>
-            </div>
-        </div>
-
-        <div class="column is-2 level-item has-text-centered">
-            <div>
-                <p class="heading">추천</p>
-                <p class="title is-6" id="recommend"></p>
-            </div>
-        </div>
-    </div>
-
-    <div class="columns">
-        <div class="column has-text-right">
-            <div id="coin-dropdown" class="dropdown is-right">
-                <div class="dropdown-trigger">
-                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3" onclick="dropdownClick()">
-                        <span id="selected-coin">Select Coin</span>
-                        <span class="icon is-small">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
-            </span>
-                    </button>
-                </div>
-                <div class="dropdown-menu" id="dropdown-menu3" role="menu">
-                    <div class="dropdown-content">
-                        <a onclick="selectCoin(this.innerText)" class="dropdown-item">
-                            리플 / XRP
-                        </a>
-                        <a onclick="selectCoin(this.innerText)" class="dropdown-item">
-                            엘프 / ELF
-                        </a>
-                        <a onclick="selectCoin(this.innerText)" class="dropdown-item">
-                            골렘 / GLM
-                        </a>
-                        <a onclick="selectCoin(this.innerText)" class="dropdown-item">
-                            아르고 / AERGO
-                        </a>
-                        <a onclick="selectCoin(this.innerText)" class="dropdown-item">
-                            파워렛저 / POWER
-                        </a>
-                        <a onclick="selectCoin(this.innerText)" class="dropdown-item">
-                            도지 / DOGE
-                        </a>
-
-                        <a onclick="selectCoin(this.innerText)" class="dropdown-item">
-                            헌트 / HUNT
-                        </a>
-
-                        <a onclick="selectCoin(this.innerText)" class="dropdown-item">
-                            누사이퍼 / NU
-                        </a>
-
+        <div class="columns">
+            <div class="column is-3" style="overflow: auto; height: 600px;">
+                <div class="columns" th:each="coin : ${coinList}"   >
+                    <div class="column" >
+                        <label  th:id="${coin.code}" class="checkbox">
+                            <input type="checkbox" th:text="${coin.koreanName}"
+                                   th:attr="onclick=|checkCoin('${coin.code}', '${coin.koreanName}')|" >
+                        </label>
                     </div>
                 </div>
             </div>
+
+            <div class="column">
+                <article class="panel is-link">
+                    <p class="panel-heading">
+                        Coin
+                    </p>
+                    <p class="panel-tabs" id="coin-list">
+
+                    </p>
+
+                    <div class="panel-block">
+                        <label>선택한 코인 : </label>
+                        <label id="nowCoin">
+
+                        </label>
+                    </div>
+
+
+                    <div class="panel-block">
+                        <label>매수 추세 : </label>
+                        <label id="rsiStatus">
+
+                        </label>
+                    </div>
+
+                    <div class="panel-block">
+                        <label>매수 현황 : </label>
+                        <label id="rsi">
+
+                        </label>
+                    </div>
+
+                        <div class="panel-block">
+                            <label>가격 추세 : </label>
+                            <label id="priceStatus">
+
+                            </label>
+                        </div>
+                </article>
+            </div>
         </div>
     </div>
-
 </div>
 <script>
-    function dropdownClick(){
-        let elem = document.getElementById("coin-dropdown");
+    let selectedCoin = [];
+    let nowSelectedCoin = "";
 
-        if(elem.className === "dropdown is-right"){
-            elem.className = "dropdown is-active is-right";
-        } else {
-            elem.className = "dropdown is-right";
-        }
+    window.onload = function (){
+        loadCoinInfo();
     }
 
-    function selectCoin(text){
-        let info = text.split('/');
-
-        document.getElementById("selected-coin").innerText = info[0];
-
-        let xhr = new XMLHttpRequest();
-        let url = "http://localhost:8080/indicator/rsi/" + info[1].trim();
-
-
-        xhr.onreadystatechange = function (){
-            if(this.readyState === this.DONE && this.status === 200){
-                var json = JSON.parse(xhr.responseText);
-
-                setTradePrice(json.tradePrice);
-                setTime(json.dateKst);
-                setRecommend(json.detailInfo.recommend);
-                setPurchase(json.detailInfo.rsi);
-                setSell(json.detailInfo.rsi);
+    function checkCoin(coinCode, coinName){
+        if(document.getElementById(coinName)){
+            document.getElementById("coin-list")
+                .removeChild(document.getElementById(coinName));
+            selectedCoin.splice(selectedCoin.indexOf(coinCode), 1);
+        } else {
+            let elem = document.createElement("a");
+            elem.innerText = coinName;
+            elem.id = coinName;
+            elem.onclick = function (){
+                nowSelectedCoin = coinCode;
+                document.getElementById("rsiStatus").innerText = "";
+                document.getElementById("priceStatus").innerText = "";
             }
-        }
-        xhr.open("GET", url);
-        xhr.send();
-        dropdownClick();
-    }
-
-
-    function setTradePrice(price){
-        document.getElementById("tradePrice").innerText = price;
-    }
-
-    function setTime(time){
-        document.getElementById("time").innerText = time.replace('T', ' ');
-    }
-
-    function setRecommend(result){
-        if(result === "BUY" || result === "SELL"){
-            document.getElementById("recommend").className = "title is-6 has-text-danger";
-        } else {
-            document.getElementById("recommend").className = "title is-6";
+            document.getElementById("coin-list").appendChild(elem);
+            selectedCoin.push(coinCode);
         }
 
-        document.getElementById("recommend").innerText = result;
     }
 
-    function setPurchase(data){
-        document.getElementById("purchase").innerText = 100 - Math.floor(data * 100) + "%";
+    function loadCoinInfo(){
+        setInterval(function (){
+            if(nowSelectedCoin == ""){
+                return;
+            }
+
+            document.getElementById("nowCoin").innerText = nowSelectedCoin;
+            let xhr = new XMLHttpRequest();
+            let url = "http://localhost:8080/strategy/rsi-with-divergence/" + nowSelectedCoin;
+
+            xhr.onreadystatechange = function (){
+                if(this.readyState === this.DONE && this.status === 200){
+                    let json = JSON.parse(xhr.responseText);
+
+                    let rsi = "";
+                    let price = "";
+                    let total = "";
+
+                    if(json.rsiStatus === "FALLING"){
+                        rsi = "하락중"
+                    } else {
+                        rsi = "상승중"
+                    }
+
+                    if(json.priceStatus === "FALLING"){
+                        price = "하락중"
+                    } else {
+                        price = "상승중"
+                    }
+
+                    document.getElementById("rsi").innerText = json.mostRecentRsi;
+                    document.getElementById("rsiStatus").innerText = rsi;
+                    document.getElementById("priceStatus").innerText = price;
+                }
+            }
+            xhr.open("GET", url);
+            xhr.send();
+
+        }, 1000)
     }
 
-
-    function setSell(data){
-        document.getElementById("sell").innerText = 100 - (100 - Math.floor(data * 100)) + "%";
-    }
 </script>
+
+</body>
+</html>
