@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="commons/common-header"></th:block>
+
+    <script>
+        let url = "http://localhost:8080/auto"
+        function submitJSON() {
+            let xmlHttpRequest = new XMLHttpRequest();
+            let data = {
+                autoCommand: "RUN",
+                strategy: "rsi-with-divergence",
+                coinType: "XRP",
+            }
+
+            xmlHttpRequest.open("POST", url, true);
+            xmlHttpRequest.setRequestHeader("Content-Type", "application/json");
+            xmlHttpRequest.send(JSON.stringify(data));
+        }
+
+    </script>
+</head>
+<body>
+<th:block th:replace="commons/common-navbar"></th:block>
+
+<div class="container is-fluid">
+    <div class="container is-fluid">
+        <div class="box">
+            <button onclick="submitJSON()">시작</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
