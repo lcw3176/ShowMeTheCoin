@@ -7,3 +7,18 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+
+upbit:
+  default:
+    minute: 1
+    candle: 200
+  rsi:
+    day: 7
+  rmi:
+    day: 14
+    n : 5
+
+auto:
+  rsi:
+    buy: 10
+    sell : 70
