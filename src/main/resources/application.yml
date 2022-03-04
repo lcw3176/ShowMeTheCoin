@@ -9,9 +9,11 @@ spring:
     suffix: .html
 
 upbit:
-  default:
-    minute: 1
-    candle: 200
+  client:
+    timeout: 3000
+  candle:
+    minute: 15
+    count: 200
   rsi:
     day: 7
   rmi:
@@ -20,5 +22,8 @@ upbit:
 
 auto:
   rsi:
-    buy: 10
+    buy: 30
     sell : 70
+  rmi:
+    buy: 7
+    sell: 70
