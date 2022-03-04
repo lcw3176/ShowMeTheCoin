@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.strategy;
+package com.joebrooks.showmethecoin.global.graph;
 
 public enum GraphStatus {
     RISING,

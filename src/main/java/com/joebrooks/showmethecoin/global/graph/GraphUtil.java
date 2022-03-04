@@ -6,7 +6,7 @@ import lombok.experimental.UtilityClass;
 public class GraphUtil {
 
     public static GraphStatus getStatus(double firstValue, double secondValue){
-        return secondValue - firstValue > 0 ?
+        return secondValue - firstValue >= 0 ?
                 GraphStatus.RISING : GraphStatus.FALLING;
     }
 }
