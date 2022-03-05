@@ -21,6 +21,9 @@ public class OrderResponse {
     @JsonProperty("market")
     private String market;
 
+    @JsonProperty("avg_price")
+    private String avgPrice;
+
     @JsonProperty("created_at")
     private String createdAt;
 
