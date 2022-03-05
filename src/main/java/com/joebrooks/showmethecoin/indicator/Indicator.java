@@ -12,5 +12,7 @@ public class Indicator {
 
     private String name;
     private double value;
-    private GraphStatus status;
+    private GraphStatus highStatus;
+    private GraphStatus normalStatus;
+    private GraphStatus lowStatus;
 }
