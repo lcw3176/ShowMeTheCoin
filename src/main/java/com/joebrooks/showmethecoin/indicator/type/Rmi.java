@@ -76,7 +76,7 @@ public class Rmi implements IIndicator {
         return Indicator.builder()
                 .name(IndicatorType.RMI)
                 .value(rmi.get(0))
-                .status(GraphUtil.getStatus(rmi.get(1), rmi.get(0)))
+                .normalStatus(GraphUtil.getStatus(rmi.get(1), rmi.get(0)))
                 .build();
     }
 }

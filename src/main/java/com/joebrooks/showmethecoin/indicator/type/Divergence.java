@@ -12,12 +12,17 @@ public class Divergence implements IIndicator {
 
     @Override
     public Indicator execute(List<CandleResponse> candles) {
-        double firstPriceVal = candles.get(1).getTradePrice();
-        double secondPriceYVal =candles.get(0).getTradePrice();
+        double firstHighPrice = candles.get(2).getHighPrice();
+        double secondHighPrice =candles.get(1).getHighPrice();
+
+        double firstLowPrice = candles.get(2).getLowPrice();
+        double secondLowPrice =candles.get(1).getLowPrice();
+
 
         return Indicator.builder()
                 .name(IndicatorType.Divergence)
-                .status(GraphUtil.getStatus(firstPriceVal, secondPriceYVal))
+                .highStatus(GraphUtil.getStatus(firstHighPrice, secondHighPrice))
+                .lowStatus(GraphUtil.getStatus(firstLowPrice, secondLowPrice))
                 .build();
     }
 }

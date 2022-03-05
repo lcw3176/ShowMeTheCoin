@@ -74,7 +74,7 @@ public class Rsi implements IIndicator {
         return Indicator.builder()
                 .name(IndicatorType.RSI)
                 .value(rsiLst.get(0))
-                .status(GraphUtil.getStatus(firstRsiVal, secondRsiVal))
+                .normalStatus(GraphUtil.getStatus(firstRsiVal, secondRsiVal))
                 .build();
     }
 }
