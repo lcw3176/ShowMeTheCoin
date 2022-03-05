@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.order;
+package com.joebrooks.showmethecoin.global.upbit;
 
 public enum Side {
     // 매수
