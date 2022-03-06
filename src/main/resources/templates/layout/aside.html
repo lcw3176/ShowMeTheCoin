@@ -1,0 +1,49 @@
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="layout_aside">
+        <aside class="aside is-placed-left is-expanded">
+            <div class="aside-tools">
+                <div class="aside-tools-label">
+                    <span>Show Me The <b>Coin</b></span>
+                </div>
+            </div>
+            <div class="menu is-menu-main">
+                <p class="menu-label">일반</p>
+                <ul class="menu-list">
+                    <li>
+                        <a href="/dashboard" class="has-icon page-move">
+                            <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
+                            <span class="menu-item-label">개요</span>
+                        </a>
+                    </li>
+                </ul>
+                <p class="menu-label">코인</p>
+                <ul class="menu-list">
+                    <li>
+                        <a href="/trade-info" class="has-icon page-move">
+                            <span class="icon"><i class="mdi mdi-table"></i></span>
+                            <span class="menu-item-label">매매 기록</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/trade-setting" class="has-icon page-move">
+                            <span class="icon"><i class="mdi mdi-account-circle"></i></span>
+                            <span class="menu-item-label">거래 설정</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <script>
+            let tags = document.getElementsByClassName("page-move");
+
+            for(let i = 0; i < tags.length; i++){
+                if(tags[i].getAttribute("href") === window.location.pathname){
+                    tags[i].className += " is-active router-link-active";
+                    break;
+                }
+            }
+
+        </script>
+    </th:block>
+</html>

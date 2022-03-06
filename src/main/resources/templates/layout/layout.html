@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      class="has-aside-left has-aside-mobile-transition has-navbar-fixed-top has-aside-expanded">
+<head th:replace="layout/head :: layout_head">
+</head>
+<body class="nav-md">
+<div id="app">
+    <nav th:replace="~{layout/navBar :: layout_navBar}"></nav>
+
+    <aside th:replace="~{layout/aside :: layout_aside}"></aside>
+
+    <div layout:fragment="layout_content"></div>
+</div>
+
+</body>
+</html>
