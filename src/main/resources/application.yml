@@ -10,9 +10,9 @@ spring:
 
 upbit:
   client:
-    timeout: 3000
+    timeout: 2000
   candle:
-    minute: 15
+    minute: 1
     count: 200
   rsi:
     day: 7
@@ -22,8 +22,9 @@ upbit:
 
 auto:
   rsi:
-    buy: 30
-    sell : 70
+    buy: 35
+    sell: 50
   rmi:
     buy: 7
-    sell: 70
+    sell: 80
+
