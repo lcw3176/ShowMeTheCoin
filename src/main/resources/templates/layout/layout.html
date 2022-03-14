@@ -6,9 +6,9 @@
 </head>
 <body class="nav-md">
 <div id="app">
-    <nav th:replace="~{layout/navBar :: layout_navBar}"></nav>
+    <nav th:replace="layout/navBar :: layout_navBar"></nav>
 
-    <aside th:replace="~{layout/aside :: layout_aside}"></aside>
+    <aside th:replace="layout/aside :: layout_aside"></aside>
 
     <div layout:fragment="layout_content"></div>
 </div>
