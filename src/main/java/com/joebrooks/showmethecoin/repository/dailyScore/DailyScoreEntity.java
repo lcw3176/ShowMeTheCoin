@@ -21,7 +21,7 @@ public class DailyScoreEntity extends BaseTimeEntity {
     private Long id;
 
     @Column(name = "today_earn_price")
-    private long todayEarnPrice;
+    private double todayEarnPrice;
 
     @ManyToOne(targetEntity = UserEntity.class)
     @JoinColumn(name = "user_id")

@@ -46,6 +46,10 @@ public class UserEntity {
     private boolean isTrading;
 
 
+    public void changeBalance(double balance){
+        this.balance = balance;
+    }
+
     public void changeTradeStatus(boolean isTrading){
         this.isTrading = isTrading;
     }

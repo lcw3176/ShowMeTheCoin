@@ -23,6 +23,13 @@ public class UserService {
         return userRepository.findByUserId(id);
     }
 
+    public void allUserStop(){
+        userRepository.findAll().forEach(i -> {
+            i.changeTradeStatus(false);
+
+            userRepository.save(i);
+        });
+    }
     public void save(UserEntity user){
         userRepository.save(user);
     }

@@ -23,22 +23,23 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.projectreactor:reactor-spring:1.0.1.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    // 타임리프 레이아웃
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
+
+    // upbit
     implementation 'com.google.code.gson:gson:2.7'
+    implementation 'com.auth0:java-jwt:3.18.2'
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
-
+    // 데이터베이스
+    implementation  'com.h2database:h2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-    // https://mvnrepository.com/artifact/com.auth0/java-jwt
-    implementation 'com.auth0:java-jwt:3.18.2'
-
-    // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
-    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
-
 }
 
 test {

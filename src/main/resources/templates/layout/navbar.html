@@ -17,14 +17,14 @@
                     <div class="navbar-item has-dropdown has-dropdown-with-icons has-divider has-user-avatar is-hoverable">
                         <a class="navbar-link is-arrowless">
                             <div class="is-user-avatar">
-                                <img src="https://avatars.dicebear.com/v2/initials/joe-brooks.svg">
+                                <img th:src="'https://avatars.dicebear.com/v2/initials/' + ${session.userId} + '.svg'">
                             </div>
-                            <div class="is-user-name"><span>Joe Brooks</span></div>
+                            <div class="is-user-name"><span th:text="${session.userId}"></span></div>
                             <span class="icon"><i class="mdi mdi-chevron-down"></i></span>
                         </a>
                         <div class="navbar-dropdown">
                             <hr class="navbar-divider">
-                            <a class="navbar-item">
+                            <a class="navbar-item" href="/logout">
                                 <span class="icon"><i class="mdi mdi-logout"></i></span>
                                 <span>로그아웃</span>
                             </a>
@@ -33,5 +33,7 @@
                 </div>
             </div>
         </nav>
+
+
     </th:block>
 </html>

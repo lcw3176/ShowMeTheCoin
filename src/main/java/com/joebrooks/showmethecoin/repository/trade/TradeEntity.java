@@ -33,10 +33,10 @@ public class TradeEntity extends BaseTimeEntity {
     private TradeResult tradeResult;
 
     @Column(name = "buy_price")
-    private long buyPrice;
+    private double buyPrice;
 
     @Column(name = "sell_price")
-    private long sellPrice;
+    private double sellPrice;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

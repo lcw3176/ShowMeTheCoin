@@ -2,179 +2,113 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layout/layout">
 <th:block layout:fragment="layout_content">
+  <script th:inline="javascript">
+    /*<![CDATA[*/
 
-<section class="hero is-hero-bar">
-  <div class="hero-body">
-    <div class="level">
-      <div class="level-left">
-        <div class="level-item"><h1 class="title">
-          거래 설정
-        </h1></div>
-      </div>
-      <div class="level-right" style="display: none;">
-        <div class="level-item"></div>
-      </div>
-    </div>
-  </div>
-</section>
+    let message = [[${result}]];
+
+    if(message === "success"){
+      alert("저장되었습니다");
+    } else if(message === "failed"){
+      alert("저장에 실패했습니다.");
+    }
+
+    /*]]>*/
+  </script>
 <section class="section is-main-section">
-  <div class="tile is-ancestor">
-    <div class="tile is-parent">
-      <div class="card tile is-child">
-        <header class="card-header">
-          <p class="card-header-title">
-            <span class="icon"><i class="mdi mdi-account-circle default"></i></span>
-            Edit Profile
-          </p>
-        </header>
-        <div class="card-content">
-          <form>
-            <div class="field is-horizontal">
-              <div class="field-label is-normal"><label class="label">Avatar</label></div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="field file">
-                    <label class="upload control">
-                      <a class="button is-primary">
-                        <span class="icon"><i class="mdi mdi-upload default"></i></span>
-                        <span>Pick a file</span>
-                      </a>
-                      <input type="file">
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <hr>
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">Name</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <input type="text" autocomplete="on" name="name" value="John Doe" class="input" required>
-                  </div>
-                  <p class="help">Required. Your name</p>
-                </div>
-              </div>
-            </div>
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">E-mail</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <input type="email" autocomplete="on" name="email" value="user@example.com" class="input" required>
-                  </div>
-                  <p class="help">Required. Your e-mail</p>
-                </div>
-              </div>
-            </div>
-            <hr>
-            <div class="field is-horizontal">
-              <div class="field-label is-normal"></div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <button type="submit" class="button is-primary">
-                      Submit
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    <div class="tile is-parent">
-      <div class="card tile is-child">
-        <header class="card-header">
-          <p class="card-header-title">
-            <span class="icon"><i class="mdi mdi-account default"></i></span>
-            Profile
-          </p>
-        </header>
-        <div class="card-content">
-          <div class="is-user-avatar image has-max-width is-aligned-center">
-            <img src="https://avatars.dicebear.com/v2/initials/john-doe.svg" alt="John Doe">
-          </div>
-          <hr>
-          <div class="field">
-            <label class="label">Name</label>
-            <div class="control is-clearfix">
-              <input type="text" readonly value="John Doe" class="input is-static">
-            </div>
-          </div>
-          <hr>
-          <div class="field">
-            <label class="label">E-mail</label>
-            <div class="control is-clearfix">
-              <input type="text" readonly value="user@example.com" class="input is-static">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
   <div class="card">
     <header class="card-header">
       <p class="card-header-title">
         <span class="icon"><i class="mdi mdi-lock default"></i></span>
-        Change Password
+        거래 설정
       </p>
     </header>
     <div class="card-content">
-      <form>
+      <form action="/trade-setting" method="post">
         <div class="field is-horizontal">
           <div class="field-label is-normal">
-            <label class="label">Current password</label>
+            <label class="label">거래 코인</label>
           </div>
           <div class="field-body">
-            <div class="field">
+            <div class="field is-narrow">
               <div class="control">
-                <input type="password" name="password_current" autocomplete="current-password" class="input" required>
+                <div class="select is-fullwidth">
+                  <select name="tradeCoin">
+                    <option th:each="coin : ${coinList}" th:if="${coin.equals(userInfo.tradeCoin)}"
+                            th:text="${coin.koreanName}" selected></option>
+
+                    <option th:each="coin : ${coinList}" th:unless="${coin.equals(userInfo.tradeCoin)}"
+                            th:text="${coin.koreanName}"></option>
+                  </select>
+                </div>
               </div>
-              <p class="help">Required. Your current password</p></div>
-          </div>
-        </div>
-        <hr>
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">New password</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <input type="password" autocomplete="new-password" name="password" class="input" required>
-              </div>
-              <p class="help">Required. New password</p>
-            </div>
-          </div>
-        </div>
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">Confirm password</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <input type="password" autocomplete="new-password" name="password_confirmation" class="input" required>
-              </div>
-              <p class="help">Required. New password one more time</p>
             </div>
           </div>
         </div>
         <hr>
+
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">현재 원화 잔고</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <input type="number" th:value="${userInfo.balance}" class="input" readonly>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">시작 가격</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <input type="number" name="startPrice" class="input" th:value="${userInfo.startPrice}" required>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">마지막 가격</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <input type="number" name="lastPrice" th:value="${userInfo.lastPrice}" class="input" required>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">분할 횟수</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <input type="number" name="divideCount" class="input" th:value="${userInfo.divideCount}" required>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+
         <div class="field is-horizontal">
           <div class="field-label is-normal"></div>
           <div class="field-body">
             <div class="field">
               <div class="control">
                 <button type="submit" class="button is-primary">
-                  Submit
+                  저장
                 </button>
               </div>
             </div>

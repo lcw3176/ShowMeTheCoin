@@ -4,15 +4,43 @@ server:
       charset: UTF-8
 
 spring:
+  datasource:
+    url: jdbc:h2:file:./maindb;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
 
+#  mail:
+#    host: smtp.naver.com
+#    port: 465
+#    username: 이메일
+#    password: 비번
+#    receiver: 붐척이메일
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          ssl:
+#            enable: true
+#            trust: smtp.naver.com
+#          starttls:
+#            enable: true
 upbit:
   client:
-    timeout: 2000
+    timeout: 3000
   candle:
-    minute: 1
+    minute: 5
     count: 200
   rsi:
     day: 7
@@ -22,9 +50,9 @@ upbit:
 
 auto:
   rsi:
-    buy: 35
-    sell: 50
+    buy: 30
+    sell : 65
   rmi:
     buy: 7
-    sell: 80
+    sell: 70
 
