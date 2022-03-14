@@ -198,7 +198,7 @@ public class AutoRoutine {
         }
     }
 
-    @Scheduled(cron = "0 30 10 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 9 * * *", zone = "Asia/Seoul")
     public void computeBalance(){
 
         if(autoCommand.equals(AutoCommand.STOP)){
