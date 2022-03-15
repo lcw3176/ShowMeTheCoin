@@ -36,6 +36,10 @@ public class CheckOrderResponse {
     // 거래에 사용중인 비용
     @JsonProperty("locked")
     private String locked;
+    
+    // 사용된 수수료
+    @JsonProperty("paid_fee")
+    private String paidFee;
 
     // 해당 주문에 걸린 체결 수
     @JsonProperty("trade_count")
