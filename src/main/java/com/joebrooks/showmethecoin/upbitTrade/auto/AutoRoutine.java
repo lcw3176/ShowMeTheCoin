@@ -2,11 +2,8 @@ package com.joebrooks.showmethecoin.upbitTrade.auto;
 
 import com.joebrooks.showmethecoin.global.graph.GraphStatus;
 import com.joebrooks.showmethecoin.global.log.LoggingService;
-import com.joebrooks.showmethecoin.global.routine.mail.ReportSender;
 import com.joebrooks.showmethecoin.global.trade.TradeResult;
 import com.joebrooks.showmethecoin.global.trade.TradeStatus;
-import com.joebrooks.showmethecoin.repository.dailyScore.DailyScoreEntity;
-import com.joebrooks.showmethecoin.repository.dailyScore.DailyScoreService;
 import com.joebrooks.showmethecoin.repository.trade.TradeEntity;
 import com.joebrooks.showmethecoin.repository.trade.TradeService;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
@@ -35,9 +32,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.mail.MessagingException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,7 +51,6 @@ public class AutoRoutine {
     private final CandleService candleService;
     private final TradeService tradeService;
     private final UserService userService;
-    private final DailyScoreService dailyScoreService;
 
     @Value("${auto.rsi.buy}")
     private int buy;
@@ -198,44 +192,15 @@ public class AutoRoutine {
         }
     }
 
-    @Scheduled(cron = "0 0 9 * * *", zone = "Asia/Seoul")
-    public void computeBalance(){
 
-        if(autoCommand.equals(AutoCommand.STOP)){
-            return;
-        }
-
-
-        List<TradeEntity> tradeEntities =
-                tradeService.getTradeLogs(user,
-                        LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusDays(1),
-                        LocalDateTime.now(ZoneId.of("Asia/Seoul")));
-
-        double buy = 0D;
-        double sell = 0D;
-
-        for (TradeEntity tradeEntity : tradeEntities) {
-            buy += tradeEntity.getBuyPrice();
-            sell += tradeEntity.getSellPrice();
-        }
-
-        dailyScoreService.addScore(DailyScoreEntity.builder()
-                .todayEarnPrice(sell - buy)
-                .userId(user)
-                .build());
-
-    }
-
-
-    @Scheduled(cron = "0 */30 * * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 */30 * * * *")
     public void orderManager(){
         if(autoCommand.equals(AutoCommand.STOP)){
             return;
         }
 
         Page<TradeEntity> pages = tradeService.getTradeLogs(user, 0);
-        List<CheckOrderResponse> responses = orderService.checkOrder(
-                        CheckOrderRequest.builder()
+        List<CheckOrderResponse> responses = orderService.checkOrder(CheckOrderRequest.builder()
                                 .state(TradeStatus.DONE.toString().toLowerCase())
                                 .build());
 
