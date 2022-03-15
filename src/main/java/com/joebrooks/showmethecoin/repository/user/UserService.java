@@ -24,7 +24,7 @@ public class UserService {
         return userRepository.findByUserId(id);
     }
 
-    public void allUserStop(){
+    public void stopAllUsersTrade(){
         userRepository.findAll().forEach(i -> {
             i.changeTradeStatus(false);
 
