@@ -27,13 +27,40 @@ public class TradeInfoController {
 
     @GetMapping
     public String showTradeInfo(@RequestParam(value = "command", defaultValue = "", required = false) String command,
+                                @RequestParam(value = "next", defaultValue = "", required = false) String next,
                                 Model model,
                                 HttpSession session) {
 
         String userId = (String)session.getAttribute("userId");
+
+        if(session.getAttribute("userPage") == null){
+            session.setAttribute("userPage", 0);
+        }
+
+
         UserEntity user = userService.getUser(userId).orElseThrow(IllegalAccessError::new);
 
-        List<TradeEntity> lst = tradeService.getTradeLogs(user, 0).getContent();
+        int page = Integer.parseInt(session.getAttribute("userPage").toString());
+
+        if(next.equals("true")){
+            page += 1;
+        } else if(next.equals("false")){
+            page -= 1;
+        }
+
+        if(page < 0){
+            page = 0;
+        }
+
+
+
+        List<TradeEntity> lst = tradeService.getTradeLogs(user, page).getContent();
+
+        if(lst.size() < 10){
+            page -= 1;
+        }
+
+        session.setAttribute("userPage", page);
 
         if(command.equals(AutoCommand.RUN.toString().toLowerCase())){
             autoService.execute(AutoCommand.RUN);
