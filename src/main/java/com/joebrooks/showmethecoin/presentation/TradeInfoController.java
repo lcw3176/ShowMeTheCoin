@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Controller
@@ -30,17 +29,21 @@ public class TradeInfoController {
     public String showTradeInfo(@RequestParam(value = "command", defaultValue = "", required = false) String command,
                                 Model model,
                                 HttpSession session) {
+
         String userId = (String)session.getAttribute("userId");
-        UserEntity user = userService.getUser(userId).get();
+        UserEntity user = userService.getUser(userId).orElseThrow(IllegalAccessError::new);
+
         List<TradeEntity> lst = tradeService.getTradeLogs(user, 0).getContent();
 
         if(command.equals(AutoCommand.RUN.toString().toLowerCase())){
-            autoService.execute(AutoCommand.RUN, user);
+            autoService.execute(AutoCommand.RUN);
             user.changeTradeStatus(true);
+
             userService.save(user);
         } else if(command.equals(AutoCommand.STOP.toString().toLowerCase())){
-            autoService.execute(AutoCommand.STOP, user);
+            autoService.execute(AutoCommand.STOP);
             user.changeTradeStatus(false);
+
             userService.save(user);
         }
 
