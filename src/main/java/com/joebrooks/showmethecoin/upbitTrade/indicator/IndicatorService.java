@@ -1,14 +1,12 @@
 package com.joebrooks.showmethecoin.upbitTrade.indicator;
 
 import com.joebrooks.showmethecoin.upbitTrade.candles.CandleResponse;
-import com.joebrooks.showmethecoin.upbitTrade.indicator.type.IndicatorType;
-import com.joebrooks.showmethecoin.upbitTrade.upbit.CoinType;
 import com.joebrooks.showmethecoin.upbitTrade.indicator.type.IIndicator;
+import com.joebrooks.showmethecoin.upbitTrade.indicator.type.IndicatorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -16,31 +14,10 @@ import java.util.List;
 public class IndicatorService {
 
     private final ApplicationContext context;
-//    private final CandleService candleService;
-//candleService.getCandles(coinType)
-    public List<Indicator> execute(List<IndicatorType> indicators, List<CandleResponse> candles) {
 
-        List<Indicator> ls = new LinkedList<>();
+    public Indicator execute(IndicatorType indicator, List<CandleResponse> candles) {
+        IIndicator iIndicator = (IIndicator) context.getBean(indicator.toString());
 
-        indicators.forEach(i -> {
-            IIndicator iIndicator = (IIndicator) context.getBean(i.toString());
-
-            ls.add(iIndicator.execute(candles));
-        });
-//        if(!indicators.contains(",")){
-//            IIndicator iIndicator = (IIndicator) context.getBean(indicators);
-//
-//            ls.add(iIndicator.execute(candles));
-//
-//        } else {
-//            String[] indArr = indicators.split(",");
-//
-//            for(String i : indArr){
-//                IIndicator iIndicator = (IIndicator) context.getBean(i);
-//                ls.add(iIndicator.execute(candles));
-//            }
-//        }
-
-        return ls;
+        return iIndicator.execute(candles);
     }
 }
