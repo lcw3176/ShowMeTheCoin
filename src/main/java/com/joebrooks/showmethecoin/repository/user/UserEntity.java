@@ -36,11 +36,8 @@ public class UserEntity {
     @Column(name = "start_price")
     private double startPrice;
 
-    @Column(name = "last_price")
-    private double lastPrice;
-
-    @Column(name = "divide_count")
-    private long divideCount;
+    @Column(name = "now_level")
+    private int nowLevel;
 
     @Column(name = "is_trading")
     private boolean isTrading;
@@ -52,5 +49,17 @@ public class UserEntity {
 
     public void changeTradeStatus(boolean isTrading){
         this.isTrading = isTrading;
+    }
+
+    public void changeTradeCoin(CoinType tradeCoin){
+        this.tradeCoin = tradeCoin;
+    }
+
+    public void changeLevel(int nowLevel){
+        this.nowLevel = nowLevel;
+    }
+
+    public void changeStartPrice(double startPrice){
+        this.startPrice = startPrice;
     }
 }
