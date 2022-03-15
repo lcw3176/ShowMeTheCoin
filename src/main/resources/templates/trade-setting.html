@@ -35,10 +35,10 @@
                 <div class="select is-fullwidth">
                   <select name="tradeCoin">
                     <option th:each="coin : ${coinList}" th:if="${coin.equals(userInfo.tradeCoin)}"
-                            th:text="${coin.koreanName}" selected></option>
+                            th:text="${coin.koreanName}" th:value="${coin.toString()}" selected></option>
 
                     <option th:each="coin : ${coinList}" th:unless="${coin.equals(userInfo.tradeCoin)}"
-                            th:text="${coin.koreanName}"></option>
+                            th:text="${coin.koreanName}" th:value="${coin.toString()}"></option>
                   </select>
                 </div>
               </div>
@@ -74,33 +74,6 @@
             </div>
           </div>
         </div>
-
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">마지막 가격</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <input type="number" name="lastPrice" th:value="${userInfo.lastPrice}" class="input" required>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">분할 횟수</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <input type="number" name="divideCount" class="input" th:value="${userInfo.divideCount}" required>
-              </div>
-            </div>
-          </div>
-        </div>
-        <hr>
 
         <div class="field is-horizontal">
           <div class="field-label is-normal"></div>
