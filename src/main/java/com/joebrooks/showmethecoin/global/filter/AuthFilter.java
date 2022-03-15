@@ -2,12 +2,19 @@ package com.joebrooks.showmethecoin.global.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.PatternMatchUtils;
+import org.springframework.web.util.ContentCachingRequestWrapper;
+import org.springframework.web.util.ContentCachingResponseWrapper;
+import org.springframework.web.util.WebUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 public class AuthFilter implements Filter {
@@ -24,7 +31,25 @@ public class AuthFilter implements Filter {
                 HttpSession session = httpRequest.getSession(false);
 
                 if (session == null || session.getAttribute("userId") == null) {
-                    log.info("미인증 사용자 요청: {}, {}", requestURI, httpRequest.getRemoteAddr());
+                    ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper((HttpServletRequest) request);
+                    ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) response);
+
+                    log.info("\n미인증 사용자 요청" +
+                                    "\n[REQUEST] {} " +
+                                    "\n[PATH] {} " +
+                                    "\n[IP] {}" +
+                                    "\n[STATUS] {}" +
+                                    "\nHeaders : {}" +
+                                    "\nRequest : {}" +
+                                    "\nResponse : {}\n",
+                            ((HttpServletRequest) request).getMethod(),
+                            ((HttpServletRequest) request).getRequestURI(),
+                            httpRequest.getRemoteAddr(),
+                            responseWrapper.getStatus(),
+                            getHeaders((HttpServletRequest) request),
+                            getRequestBody(requestWrapper),
+                            getResponseBody(responseWrapper));
+
                     httpResponse.sendRedirect("/login");
                     return;
                 }
@@ -35,6 +60,7 @@ public class AuthFilter implements Filter {
             ((HttpServletResponse) response).addHeader("Expires", "0");
 
             chain.doFilter(request, response);
+
         } catch (Exception e) {
             throw e;
         }
@@ -42,6 +68,43 @@ public class AuthFilter implements Filter {
 
     private boolean isLoginCheckPath(String requestURI) {
         return !PatternMatchUtils.simpleMatch(whitelist, requestURI);
+    }
+
+
+    private Map getHeaders(HttpServletRequest request) {
+        Map headerMap = new HashMap<>();
+
+        Enumeration headerArray = request.getHeaderNames();
+        while (headerArray.hasMoreElements()) {
+            String headerName = (String) headerArray.nextElement();
+            headerMap.put(headerName, request.getHeader(headerName));
+        }
+        return headerMap;
+    }
+
+    private String getRequestBody(ContentCachingRequestWrapper request) {
+        ContentCachingRequestWrapper wrapper = WebUtils.getNativeRequest(request, ContentCachingRequestWrapper.class);
+        if (wrapper != null) {
+            byte[] buf = wrapper.getContentAsByteArray();
+            if (buf.length > 0) {
+                return new String(buf, 0, buf.length, StandardCharsets.UTF_8);
+            }
+        }
+        return " - ";
+    }
+
+    private String getResponseBody(final HttpServletResponse response) throws IOException {
+        String payload = null;
+        ContentCachingResponseWrapper wrapper =
+                WebUtils.getNativeResponse(response, ContentCachingResponseWrapper.class);
+        if (wrapper != null) {
+            byte[] buf = wrapper.getContentAsByteArray();
+            if (buf.length > 0) {
+                payload = new String(buf, 0, buf.length, StandardCharsets.UTF_8);
+                wrapper.copyBodyToResponse();
+            }
+        }
+        return null == payload ? " - " : payload;
     }
 
 }
