@@ -2,6 +2,7 @@ package com.joebrooks.showmethecoin.upbitTrade.auto;
 
 import com.joebrooks.showmethecoin.global.exception.type.AutomationException;
 import com.joebrooks.showmethecoin.global.graph.GraphStatus;
+import com.joebrooks.showmethecoin.repository.user.UserService;
 import com.joebrooks.showmethecoin.upbitTrade.account.AccountResponse;
 import com.joebrooks.showmethecoin.upbitTrade.account.AccountService;
 import com.joebrooks.showmethecoin.upbitTrade.candles.CandleResponse;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +37,7 @@ public class AutoTrade {
     private final AccountService accountService;
     private final OrderService orderService;
     private final CandleService candleService;
+    private final UserService userService;
 
     @Value("${auto.rsi.buy}")
     private int buy;
@@ -42,9 +45,6 @@ public class AutoTrade {
     @Value("${auto.rsi.sell}")
     private int sell;
 
-    private final double initCashValue = 10000D;
-    private double minCash = initCashValue;
-    private double weight = 0.1D;
     private boolean isAvailable = true;
 
     private final double initValue = 100000000D;
@@ -52,7 +52,6 @@ public class AutoTrade {
     private CandleResponse lastTradeCandle = null;
 
 
-    private final CoinType coinType = CoinType.WAVES;
     private final IndicatorType rsiIndicator = IndicatorType.RSI;
     private final IndicatorType divergenceIndicator = IndicatorType.Divergence;
 
@@ -65,81 +64,94 @@ public class AutoTrade {
     @Scheduled(fixedDelay = 3000)
     public void mainAutomationRoutine() throws AutomationException {
 
-        try{
+        try {
+
             if(autoCommand.equals(AutoCommand.STOP) || !isAvailable){
                 return;
             }
 
-            List<CandleResponse> candles = candleService.getCandles(coinType);
-            Indicator rsi = indicatorService.execute(rsiIndicator, candles);
-            Indicator divergence = indicatorService.execute(divergenceIndicator, candles);
 
-            CandleResponse nowCandle = candles.get(0);
+            userService.getAllUser().forEach(user -> {
+                CoinType coinType = user.getTradeCoin();
+                double startPrice = user.getStartPrice();
+                int nowLevel = user.getNowLevel();
 
-            if(rsi.getValue() <= buy
-                    && rsi.getStatus().equals(GraphStatus.STRONG_RISING)
-                    && divergence.getStatus().equals(GraphStatus.FALLING)
-                    && (lastTradeCandle == null || !nowCandle.getDateKst().equals(lastTradeCandle.getDateKst())) ){
+                double minCash = startPrice + 1000 * nowLevel;
 
-                AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
-                        .filter(data -> data.getCurrency().equals("KRW"))
-                        .findFirst()
-                        .orElseThrow(() ->{
-                            throw new RuntimeException("계좌 정보가 없습니다");
-                        });
+                List<CandleResponse> candles = candleService.getCandles(coinType);
+                Indicator rsi = indicatorService.execute(rsiIndicator, candles);
+                Indicator divergence = indicatorService.execute(divergenceIndicator, candles);
 
-                double myBalance = Math.ceil(Double.parseDouble(accountResponse.getBalance())) ;
+                CandleResponse nowCandle = candles.get(0);
 
-                if(myBalance > minCash && nowCandle.getTradePrice() < lastTradePrice){
-                    double coinVolume = minCash / nowCandle.getTradePrice();
+                if(rsi.getValue() <= buy
+                        && rsi.getStatus().equals(GraphStatus.STRONG_RISING)
+                        && divergence.getStatus().equals(GraphStatus.FALLING)
+                        && (lastTradeCandle == null || !nowCandle.getDateKst().equals(lastTradeCandle.getDateKst())) ){
 
-                    OrderRequest orderRequest = OrderRequest.builder()
-                            .market(coinType.getName())
-                            .side(Side.bid)
-                            .price(Double.toString(nowCandle.getTradePrice()))
-                            .volume(Double.toString(coinVolume))
-                            .ordType(OrderType.limit)
-                            .build();
+                    AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
+                            .filter(data -> data.getCurrency().equals("KRW"))
+                            .findFirst()
+                            .orElseThrow(() ->{
+                                throw new RuntimeException("계좌 정보가 없습니다");
+                            });
 
-                    orderService.requestOrder(orderRequest);
+                    double myBalance = Math.ceil(Double.parseDouble(accountResponse.getBalance())) ;
 
-                    log.info("{}: 매수 {}", coinType.getKoreanName(), nowCandle.getTradePrice());
 
-                    lastTradePrice = nowCandle.getTradePrice();
-                    lastTradeCandle = nowCandle;
+                    if(myBalance > minCash && nowCandle.getTradePrice() < lastTradePrice){
+                        double coinVolume = minCash / nowCandle.getTradePrice();
 
-                    minCash = initCashValue + (weight * initCashValue);
-                    weight += 0.1D;
+                        OrderRequest orderRequest = OrderRequest.builder()
+                                .market(coinType.getName())
+                                .side(Side.bid)
+                                .price(Double.toString(nowCandle.getTradePrice()))
+                                .volume(BigDecimal.valueOf(coinVolume).toString())
+                                .ordType(OrderType.limit)
+                                .build();
+
+                        orderService.requestOrder(orderRequest);
+
+                        log.info("{}: 매수 {}", coinType.getKoreanName(), nowCandle.getTradePrice());
+
+                        lastTradePrice = nowCandle.getTradePrice();
+                        lastTradeCandle = nowCandle;
+                        user.changeLevel(user.getNowLevel() + 1);
+                        userService.save(user);
+                    }
+
                 }
 
-            }
+                if(rsi.getValue() >= sell){
 
-            if(rsi.getValue() >= sell){
+                    AccountResponse coinResponse = Arrays.stream(accountService.getAccountData())
+                            .filter(data -> data.getCurrency().equals(coinType.getName().split("-")[1]))
+                            .findFirst()
+                            .orElse(AccountResponse.builder().balance("0").build());
 
-                AccountResponse coinResponse = Arrays.stream(accountService.getAccountData())
-                        .filter(data -> data.getCurrency().equals(coinType.getName().split("-")[1]))
-                        .findFirst()
-                        .orElse(AccountResponse.builder().balance("0").build());
+                    double coinBalance = Double.parseDouble(coinResponse.getBalance());
 
-                double coinBalance = Double.parseDouble(coinResponse.getBalance());
+                    if(coinBalance > 0){
+                        OrderRequest orderRequest = OrderRequest.builder()
+                                .market(coinType.getName())
+                                .side(Side.ask)
+                                .price(Double.toString(nowCandle.getTradePrice()))
+                                .volume(BigDecimal.valueOf(coinBalance).toString())
+                                .ordType(OrderType.limit)
+                                .build();
 
-                if(coinBalance > 0){
-                    OrderRequest orderRequest = OrderRequest.builder()
-                            .market(coinType.getName())
-                            .side(Side.ask)
-                            .price(Double.toString(nowCandle.getTradePrice()))
-                            .volume(Double.toString(coinBalance))
-                            .ordType(OrderType.limit)
-                            .build();
+                        orderService.requestOrder(orderRequest);
 
-                    orderService.requestOrder(orderRequest);
-
-                    log.info("{}: 매도 {}", coinType.getKoreanName(), nowCandle.getTradePrice());
-                    lastTradePrice = initValue;
-                    minCash = initCashValue;
-                    weight = 0.1D;
+                        log.info("{}: 매도 {}", coinType.getKoreanName(), nowCandle.getTradePrice());
+                        lastTradePrice = initValue;
+                        user.changeLevel(1);
+                        userService.save(user);
+                    }
                 }
-            }
+
+            });
+
+
 
         } catch (ReadTimeoutException e){
             log.info("타임아웃");
