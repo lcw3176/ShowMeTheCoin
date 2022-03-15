@@ -1,5 +1,6 @@
 package com.joebrooks.showmethecoin.presentation;
 
+import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.repository.user.UserService;
 import com.joebrooks.showmethecoin.upbitTrade.upbit.CoinType;
 import lombok.Data;
@@ -31,7 +32,16 @@ public class TradeSettingController {
     }
 
     @PostMapping
-    public String saveUserSetting(@ModelAttribute TradeResponse body){
+    public String saveUserSetting(@ModelAttribute TradeResponse body, HttpSession session){
+        String userId = session.getAttribute("userId").toString();
+        UserEntity user = userService.getUser(userId).orElseThrow(() ->{
+            throw new IllegalAccessError();
+        });
+
+        user.changeTradeCoin(body.getTradeCoin());
+        user.changeStartPrice(body.getStartPrice());
+
+        userService.save(user);
 
         return "redirect:/trade-setting?result=success";
     }
@@ -39,9 +49,7 @@ public class TradeSettingController {
 
     @Data
     public class TradeResponse {
-        private String tradeCoin;
-        private long divideCount;
+        private CoinType tradeCoin;
         private double startPrice;
-        private double lastPrice;
     }
 }
