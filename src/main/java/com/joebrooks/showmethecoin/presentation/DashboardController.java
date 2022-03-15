@@ -30,19 +30,20 @@ public class DashboardController {
     @GetMapping("/dashboard")
     public String showDashboard(Model model, HttpSession session){
         String id = (String)session.getAttribute("userId");
-        long revenue = 0L;
 
-        UserEntity user = userService.getUser(id).get();
+        userService.getUser(id).ifPresent((user) -> {
+            List<DailyScoreEntity> lst = dailyScoreService.getScore(user);
+            long revenue = 0L;
 
-        List<DailyScoreEntity> lst = dailyScoreService.getScore(user);
+            for (DailyScoreEntity dailyScore : lst) {
+                revenue += dailyScore.getTodayEarnPrice();
+            }
 
-        for(int i = 0; i < lst.size(); i++){
-            revenue += lst.get(i).getTodayEarnPrice();
-        }
+            model.addAttribute("balance",  (long)user.getBalance());
+            model.addAttribute("revenue", revenue);
+            model.addAttribute("daily", lst);
+        });
 
-        model.addAttribute("balance", user.getBalance());
-        model.addAttribute("revenue", revenue);
-        model.addAttribute("daily", lst);
 
         return "dashboard";
     }
