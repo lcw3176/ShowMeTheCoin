@@ -1,6 +1,6 @@
 package com.joebrooks.showmethecoin.presentation;
 
-import com.joebrooks.showmethecoin.global.routine.mail.ReportSender;
+import com.joebrooks.showmethecoin.global.exception.type.LoginException;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.repository.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import java.security.NoSuchAlgorithmException;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,13 +31,12 @@ public class LoginController {
                             @RequestParam("pw") String pw,
                             HttpSession session) throws NoSuchAlgorithmException {
 
-        Optional<UserEntity> user = userService.login(id, pw);
-        if(user.isPresent()){
-            session.setAttribute("userId", user.get().getUserId());
+        UserEntity user = userService.login(id, pw).orElseThrow(() -> {
+                    throw new LoginException(id, pw);
+                });
 
-            return "redirect:/dashboard";
-        }
+        session.setAttribute("userId", user.getUserId());
 
-        return "login";
+        return "redirect:/dashboard";
     }
 }
