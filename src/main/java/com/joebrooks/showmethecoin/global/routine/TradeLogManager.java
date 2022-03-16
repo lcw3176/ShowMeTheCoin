@@ -68,7 +68,7 @@ public class TradeLogManager {
                         } else {
                             buy += Double.parseDouble(unknownOrder.getPrice())
                                     * Double.parseDouble(unknownOrder.getExecuteVolume())
-                                    - Double.parseDouble(unknownOrder.getPaidFee());
+                                    + Double.parseDouble(unknownOrder.getPaidFee());
                         }
                     }
 
