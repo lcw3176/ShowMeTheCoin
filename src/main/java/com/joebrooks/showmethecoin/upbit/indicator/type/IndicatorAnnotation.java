@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.upbitTrade.indicator.type;
+package com.joebrooks.showmethecoin.upbit.indicator.type;
 
 public class IndicatorAnnotation {
     public static final String RSI = "RSI";

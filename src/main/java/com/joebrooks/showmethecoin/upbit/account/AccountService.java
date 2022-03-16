@@ -1,6 +1,6 @@
-package com.joebrooks.showmethecoin.upbitTrade.account;
+package com.joebrooks.showmethecoin.upbit.account;
 
-import com.joebrooks.showmethecoin.upbitTrade.upbit.UpBitClient;
+import com.joebrooks.showmethecoin.upbit.client.UpBitClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

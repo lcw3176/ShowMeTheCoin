@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.upbitTrade.upbit;
+package com.joebrooks.showmethecoin.upbit.client;
 
 public enum Side {
     // 매수

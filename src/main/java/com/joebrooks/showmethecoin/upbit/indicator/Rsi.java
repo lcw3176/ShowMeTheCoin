@@ -1,12 +1,14 @@
-package com.joebrooks.showmethecoin.upbitTrade.indicator.type;
+package com.joebrooks.showmethecoin.upbit.indicator;
 
-import com.joebrooks.showmethecoin.upbitTrade.candles.CandleResponse;
+import com.joebrooks.showmethecoin.upbit.candles.CandleResponse;
 import com.joebrooks.showmethecoin.global.graph.GraphUtil;
-import com.joebrooks.showmethecoin.upbitTrade.indicator.Indicator;
+import com.joebrooks.showmethecoin.upbit.indicator.IIndicator;
+import com.joebrooks.showmethecoin.upbit.indicator.IndicatorResponse;
+import com.joebrooks.showmethecoin.upbit.indicator.type.IndicatorAnnotation;
+import com.joebrooks.showmethecoin.upbit.indicator.type.IndicatorType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -63,13 +65,13 @@ public class Rsi implements IIndicator {
 
 
     @Override
-    public Indicator execute(List<CandleResponse> candles) {
+    public IndicatorResponse execute(List<CandleResponse> candles) {
         List<Double> rsiLst = getRsi(candles);
 
         double firstRsiVal = rsiLst.get(1);
         double secondRsiVal = rsiLst.get(0);
 
-        return Indicator.builder()
+        return IndicatorResponse.builder()
                 .type(IndicatorType.RSI)
                 .value(rsiLst.get(0))
                 .status(GraphUtil.getStatus(firstRsiVal, secondRsiVal))

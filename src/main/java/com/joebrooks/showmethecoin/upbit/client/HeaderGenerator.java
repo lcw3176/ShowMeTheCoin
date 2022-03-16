@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.upbitTrade.upbit;
+package com.joebrooks.showmethecoin.upbit.client;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

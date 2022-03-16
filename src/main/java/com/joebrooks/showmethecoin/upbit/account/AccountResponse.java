@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.upbitTrade.account;
+package com.joebrooks.showmethecoin.upbit.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

@@ -4,8 +4,7 @@ import com.joebrooks.showmethecoin.repository.trade.TradeEntity;
 import com.joebrooks.showmethecoin.repository.trade.TradeService;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.repository.user.UserService;
-import com.joebrooks.showmethecoin.upbitTrade.auto.AutoCommand;
-import com.joebrooks.showmethecoin.upbitTrade.auto.AutoService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +22,6 @@ public class TradeInfoController {
 
     private final TradeService tradeService;
     private final UserService userService;
-    private final AutoService autoService;
 
     @GetMapping
     public String showTradeInfo(@RequestParam(value = "command", defaultValue = "", required = false) String command,
@@ -62,13 +60,11 @@ public class TradeInfoController {
 
         session.setAttribute("userPage", page);
 
-        if(command.equals(AutoCommand.RUN.toString().toLowerCase())){
-            autoService.execute(AutoCommand.RUN);
+        if(command.equals(AutoCommand.RUN.getValue())){
             user.changeTradeStatus(true);
 
             userService.save(user);
-        } else if(command.equals(AutoCommand.STOP.toString().toLowerCase())){
-            autoService.execute(AutoCommand.STOP);
+        } else if(command.equals(AutoCommand.STOP.getValue())){
             user.changeTradeStatus(false);
 
             userService.save(user);
@@ -77,6 +73,19 @@ public class TradeInfoController {
         model.addAttribute("info", lst);
         model.addAttribute("status", user.isTrading());
         return "trade-info";
+    }
+
+    @Getter
+    private enum AutoCommand {
+        RUN("run"),
+        STOP("stop");
+
+        String value;
+
+        private AutoCommand(String value){
+            this.value = value;
+        }
+
     }
 
 }

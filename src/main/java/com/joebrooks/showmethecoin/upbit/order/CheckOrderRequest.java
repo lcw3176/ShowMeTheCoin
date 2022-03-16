@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.upbitTrade.order;
+package com.joebrooks.showmethecoin.upbit.order;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

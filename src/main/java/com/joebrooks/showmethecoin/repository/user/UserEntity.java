@@ -1,7 +1,7 @@
 package com.joebrooks.showmethecoin.repository.user;
 
 
-import com.joebrooks.showmethecoin.upbitTrade.upbit.CoinType;
+import com.joebrooks.showmethecoin.upbit.client.CoinType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,8 +1,8 @@
-package com.joebrooks.showmethecoin.upbitTrade.order;
+package com.joebrooks.showmethecoin.upbit.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.joebrooks.showmethecoin.upbitTrade.upbit.OrderType;
-import com.joebrooks.showmethecoin.upbitTrade.upbit.Side;
+import com.joebrooks.showmethecoin.upbit.client.OrderType;
+import com.joebrooks.showmethecoin.upbit.client.Side;
 import lombok.*;
 
 @Getter

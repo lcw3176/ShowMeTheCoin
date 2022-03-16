@@ -1,7 +1,7 @@
-package com.joebrooks.showmethecoin.upbitTrade.candles;
+package com.joebrooks.showmethecoin.upbit.candles;
 
-import com.joebrooks.showmethecoin.upbitTrade.upbit.UpBitClient;
-import com.joebrooks.showmethecoin.upbitTrade.upbit.CoinType;
+import com.joebrooks.showmethecoin.upbit.client.UpBitClient;
+import com.joebrooks.showmethecoin.upbit.client.CoinType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,7 @@
-package com.joebrooks.showmethecoin.upbitTrade.indicator;
+package com.joebrooks.showmethecoin.upbit.indicator;
 
-import com.joebrooks.showmethecoin.upbitTrade.candles.CandleResponse;
-import com.joebrooks.showmethecoin.upbitTrade.indicator.type.IIndicator;
-import com.joebrooks.showmethecoin.upbitTrade.indicator.type.IndicatorType;
+import com.joebrooks.showmethecoin.upbit.candles.CandleResponse;
+import com.joebrooks.showmethecoin.upbit.indicator.type.IndicatorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ public class IndicatorService {
 
     private final ApplicationContext context;
 
-    public Indicator execute(IndicatorType indicator, List<CandleResponse> candles) {
+    public IndicatorResponse execute(IndicatorType indicator, List<CandleResponse> candles) {
         IIndicator iIndicator = (IIndicator) context.getBean(indicator.toString());
 
         return iIndicator.execute(candles);

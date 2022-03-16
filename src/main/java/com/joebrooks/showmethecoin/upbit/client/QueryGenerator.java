@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.upbitTrade.upbit;
+package com.joebrooks.showmethecoin.upbit.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.experimental.UtilityClass;
@@ -27,10 +27,7 @@ public class QueryGenerator {
         MessageDigest md = MessageDigest.getInstance("SHA-512");
         md.update(queryString.getBytes(StandardCharsets.UTF_8));
 
-        String queryHash = String.format("%0128x", new BigInteger(1, md.digest()));
-
-
-        return queryHash;
+        return String.format("%0128x", new BigInteger(1, md.digest()));
     }
 
 

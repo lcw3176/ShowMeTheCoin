@@ -1,21 +1,19 @@
-package com.joebrooks.showmethecoin.upbitTrade.order;
-
+package com.joebrooks.showmethecoin.upbit.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Builder
-public class CheckOrderResponse {
+public class OrderResponse {
 
     @JsonProperty("uuid")
     private String uuid;
-
-    @JsonProperty("side")
-    private String side;
 
     @JsonProperty("price")
     private String price;
@@ -28,7 +26,7 @@ public class CheckOrderResponse {
 
     @JsonProperty("created_at")
     private String createdAt;
-
+    
     // 체결된 양
     @JsonProperty("executed_volume")
     private String executeVolume;
@@ -36,12 +34,9 @@ public class CheckOrderResponse {
     // 거래에 사용중인 비용
     @JsonProperty("locked")
     private String locked;
-    
-    // 사용된 수수료
-    @JsonProperty("paid_fee")
-    private String paidFee;
 
     // 해당 주문에 걸린 체결 수
     @JsonProperty("trade_count")
     private int tradeCount;
+
 }

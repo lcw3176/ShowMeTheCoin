@@ -1,8 +1,11 @@
-package com.joebrooks.showmethecoin.upbitTrade.indicator.type;
+package com.joebrooks.showmethecoin.upbit.indicator;
 
-import com.joebrooks.showmethecoin.upbitTrade.candles.CandleResponse;
+import com.joebrooks.showmethecoin.upbit.candles.CandleResponse;
 import com.joebrooks.showmethecoin.global.graph.GraphUtil;
-import com.joebrooks.showmethecoin.upbitTrade.indicator.Indicator;
+import com.joebrooks.showmethecoin.upbit.indicator.IIndicator;
+import com.joebrooks.showmethecoin.upbit.indicator.IndicatorResponse;
+import com.joebrooks.showmethecoin.upbit.indicator.type.IndicatorAnnotation;
+import com.joebrooks.showmethecoin.upbit.indicator.type.IndicatorType;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,12 +14,12 @@ import java.util.List;
 public class Divergence implements IIndicator {
 
     @Override
-    public Indicator execute(List<CandleResponse> candles) {
+    public IndicatorResponse execute(List<CandleResponse> candles) {
         double firstPrice = candles.get(2).getTradePrice();
         double secondPrice = candles.get(1).getTradePrice();
 
 
-        return Indicator.builder()
+        return IndicatorResponse.builder()
                 .type(IndicatorType.Divergence)
                 .status(GraphUtil.getStatus(firstPrice, secondPrice))
                 .build();

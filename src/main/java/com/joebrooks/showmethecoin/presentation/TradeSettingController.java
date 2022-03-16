@@ -2,7 +2,7 @@ package com.joebrooks.showmethecoin.presentation;
 
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.repository.user.UserService;
-import com.joebrooks.showmethecoin.upbitTrade.upbit.CoinType;
+import com.joebrooks.showmethecoin.upbit.client.CoinType;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

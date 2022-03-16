@@ -1,7 +1,7 @@
-package com.joebrooks.showmethecoin.upbitTrade.indicator;
+package com.joebrooks.showmethecoin.upbit.indicator;
 
 import com.joebrooks.showmethecoin.global.graph.GraphStatus;
-import com.joebrooks.showmethecoin.upbitTrade.indicator.type.IndicatorType;
+import com.joebrooks.showmethecoin.upbit.indicator.type.IndicatorType;
 import lombok.*;
 
 @Getter
@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
-public class Indicator {
+public class IndicatorResponse {
 
     private IndicatorType type;
     private double value;
