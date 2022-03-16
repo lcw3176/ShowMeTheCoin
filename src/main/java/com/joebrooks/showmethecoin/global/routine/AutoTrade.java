@@ -1,20 +1,20 @@
-package com.joebrooks.showmethecoin.upbitTrade.auto;
+package com.joebrooks.showmethecoin.global.routine;
 
 import com.joebrooks.showmethecoin.global.exception.type.AutomationException;
 import com.joebrooks.showmethecoin.global.graph.GraphStatus;
 import com.joebrooks.showmethecoin.repository.user.UserService;
-import com.joebrooks.showmethecoin.upbitTrade.account.AccountResponse;
-import com.joebrooks.showmethecoin.upbitTrade.account.AccountService;
-import com.joebrooks.showmethecoin.upbitTrade.candles.CandleResponse;
-import com.joebrooks.showmethecoin.upbitTrade.candles.CandleService;
-import com.joebrooks.showmethecoin.upbitTrade.indicator.Indicator;
-import com.joebrooks.showmethecoin.upbitTrade.indicator.IndicatorService;
-import com.joebrooks.showmethecoin.upbitTrade.indicator.type.IndicatorType;
-import com.joebrooks.showmethecoin.upbitTrade.order.OrderRequest;
-import com.joebrooks.showmethecoin.upbitTrade.order.OrderService;
-import com.joebrooks.showmethecoin.upbitTrade.upbit.CoinType;
-import com.joebrooks.showmethecoin.upbitTrade.upbit.OrderType;
-import com.joebrooks.showmethecoin.upbitTrade.upbit.Side;
+import com.joebrooks.showmethecoin.upbit.account.AccountResponse;
+import com.joebrooks.showmethecoin.upbit.account.AccountService;
+import com.joebrooks.showmethecoin.upbit.candles.CandleResponse;
+import com.joebrooks.showmethecoin.upbit.candles.CandleService;
+import com.joebrooks.showmethecoin.upbit.indicator.IndicatorResponse;
+import com.joebrooks.showmethecoin.upbit.indicator.IndicatorService;
+import com.joebrooks.showmethecoin.upbit.indicator.type.IndicatorType;
+import com.joebrooks.showmethecoin.upbit.order.OrderRequest;
+import com.joebrooks.showmethecoin.upbit.order.OrderService;
+import com.joebrooks.showmethecoin.upbit.client.CoinType;
+import com.joebrooks.showmethecoin.upbit.client.OrderType;
+import com.joebrooks.showmethecoin.upbit.client.Side;
 import io.netty.handler.timeout.ReadTimeoutException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +30,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class AutoTrade {
-
-    private AutoCommand autoCommand = AutoCommand.STOP;
 
     private final IndicatorService indicatorService;
     private final AccountService accountService;
@@ -55,10 +53,6 @@ public class AutoTrade {
     private final IndicatorType rsiIndicator = IndicatorType.RSI;
     private final IndicatorType divergenceIndicator = IndicatorType.Divergence;
 
-    public void setCommand(AutoCommand command){
-        this.autoCommand = command;
-    }
-
 
 
     @Scheduled(fixedDelay = 3000)
@@ -66,12 +60,16 @@ public class AutoTrade {
 
         try {
 
-            if(autoCommand.equals(AutoCommand.STOP) || !isAvailable){
+            if(!isAvailable){
                 return;
             }
 
 
             userService.getAllUser().forEach(user -> {
+                if(!user.isTrading()){
+                    return;
+                }
+
                 CoinType coinType = user.getTradeCoin();
                 double startPrice = user.getStartPrice();
                 int nowLevel = user.getNowLevel();
@@ -79,8 +77,8 @@ public class AutoTrade {
                 double minCash = startPrice + 1000 * nowLevel;
 
                 List<CandleResponse> candles = candleService.getCandles(coinType);
-                Indicator rsi = indicatorService.execute(rsiIndicator, candles);
-                Indicator divergence = indicatorService.execute(divergenceIndicator, candles);
+                IndicatorResponse rsi = indicatorService.execute(rsiIndicator, candles);
+                IndicatorResponse divergence = indicatorService.execute(divergenceIndicator, candles);
 
                 CandleResponse nowCandle = candles.get(0);
 
@@ -125,7 +123,7 @@ public class AutoTrade {
                 if(rsi.getValue() >= sell){
 
                     AccountResponse coinResponse = Arrays.stream(accountService.getAccountData())
-                            .filter(data -> data.getCurrency().equals(coinType.getName().split("-")[1]))
+                            .filter(data -> data.getCurrency().equals(coinType.toString()))
                             .findFirst()
                             .orElse(AccountResponse.builder().balance("0").build());
 
