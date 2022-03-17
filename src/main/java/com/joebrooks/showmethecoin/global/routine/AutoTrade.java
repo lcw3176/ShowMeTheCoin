@@ -41,9 +41,7 @@ public class AutoTrade {
     private int buy;
 
     @Value("${auto.rsi.sell}")
-    private int firstSellValue;
-
-    private int sell = firstSellValue;
+    private int sell;
 
     private boolean isAvailable = true;
 
@@ -80,13 +78,12 @@ public class AutoTrade {
 
                 List<CandleResponse> candles = candleService.getCandles(coinType);
                 IndicatorResponse rsi = indicatorService.execute(rsiIndicator, candles);
-                IndicatorResponse divergence = indicatorService.execute(divergenceIndicator, candles);
+//                IndicatorResponse divergence = indicatorService.execute(divergenceIndicator, candles);
 
                 CandleResponse nowCandle = candles.get(0);
 
-                if(rsi.getValue() <= buy
-                        && rsi.getStatus().equals(GraphStatus.STRONG_RISING)
-                        && divergence.getStatus().equals(GraphStatus.FALLING)
+                if(rsi.getValue() >= buy
+                        && rsi.getBeforeValue() < buy
                         && (lastTradeCandle == null || !nowCandle.getDateKst().equals(lastTradeCandle.getDateKst())) ){
 
                     AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
@@ -116,7 +113,6 @@ public class AutoTrade {
 
                         lastTradePrice = nowCandle.getTradePrice();
                         lastTradeCandle = nowCandle;
-                        sell = firstSellValue + user.getNowLevel();
                         user.changeLevel(user.getNowLevel() + 1);
                         userService.save(user);
                     }
@@ -145,7 +141,6 @@ public class AutoTrade {
 
                         log.info("{}: 매도 {}", coinType.getKoreanName(), nowCandle.getTradePrice());
                         lastTradePrice = initValue;
-                        sell = firstSellValue;
                         user.changeLevel(0);
                         userService.save(user);
                     }
