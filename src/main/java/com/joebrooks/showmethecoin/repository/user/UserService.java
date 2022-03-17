@@ -31,6 +31,14 @@ public class UserService {
             userRepository.save(i);
         });
     }
+
+    public void initAllUsersTradeLevel(){
+        userRepository.findAll().forEach(i -> {
+            i.changeLevel(0);
+
+            userRepository.save(i);
+        });
+    }
     public void save(UserEntity user){
         userRepository.save(user);
     }

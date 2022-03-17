@@ -21,8 +21,9 @@ public class ShowMeTheCoinApplication {
     private final UserService userService;
 
     @PostConstruct
-    public void setTimeZone(){
+    public void init(){
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+        userService.initAllUsersTradeLevel();
     }
 
     public static void main(String[] args) throws MessagingException {
