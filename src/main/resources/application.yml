@@ -32,7 +32,7 @@ upbit:
     minute: 1
     count: 200
   rsi:
-    day: 5
+    day: 14
   rmi:
     day: 14
     n : 5
