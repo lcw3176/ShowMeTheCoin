@@ -1,20 +1,19 @@
 package com.joebrooks.showmethecoin.global.routine;
 
 import com.joebrooks.showmethecoin.global.exception.type.AutomationException;
-import com.joebrooks.showmethecoin.global.graph.GraphStatus;
 import com.joebrooks.showmethecoin.repository.user.UserService;
 import com.joebrooks.showmethecoin.upbit.account.AccountResponse;
 import com.joebrooks.showmethecoin.upbit.account.AccountService;
 import com.joebrooks.showmethecoin.upbit.candles.CandleResponse;
 import com.joebrooks.showmethecoin.upbit.candles.CandleService;
+import com.joebrooks.showmethecoin.upbit.client.CoinType;
+import com.joebrooks.showmethecoin.upbit.client.OrderType;
+import com.joebrooks.showmethecoin.upbit.client.Side;
 import com.joebrooks.showmethecoin.upbit.indicator.IndicatorResponse;
 import com.joebrooks.showmethecoin.upbit.indicator.IndicatorService;
 import com.joebrooks.showmethecoin.upbit.indicator.type.IndicatorType;
 import com.joebrooks.showmethecoin.upbit.order.OrderRequest;
 import com.joebrooks.showmethecoin.upbit.order.OrderService;
-import com.joebrooks.showmethecoin.upbit.client.CoinType;
-import com.joebrooks.showmethecoin.upbit.client.OrderType;
-import com.joebrooks.showmethecoin.upbit.client.Side;
 import io.netty.handler.timeout.ReadTimeoutException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -82,9 +81,8 @@ public class AutoTrade {
 
                 CandleResponse nowCandle = candles.get(0);
 
-                if(rsi.getValue() >= buy
-                        && rsi.getBeforeValue() < buy
-                        && rsi.getStatus().equals(GraphStatus.STRONG_RISING)
+                if(rsi.getRecentValue() > buy
+                        && rsi.getOlderValue() < buy
                         && (lastTradeCandle == null || !nowCandle.getDateKst().equals(lastTradeCandle.getDateKst())) ){
 
                     AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
@@ -120,7 +118,7 @@ public class AutoTrade {
 
                 }
 
-                if(rsi.getValue() >= sell){
+                if(rsi.getNewestValue() >= sell){
 
                     AccountResponse coinResponse = Arrays.stream(accountService.getAccountData())
                             .filter(data -> data.getCurrency().equals(coinType.toString()))
