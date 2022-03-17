@@ -13,5 +13,6 @@ public class IndicatorResponse {
 
     private IndicatorType type;
     private double value;
+    private double beforeValue;
     private GraphStatus status;
 }
