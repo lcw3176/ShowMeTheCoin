@@ -84,7 +84,7 @@ public class AutoTrade {
 
                 if(rsi.getValue() >= buy
                         && rsi.getBeforeValue() < buy
-                        && (rsi.getStatus().equals(GraphStatus.FALLING) || rsi.getStatus().equals(GraphStatus.STAY))
+                        && rsi.getStatus().equals(GraphStatus.STRONG_RISING)
                         && (lastTradeCandle == null || !nowCandle.getDateKst().equals(lastTradeCandle.getDateKst())) ){
 
                     AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
