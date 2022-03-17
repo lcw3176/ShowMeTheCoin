@@ -68,13 +68,13 @@ public class Rsi implements IIndicator {
     public IndicatorResponse execute(List<CandleResponse> candles) {
         List<Double> rsiLst = getRsi(candles);
 
-        double firstRsiVal = rsiLst.get(1);
-        double secondRsiVal = rsiLst.get(0);
+//        double firstRsiVal = rsiLst.get(1);
+//        double secondRsiVal = rsiLst.get(0);
 
         return IndicatorResponse.builder()
                 .type(IndicatorType.RSI)
                 .value(rsiLst.get(0))
-                .status(GraphUtil.getStatus(firstRsiVal, secondRsiVal))
+                .beforeValue(rsiLst.get(1))
                 .build();
     }
 }
