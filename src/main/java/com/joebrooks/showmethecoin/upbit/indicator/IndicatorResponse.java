@@ -12,7 +12,8 @@ import lombok.*;
 public class IndicatorResponse {
 
     private IndicatorType type;
-    private double value;
-    private double beforeValue;
+    private double olderValue;
+    private double recentValue;
+    private double newestValue;
     private GraphStatus status;
 }
