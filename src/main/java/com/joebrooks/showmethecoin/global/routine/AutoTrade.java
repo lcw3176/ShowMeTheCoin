@@ -142,7 +142,7 @@ public class AutoTrade {
 
                         log.info("{}: 매도 {}", coinType.getKoreanName(), nowCandle.getTradePrice());
                         lastTradePrice = initValue;
-                        user.changeLevel(1);
+                        user.changeLevel(0);
                         userService.save(user);
                     }
                 }
