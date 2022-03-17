@@ -41,7 +41,9 @@ public class AutoTrade {
     private int buy;
 
     @Value("${auto.rsi.sell}")
-    private int sell;
+    private int firstSellValue;
+
+    private int sell = firstSellValue;
 
     private boolean isAvailable = true;
 
@@ -114,6 +116,7 @@ public class AutoTrade {
 
                         lastTradePrice = nowCandle.getTradePrice();
                         lastTradeCandle = nowCandle;
+                        sell = firstSellValue + user.getNowLevel();
                         user.changeLevel(user.getNowLevel() + 1);
                         userService.save(user);
                     }
@@ -142,6 +145,7 @@ public class AutoTrade {
 
                         log.info("{}: 매도 {}", coinType.getKoreanName(), nowCandle.getTradePrice());
                         lastTradePrice = initValue;
+                        sell = firstSellValue;
                         user.changeLevel(0);
                         userService.save(user);
                     }
