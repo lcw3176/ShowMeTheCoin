@@ -68,8 +68,8 @@ public class Rsi implements IIndicator {
     public IndicatorResponse execute(List<CandleResponse> candles) {
         List<Double> rsiLst = getRsi(candles);
 
-        double firstRsiVal = rsiLst.get(2);
-        double secondRsiVal = rsiLst.get(1);
+        double firstRsiVal = rsiLst.get(1);
+        double secondRsiVal = rsiLst.get(0);
 
         return IndicatorResponse.builder()
                 .type(IndicatorType.RSI)
