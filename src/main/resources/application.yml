@@ -32,7 +32,7 @@ upbit:
     minute: 1
     count: 200
   rsi:
-    day: 7
+    day: 5
   rmi:
     day: 14
     n : 5
@@ -40,7 +40,7 @@ upbit:
 auto:
   rsi:
     buy: 30
-    sell : 65
+    sell : 60
   rmi:
     buy: 7
     sell: 70
