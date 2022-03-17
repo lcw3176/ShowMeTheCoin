@@ -39,7 +39,7 @@ upbit:
 
 auto:
   rsi:
-    buy: 35
+    buy: 40
     sell : 60
   rmi:
     buy: 10
