@@ -29,8 +29,7 @@ public class TradeLogManager {
     private final OrderService orderService;
     private final AccountService accountService;
 
-//    @Scheduled(cron = "0 */30 * * * *")
-    // fixme null값 처리
+    @Scheduled(cron = "0 */30 * * * *")
     public void refreshCompletedOrder(){
 
         userService.getAllUser().forEach(user -> {
@@ -59,6 +58,10 @@ public class TradeLogManager {
                                 .isBefore(lastRecordedOrder.getCreatedDate())
                                 && j != i){
                             break;
+                        }
+
+                        if(unknownOrder.getPrice() == null){
+                            unknownOrder.setPriceByPaidFee();
                         }
 
                         if (unknownOrder.getSide().equals(Side.ask.toString())) {
