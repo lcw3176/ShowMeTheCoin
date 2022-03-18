@@ -4,6 +4,8 @@ package com.joebrooks.showmethecoin.upbit.order;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,4 +46,8 @@ public class CheckOrderResponse {
     // 해당 주문에 걸린 체결 수
     @JsonProperty("trade_count")
     private int tradeCount;
+
+    public void setPriceByPaidFee(){
+        this.price = BigDecimal.valueOf(Double.parseDouble(this.paidFee) / 0.0005).toString();
+    }
 }
