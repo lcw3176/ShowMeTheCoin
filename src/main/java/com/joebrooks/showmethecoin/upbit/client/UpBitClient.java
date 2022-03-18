@@ -39,9 +39,7 @@ public class UpBitClient {
                     })
                     .acceptCharset(StandardCharsets.UTF_8)
                     .retrieve()
-                    .onStatus(HttpStatus::isError, response -> {
-                        return Mono.error(new IllegalStateException("failed get"));
-                    })
+                    .onStatus(HttpStatus::isError, response -> Mono.error(new IllegalStateException("failed get")))
                     .bodyToMono(clazz)
                     .block();
 
@@ -61,9 +59,7 @@ public class UpBitClient {
                             HeaderGenerator.getJwtHeader(accessKey, secretKey, QueryGenerator.convertQueryToHash(map)))
                     .acceptCharset(StandardCharsets.UTF_8)
                     .retrieve()
-                    .onStatus(HttpStatus::isError, response -> {
-                        return Mono.error(new IllegalStateException("failed get"));
-                    })
+                    .onStatus(HttpStatus::isError, response -> Mono.error(new IllegalStateException("failed get")))
                     .bodyToMono(clazz)
                     .block();
 
@@ -84,12 +80,28 @@ public class UpBitClient {
                     .acceptCharset(StandardCharsets.UTF_8)
                     .bodyValue(new Gson().toJson(map))
                     .retrieve()
-                    .onStatus(HttpStatus::isError, response -> {
-                        return Mono.error(new IllegalStateException("failed post"));
-                    })
+                    .onStatus(HttpStatus::isError, response -> Mono.error(new IllegalStateException("failed post")))
                     .bodyToMono(clazz)
                     .block();
 
+        } catch(Exception e){
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+
+    public void delete(String path, Object queryParams){
+        HashMap<String, String> map = QueryGenerator.getQueryMap(queryParams);
+
+        try{
+            client.getClient(baseUrl, timeoutMillis).delete()
+                    .uri(path)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .header("Authorization",
+                            HeaderGenerator.getJwtHeader(accessKey, secretKey, QueryGenerator.convertQueryToHash(map)))
+                    .acceptCharset(StandardCharsets.UTF_8)
+                    .retrieve()
+                    .onStatus(HttpStatus::isError, response -> Mono.error(new IllegalStateException("failed delete")));
         } catch(Exception e){
             throw new RuntimeException(e.getMessage(), e);
         }
