@@ -1,7 +1,7 @@
 package com.joebrooks.showmethecoin.repository.trade;
 
 import com.joebrooks.showmethecoin.global.trade.TradeResult;
-import com.joebrooks.showmethecoin.global.trade.TradeStatus;
+import com.joebrooks.showmethecoin.upbit.order.OrderStatus;
 import com.joebrooks.showmethecoin.repository.BaseTimeEntity;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.upbit.client.CoinType;
@@ -39,7 +39,7 @@ public class TradeEntity extends BaseTimeEntity {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private TradeStatus status;
+    private OrderStatus status;
 
     @ManyToOne(targetEntity = UserEntity.class)
     @JoinColumn(name = "user_id")
