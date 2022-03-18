@@ -50,9 +50,6 @@ public class AutoTrade {
 
 
     private final IndicatorType rsiIndicator = IndicatorType.RSI;
-    private final IndicatorType divergenceIndicator = IndicatorType.Divergence;
-
-
 
     @Scheduled(fixedDelay = 3000)
     public void mainAutomationRoutine() throws AutomationException {
@@ -77,12 +74,12 @@ public class AutoTrade {
 
                 List<CandleResponse> candles = candleService.getCandles(coinType);
                 IndicatorResponse rsi = indicatorService.execute(rsiIndicator, candles);
-//                IndicatorResponse divergence = indicatorService.execute(divergenceIndicator, candles);
 
                 CandleResponse nowCandle = candles.get(0);
 
                 if(rsi.getRecentValue() > buy
                         && rsi.getOlderValue() < buy
+                        && (rsi.getNewestValue() > buy && rsi.getNewestValue() < sell)
                         && (lastTradeCandle == null || !nowCandle.getDateKst().equals(lastTradeCandle.getDateKst())) ){
 
                     AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
