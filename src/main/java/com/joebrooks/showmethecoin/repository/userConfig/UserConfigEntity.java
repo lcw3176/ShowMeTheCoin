@@ -1,7 +1,6 @@
 package com.joebrooks.showmethecoin.repository.userConfig;
 
-import com.joebrooks.showmethecoin.global.strategy.BuyStrategy;
-import com.joebrooks.showmethecoin.global.strategy.SellStrategy;
+import com.joebrooks.showmethecoin.global.strategy.Strategy;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.upbit.client.CoinType;
 import lombok.AllArgsConstructor;
@@ -41,13 +40,10 @@ public class UserConfigEntity {
     @Column(name = "common_difference")
     private double commonDifference;
 
-    @Column(name = "buy_strategy")
+    @Column(name = "strategy")
     @Enumerated(EnumType.STRING)
-    private BuyStrategy buyStrategy;
+    private Strategy strategy;
 
-    @Column(name = "sell_strategy")
-    @Enumerated(EnumType.STRING)
-    private SellStrategy sellStrategy;
 
     @OneToOne(targetEntity = UserEntity.class)
     @JoinColumn(name = "user_id")
