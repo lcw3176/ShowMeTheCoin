@@ -12,8 +12,7 @@ import com.joebrooks.showmethecoin.upbit.client.Side;
 import com.joebrooks.showmethecoin.upbit.indicator.IndicatorResponse;
 import com.joebrooks.showmethecoin.upbit.indicator.IndicatorService;
 import com.joebrooks.showmethecoin.upbit.indicator.type.IndicatorType;
-import com.joebrooks.showmethecoin.upbit.order.OrderRequest;
-import com.joebrooks.showmethecoin.upbit.order.OrderService;
+import com.joebrooks.showmethecoin.upbit.order.*;
 import io.netty.handler.timeout.ReadTimeoutException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -139,6 +138,17 @@ public class AutoTrade {
                         lastTradePrice = initValue;
                         user.changeLevel(0);
                         userService.save(user);
+
+                        List<CheckOrderResponse> checkOrderResponses = orderService.checkOrder(CheckOrderRequest.builder()
+                                                    .state(OrderStatus.wait)
+                                                    .build());
+
+
+                        checkOrderResponses.forEach(remainedOrder -> {
+                            orderService.cancelOrder(CancelOrderRequest.builder()
+                                    .uuid(remainedOrder.getUuid())
+                                    .build());
+                        });
                     }
                 }
 

@@ -1,7 +1,7 @@
 package com.joebrooks.showmethecoin.global.routine;
 
 import com.joebrooks.showmethecoin.global.trade.TradeResult;
-import com.joebrooks.showmethecoin.global.trade.TradeStatus;
+import com.joebrooks.showmethecoin.upbit.order.OrderStatus;
 import com.joebrooks.showmethecoin.repository.trade.TradeEntity;
 import com.joebrooks.showmethecoin.repository.trade.TradeService;
 import com.joebrooks.showmethecoin.repository.user.UserService;
@@ -35,7 +35,7 @@ public class TradeLogManager {
         userService.getAllUser().forEach(user -> {
             Page<TradeEntity> pages = tradeService.getTradeLogs(user, 0);
             List<CheckOrderResponse> responses = orderService.checkOrder(CheckOrderRequest.builder()
-                    .state(TradeStatus.DONE.toString().toLowerCase())
+                    .state(OrderStatus.done)
                     .build());
 
             for(int i = 0; i < responses.size(); i++){
@@ -89,7 +89,7 @@ public class TradeLogManager {
                             .tradeResult(result)
                             .sellPrice(sell)
                             .buyPrice(buy)
-                            .status(TradeStatus.DONE)
+                            .status(OrderStatus.done)
                             .coinType(user.getTradeCoin())
                             .build());
 

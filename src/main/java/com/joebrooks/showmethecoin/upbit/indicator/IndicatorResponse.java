@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 @Builder
 public class IndicatorResponse {
-
+    // fixme 값 정리 필요
     private IndicatorType type;
     private double olderValue;
     private double recentValue;

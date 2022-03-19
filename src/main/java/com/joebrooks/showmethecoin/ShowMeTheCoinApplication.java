@@ -23,7 +23,7 @@ public class ShowMeTheCoinApplication {
     @PostConstruct
     public void init(){
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-        userService.initAllUsersTradeLevel();
+        userService.initAllUsersTradeLevel(); // fixme 테스트용도, 차후 제거
     }
 
     public static void main(String[] args) throws MessagingException {

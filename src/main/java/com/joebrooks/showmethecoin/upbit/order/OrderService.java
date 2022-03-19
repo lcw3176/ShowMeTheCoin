@@ -13,19 +13,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderService {
     private final UpBitClient upBitClient;
-    private final String path = "/orders";
 
     public OrderResponse requestOrder(OrderRequest request){
+        String path = "/orders";
+
         return upBitClient.post(path, request, OrderResponse.class);
     }
 
     public List<CheckOrderResponse> checkOrder(CheckOrderRequest request){
+        String path = "/orders";
+
         UriComponents uri = UriComponentsBuilder.newInstance()
                                 .path(path)
                                 .queryParam("state", request.getState())
                                 .build();
 
         return Arrays.asList(upBitClient.get(uri.toString(), request, CheckOrderResponse[].class));
+    }
+
+    public void cancelOrder(CancelOrderRequest request){
+        String path = "/order";
+
+        UriComponents uri = UriComponentsBuilder.newInstance()
+                .path(path)
+                .queryParam("uuid", request.getUuid())
+                .build();
+
+        upBitClient.delete(uri.toString(), request);
     }
 
 }

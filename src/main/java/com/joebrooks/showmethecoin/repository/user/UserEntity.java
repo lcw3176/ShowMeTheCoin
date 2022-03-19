@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Builder
 @Entity(name = "user")
 public class UserEntity {
-
+    // fixme db좀 나눠야겠다
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

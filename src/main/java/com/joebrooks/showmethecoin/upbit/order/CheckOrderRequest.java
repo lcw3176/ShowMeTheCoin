@@ -4,6 +4,9 @@ package com.joebrooks.showmethecoin.upbit.order;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,5 +15,6 @@ import lombok.*;
 public class CheckOrderRequest {
 
     @JsonProperty("state")
-    private String state;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus state;
 }

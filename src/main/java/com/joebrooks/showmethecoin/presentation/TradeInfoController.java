@@ -30,7 +30,8 @@ public class TradeInfoController {
                                 HttpSession session) {
 
         String userId = (String)session.getAttribute("userId");
-
+        
+        // fixme 페이지네이션 정리좀
         if(session.getAttribute("userPage") == null){
             session.setAttribute("userPage", 0);
         }
