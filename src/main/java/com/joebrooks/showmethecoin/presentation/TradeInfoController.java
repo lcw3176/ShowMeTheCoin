@@ -41,7 +41,10 @@ public class TradeInfoController {
 
 
         UserEntity user = userService.getUser(userId).orElseThrow(IllegalAccessError::new);
-        UserConfigEntity userConfig = userConfigService.getUser(user).get();
+        UserConfigEntity userConfig = userConfigService.getUser(user).orElse(
+                UserConfigEntity.builder()
+                        .isTrading(false)
+                        .build());
         int page = Integer.parseInt(session.getAttribute("userPage").toString());
 
         if(next.equals("true")){

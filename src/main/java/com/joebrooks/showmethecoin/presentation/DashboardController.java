@@ -1,15 +1,14 @@
 package com.joebrooks.showmethecoin.presentation;
 
 import com.joebrooks.showmethecoin.repository.dailyScore.DailyScoreEntity;
-import com.joebrooks.showmethecoin.repository.dailyScore.DailyScoreRepository;
 import com.joebrooks.showmethecoin.repository.dailyScore.DailyScoreService;
-import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.repository.user.UserService;
+import com.joebrooks.showmethecoin.repository.userConfig.UserConfigEntity;
+import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -20,6 +19,7 @@ public class DashboardController {
 
     private final DailyScoreService dailyScoreService;
     private final UserService userService;
+    private final UserConfigService userConfigService;
 
     @GetMapping("/")
     public String redirectDashboard(){
@@ -39,7 +39,12 @@ public class DashboardController {
                 revenue += dailyScore.getTodayEarnPrice();
             }
 
-            model.addAttribute("balance",  (long)user.getBalance());
+            UserConfigEntity userConfigEntity = userConfigService.getUser(user).orElse(
+                    UserConfigEntity.builder()
+                            .balance(0)
+                            .build());
+
+            model.addAttribute("balance",  (long)userConfigEntity.getBalance());
             model.addAttribute("revenue", revenue);
             model.addAttribute("daily", lst);
         });
