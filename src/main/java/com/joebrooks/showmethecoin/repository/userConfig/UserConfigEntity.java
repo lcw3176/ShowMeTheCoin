@@ -32,8 +32,8 @@ public class UserConfigEntity {
     @Column(name = "start_price")
     private double startPrice;
 
-    @Column(name = "now_level")
-    private int nowLevel;
+    @Column(name = "difference_level")
+    private int differenceLevel;
 
     @Column(name = "is_trading")
     private boolean isTrading;
@@ -65,8 +65,8 @@ public class UserConfigEntity {
         this.tradeCoin = tradeCoin;
     }
 
-    public void changeLevel(int nowLevel){
-        this.nowLevel = nowLevel;
+    public void changeDifferenceLevel(int differenceLevel){
+        this.differenceLevel = differenceLevel;
     }
 
     public void changeStartPrice(double startPrice){

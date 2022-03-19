@@ -68,7 +68,7 @@ public class AutoTrade {
 
                 CoinType coinType = user.getTradeCoin();
                 double startPrice = user.getStartPrice();
-                int nowLevel = user.getNowLevel();
+                int nowLevel = user.getDifferenceLevel();
 
                 double minCash = startPrice + 1000 * nowLevel;
 
@@ -109,7 +109,7 @@ public class AutoTrade {
 
                         lastTradePrice = nowCandle.getTradePrice();
                         lastTradeCandle = nowCandle;
-                        user.changeLevel(user.getNowLevel() + 1);
+                        user.changeDifferenceLevel(user.getDifferenceLevel() + 1);
                         userConfigService.save(user);
                     }
 
@@ -137,7 +137,7 @@ public class AutoTrade {
 
                         log.info("{}: 매도 {}", coinType.getKoreanName(), nowCandle.getTradePrice());
                         lastTradePrice = initValue;
-                        user.changeLevel(0);
+                        user.changeDifferenceLevel(0);
                         userConfigService.save(user);
 
                         List<CheckOrderResponse> checkOrderResponses = orderService.checkOrder(CheckOrderRequest.builder()
