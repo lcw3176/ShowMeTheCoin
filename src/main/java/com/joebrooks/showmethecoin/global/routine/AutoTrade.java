@@ -2,6 +2,7 @@ package com.joebrooks.showmethecoin.global.routine;
 
 import com.joebrooks.showmethecoin.global.exception.type.AutomationException;
 import com.joebrooks.showmethecoin.repository.user.UserService;
+import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
 import com.joebrooks.showmethecoin.upbit.account.AccountResponse;
 import com.joebrooks.showmethecoin.upbit.account.AccountService;
 import com.joebrooks.showmethecoin.upbit.candles.CandleResponse;
@@ -33,7 +34,7 @@ public class AutoTrade {
     private final AccountService accountService;
     private final OrderService orderService;
     private final CandleService candleService;
-    private final UserService userService;
+    private final UserConfigService userConfigService;
 
     @Value("${auto.rsi.buy}")
     private int buy;
@@ -60,7 +61,7 @@ public class AutoTrade {
             }
 
 
-            userService.getAllUser().forEach(user -> {
+            userConfigService.getAllUserConfig().forEach(user -> {
                 if(!user.isTrading()){
                     return;
                 }
@@ -109,7 +110,7 @@ public class AutoTrade {
                         lastTradePrice = nowCandle.getTradePrice();
                         lastTradeCandle = nowCandle;
                         user.changeLevel(user.getNowLevel() + 1);
-                        userService.save(user);
+                        userConfigService.save(user);
                     }
 
                 }
@@ -137,7 +138,7 @@ public class AutoTrade {
                         log.info("{}: 매도 {}", coinType.getKoreanName(), nowCandle.getTradePrice());
                         lastTradePrice = initValue;
                         user.changeLevel(0);
-                        userService.save(user);
+                        userConfigService.save(user);
 
                         List<CheckOrderResponse> checkOrderResponses = orderService.checkOrder(CheckOrderRequest.builder()
                                                     .state(OrderStatus.wait)

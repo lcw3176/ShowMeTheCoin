@@ -1,16 +1,16 @@
 package com.joebrooks.showmethecoin.global.routine;
 
 import com.joebrooks.showmethecoin.global.trade.TradeResult;
-import com.joebrooks.showmethecoin.upbit.order.OrderStatus;
 import com.joebrooks.showmethecoin.repository.trade.TradeEntity;
 import com.joebrooks.showmethecoin.repository.trade.TradeService;
-import com.joebrooks.showmethecoin.repository.user.UserService;
+import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
 import com.joebrooks.showmethecoin.upbit.account.AccountResponse;
 import com.joebrooks.showmethecoin.upbit.account.AccountService;
+import com.joebrooks.showmethecoin.upbit.client.Side;
 import com.joebrooks.showmethecoin.upbit.order.CheckOrderRequest;
 import com.joebrooks.showmethecoin.upbit.order.CheckOrderResponse;
 import com.joebrooks.showmethecoin.upbit.order.OrderService;
-import com.joebrooks.showmethecoin.upbit.client.Side;
+import com.joebrooks.showmethecoin.upbit.order.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TradeLogManager {
 
-    private final UserService userService;
+    private final UserConfigService userConfigService;
     private final TradeService tradeService;
     private final OrderService orderService;
     private final AccountService accountService;
@@ -32,8 +32,8 @@ public class TradeLogManager {
     @Scheduled(cron = "0 */30 * * * *")
     public void refreshCompletedOrder(){
 
-        userService.getAllUser().forEach(user -> {
-            Page<TradeEntity> pages = tradeService.getTradeLogs(user, 0);
+        userConfigService.getAllUserConfig().forEach(userConfig -> {
+            Page<TradeEntity> pages = tradeService.getTradeLogs(userConfig.getUserId(), 0);
             List<CheckOrderResponse> responses = orderService.checkOrder(CheckOrderRequest.builder()
                     .state(OrderStatus.done)
                     .build());
@@ -85,12 +85,12 @@ public class TradeLogManager {
                     }
 
                     tradeService.addTradeLog(TradeEntity.builder()
-                            .userId(user)
+                            .userId(userConfig.getUserId())
                             .tradeResult(result)
                             .sellPrice(sell)
                             .buyPrice(buy)
                             .status(OrderStatus.done)
-                            .coinType(user.getTradeCoin())
+                            .coinType(userConfig.getTradeCoin())
                             .build());
 
                     AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
@@ -100,8 +100,8 @@ public class TradeLogManager {
                                 throw  new RuntimeException("계좌 정보가 없습니다");
                             });
 
-                    user.changeBalance(Double.parseDouble(accountResponse.getBalance()));
-                    userService.save(user);
+                    userConfig.changeBalance(Double.parseDouble(accountResponse.getBalance()));
+                    userConfigService.save(userConfig);
                     break;
                 }
             }

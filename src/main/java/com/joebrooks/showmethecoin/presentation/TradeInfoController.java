@@ -4,6 +4,8 @@ import com.joebrooks.showmethecoin.repository.trade.TradeEntity;
 import com.joebrooks.showmethecoin.repository.trade.TradeService;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.repository.user.UserService;
+import com.joebrooks.showmethecoin.repository.userConfig.UserConfigEntity;
+import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,7 @@ public class TradeInfoController {
 
     private final TradeService tradeService;
     private final UserService userService;
+    private final UserConfigService userConfigService;
 
     @GetMapping
     public String showTradeInfo(@RequestParam(value = "command", defaultValue = "", required = false) String command,
@@ -38,7 +41,7 @@ public class TradeInfoController {
 
 
         UserEntity user = userService.getUser(userId).orElseThrow(IllegalAccessError::new);
-
+        UserConfigEntity userConfig = userConfigService.getUser(user).get();
         int page = Integer.parseInt(session.getAttribute("userPage").toString());
 
         if(next.equals("true")){
@@ -62,17 +65,17 @@ public class TradeInfoController {
         session.setAttribute("userPage", page);
 
         if(command.equals(AutoCommand.RUN.getValue())){
-            user.changeTradeStatus(true);
+            userConfig.changeTradeStatus(true);
 
-            userService.save(user);
+            userConfigService.save(userConfig);
         } else if(command.equals(AutoCommand.STOP.getValue())){
-            user.changeTradeStatus(false);
+            userConfig.changeTradeStatus(false);
 
-            userService.save(user);
+            userConfigService.save(userConfig);
         }
 
         model.addAttribute("info", lst);
-        model.addAttribute("status", user.isTrading());
+        model.addAttribute("status", userConfig.isTrading());
         return "trade-info";
     }
 

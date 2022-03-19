@@ -24,21 +24,6 @@ public class UserService {
         return userRepository.findByUserId(id);
     }
 
-    public void stopAllUsersTrade(){
-        userRepository.findAll().forEach(i -> {
-            i.changeTradeStatus(false);
-
-            userRepository.save(i);
-        });
-    }
-
-    public void initAllUsersTradeLevel(){
-        userRepository.findAll().forEach(i -> {
-            i.changeLevel(0);
-
-            userRepository.save(i);
-        });
-    }
     public void save(UserEntity user){
         userRepository.save(user);
     }

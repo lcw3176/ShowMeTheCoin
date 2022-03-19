@@ -2,6 +2,8 @@ package com.joebrooks.showmethecoin.presentation;
 
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.repository.user.UserService;
+import com.joebrooks.showmethecoin.repository.userConfig.UserConfigEntity;
+import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
 import com.joebrooks.showmethecoin.upbit.client.CoinType;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/trade-setting")
 public class TradeSettingController {
 
+    private final UserConfigService userConfigService;
     private final UserService userService;
 
     @GetMapping
@@ -23,9 +26,12 @@ public class TradeSettingController {
                                    HttpSession session,
                                    @RequestParam(value = "result", defaultValue = "",required = false) String result){
         String userId = session.getAttribute("userId").toString();
+        UserEntity userEntity = userService.getUser(userId).orElseThrow(() -> {
+            throw new IllegalAccessError();
+        });
 
         model.addAttribute("coinList", CoinType.values());
-        model.addAttribute("userInfo", userService.getUser(userId).get());
+        model.addAttribute("userInfo", userConfigService.getUser(userEntity).get());
         model.addAttribute("result", result);
 
         return "trade-setting";
@@ -34,14 +40,16 @@ public class TradeSettingController {
     @PostMapping
     public String saveUserSetting(@ModelAttribute TradeResponse body, HttpSession session){
         String userId = session.getAttribute("userId").toString();
-        UserEntity user = userService.getUser(userId).orElseThrow(() ->{
+        UserEntity userEntity = userService.getUser(userId).orElseThrow(() ->{
             throw new IllegalAccessError();
         });
 
-        user.changeTradeCoin(body.getTradeCoin());
-        user.changeStartPrice(body.getStartPrice());
+        UserConfigEntity userConfigEntity = userConfigService.getUser(userEntity).get();
 
-        userService.save(user);
+        userConfigEntity.changeTradeCoin(body.getTradeCoin());
+        userConfigEntity.changeStartPrice(body.getStartPrice());
+
+        userConfigService.save(userConfigEntity);
 
         return "redirect:/trade-setting?result=success";
     }

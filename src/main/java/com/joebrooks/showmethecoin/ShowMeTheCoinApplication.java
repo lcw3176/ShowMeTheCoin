@@ -1,6 +1,7 @@
 package com.joebrooks.showmethecoin;
 
 import com.joebrooks.showmethecoin.repository.user.UserService;
+import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,12 +19,12 @@ import java.util.TimeZone;
 @RequiredArgsConstructor
 public class ShowMeTheCoinApplication {
 
-    private final UserService userService;
+    private final UserConfigService userConfigService;
 
     @PostConstruct
     public void init(){
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-        userService.initAllUsersTradeLevel(); // fixme 테스트용도, 차후 제거
+        userConfigService.initAllUsersTradeLevel(); // fixme 테스트용도, 차후 제거
     }
 
     public static void main(String[] args) throws MessagingException {
@@ -32,7 +33,7 @@ public class ShowMeTheCoinApplication {
 
     @PreDestroy
     public void close(){
-        userService.stopAllUsersTrade();
+        userConfigService.stopAllUsersTrade();
     }
 
 

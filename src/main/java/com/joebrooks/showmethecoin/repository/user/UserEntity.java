@@ -1,7 +1,6 @@
 package com.joebrooks.showmethecoin.repository.user;
 
 
-import com.joebrooks.showmethecoin.upbit.client.CoinType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +14,7 @@ import javax.persistence.*;
 @Builder
 @Entity(name = "user")
 public class UserEntity {
-    // fixme db좀 나눠야겠다
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,40 +25,4 @@ public class UserEntity {
     @Column(name = "user_pw", unique = true)
     private String userPw;
 
-    @Column(name = "balance")
-    private double balance;
-
-    @Column(name = "trade_coin")
-    @Enumerated(EnumType.STRING)
-    private CoinType tradeCoin;
-
-    @Column(name = "start_price")
-    private double startPrice;
-
-    @Column(name = "now_level")
-    private int nowLevel;
-
-    @Column(name = "is_trading")
-    private boolean isTrading;
-
-
-    public void changeBalance(double balance){
-        this.balance = balance;
-    }
-
-    public void changeTradeStatus(boolean isTrading){
-        this.isTrading = isTrading;
-    }
-
-    public void changeTradeCoin(CoinType tradeCoin){
-        this.tradeCoin = tradeCoin;
-    }
-
-    public void changeLevel(int nowLevel){
-        this.nowLevel = nowLevel;
-    }
-
-    public void changeStartPrice(double startPrice){
-        this.startPrice = startPrice;
-    }
 }
