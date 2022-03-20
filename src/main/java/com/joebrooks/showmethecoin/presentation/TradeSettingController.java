@@ -1,5 +1,6 @@
 package com.joebrooks.showmethecoin.presentation;
 
+import com.joebrooks.showmethecoin.global.strategy.Strategy;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.repository.user.UserService;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigEntity;
@@ -31,7 +32,8 @@ public class TradeSettingController {
         });
 
         model.addAttribute("coinList", CoinType.values());
-        model.addAttribute("userInfo", userConfigService.getUser(userEntity).get());
+        model.addAttribute("userInfo", userConfigService.getUserConfig(userEntity).get());
+        model.addAttribute("strategyLst", Strategy.values());
         model.addAttribute("result", result);
 
         return "trade-setting";
@@ -44,11 +46,12 @@ public class TradeSettingController {
             throw new IllegalAccessError();
         });
 
-        UserConfigEntity userConfigEntity = userConfigService.getUser(userEntity).get();
+        UserConfigEntity userConfigEntity = userConfigService.getUserConfig(userEntity).get();
 
         userConfigEntity.changeTradeCoin(body.getTradeCoin());
         userConfigEntity.changeStartPrice(body.getStartPrice());
-
+        userConfigEntity.changeCommonDifference(body.commonDifference);
+        userConfigEntity.changeStrategy(body.strategy);
         userConfigService.save(userConfigEntity);
 
         return "redirect:/trade-setting?result=success";
@@ -59,5 +62,7 @@ public class TradeSettingController {
     public class TradeResponse {
         private CoinType tradeCoin;
         private double startPrice;
+        private double commonDifference;
+        private Strategy strategy;
     }
 }

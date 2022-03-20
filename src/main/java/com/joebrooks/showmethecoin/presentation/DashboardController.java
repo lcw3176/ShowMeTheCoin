@@ -39,7 +39,7 @@ public class DashboardController {
                 revenue += dailyScore.getTodayEarnPrice();
             }
 
-            UserConfigEntity userConfigEntity = userConfigService.getUser(user).orElse(
+            UserConfigEntity userConfigEntity = userConfigService.getUserConfig(user).orElse(
                     UserConfigEntity.builder()
                             .balance(0)
                             .build());

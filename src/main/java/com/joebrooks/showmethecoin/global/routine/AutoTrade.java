@@ -1,7 +1,6 @@
 package com.joebrooks.showmethecoin.global.routine;
 
 import com.joebrooks.showmethecoin.global.exception.type.AutomationException;
-import com.joebrooks.showmethecoin.repository.user.UserService;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
 import com.joebrooks.showmethecoin.upbit.account.AccountResponse;
 import com.joebrooks.showmethecoin.upbit.account.AccountService;
@@ -17,7 +16,6 @@ import com.joebrooks.showmethecoin.upbit.order.*;
 import io.netty.handler.timeout.ReadTimeoutException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -35,12 +33,6 @@ public class AutoTrade {
     private final OrderService orderService;
     private final CandleService candleService;
     private final UserConfigService userConfigService;
-
-    @Value("${auto.rsi.buy}")
-    private int buy;
-
-    @Value("${auto.rsi.sell}")
-    private int sell;
 
     private boolean isAvailable = true;
 
@@ -69,8 +61,11 @@ public class AutoTrade {
                 CoinType coinType = user.getTradeCoin();
                 double startPrice = user.getStartPrice();
                 int nowLevel = user.getDifferenceLevel();
+                int buy = user.getStrategy().getBuyValue();
+                int sell = user.getStrategy().getSellValue();
+                double commonDifference = user.getCommonDifference();
 
-                double minCash = startPrice + 1000 * nowLevel;
+                double minCash = startPrice + commonDifference * nowLevel;
 
                 List<CandleResponse> candles = candleService.getCandles(coinType);
                 IndicatorResponse rsi = indicatorService.execute(rsiIndicator, candles);

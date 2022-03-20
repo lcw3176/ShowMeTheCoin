@@ -76,6 +76,40 @@
         </div>
 
         <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">공차</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <input type="number" name="commonDifference" class="input" th:value="${userInfo.commonDifference}" required>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">매매 전략</label>
+          </div>
+          <div class="field-body">
+            <div class="field is-narrow">
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select name="strategy">
+                    <option th:each="strategy : ${strategyLst}" th:if="${strategy.equals(userInfo.strategy)}"
+                            th:text="${strategy.name}" th:value="${strategy.toString()}" selected></option>
+
+                    <option th:each="strategy : ${strategyLst}" th:unless="${strategy.equals(userInfo.strategy)}"
+                            th:text="${strategy.name}" th:value="${strategy.toString()}"></option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
           <div class="field-label is-normal"></div>
           <div class="field-body">
             <div class="field">

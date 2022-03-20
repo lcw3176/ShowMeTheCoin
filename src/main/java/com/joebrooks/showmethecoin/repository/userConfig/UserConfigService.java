@@ -19,7 +19,7 @@ public class UserConfigService {
         return userConfigRepository.findAll();
     }
 
-    public Optional<UserConfigEntity> getUser(UserEntity id) {
+    public Optional<UserConfigEntity> getUserConfig(UserEntity id) {
         return userConfigRepository.findByUserId(id);
     }
 

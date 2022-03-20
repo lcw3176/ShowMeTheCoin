@@ -68,4 +68,12 @@ public class UserConfigEntity {
     public void changeStartPrice(double startPrice){
         this.startPrice = startPrice;
     }
+
+    public void changeCommonDifference(double commonDifference){
+        this.commonDifference = commonDifference;
+    }
+
+    public void changeStrategy(Strategy strategy){
+        this.strategy = strategy;
+    }
 }
