@@ -41,7 +41,7 @@ public class AutoTrade {
     private double lastTradePrice = initValue;
     private CandleResponse lastTradeCandle = null;
     private final int averageCount = 60;
-
+    private final int offset = 10;
     private final IndicatorType rsiIndicator = IndicatorType.RSI;
 
     @Scheduled(fixedDelay = 3000)
@@ -86,8 +86,8 @@ public class AutoTrade {
 
                     double averageRsi = temp / averageCount;
 
-                    buy = (int)averageRsi - 10;
-                    sell = (int)averageRsi + 10;
+                    buy = (int)averageRsi - offset;
+                    sell = (int)averageRsi + offset;
 
                 } else {
                     buy = user.getStrategy().getBuyValue();
@@ -96,7 +96,7 @@ public class AutoTrade {
 
                 if(secondRecentValue > buy
                         && thirdRecentValue < buy
-                        && (mostRecentValue > buy && mostRecentValue < sell)
+                        && (mostRecentValue > buy && mostRecentValue < sell - offset)
                         && (lastTradeCandle == null || !nowCandle.getDateKst().equals(lastTradeCandle.getDateKst())) ){
 
                     AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
