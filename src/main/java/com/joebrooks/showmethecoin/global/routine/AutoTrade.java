@@ -135,16 +135,16 @@ public class AutoTrade {
                         user.changeDifferenceLevel(0);
                         userConfigService.save(user);
 
-                        List<CheckOrderResponse> checkOrderResponses = orderService.checkOrder(CheckOrderRequest.builder()
-                                                    .state(OrderStatus.wait)
-                                                    .build());
-
-
-                        checkOrderResponses.forEach(remainedOrder -> {
-                            orderService.cancelOrder(CancelOrderRequest.builder()
-                                    .uuid(remainedOrder.getUuid())
-                                    .build());
-                        });
+//                        List<CheckOrderResponse> checkOrderResponses = orderService.checkOrder(CheckOrderRequest.builder()
+//                                                    .state(OrderStatus.wait)
+//                                                    .build());
+//
+//
+//                        checkOrderResponses.forEach(remainedOrder -> {
+//                            orderService.cancelOrder(CancelOrderRequest.builder()
+//                                    .uuid(remainedOrder.getUuid())
+//                                    .build());
+//                        });
                     }
                 }
 
