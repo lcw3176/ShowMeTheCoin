@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum Strategy {
-    FALLING("하락장", 25, 45),
+    FALLING("하락장", 30, 45),
     RISING("상승장",40, 60),
     STAY("횡보장",30, 60);
 
