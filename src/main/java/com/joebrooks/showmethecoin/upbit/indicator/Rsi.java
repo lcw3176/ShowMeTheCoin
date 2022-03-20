@@ -1,9 +1,7 @@
 package com.joebrooks.showmethecoin.upbit.indicator;
 
-import com.joebrooks.showmethecoin.upbit.candles.CandleResponse;
 import com.joebrooks.showmethecoin.global.graph.GraphUtil;
-import com.joebrooks.showmethecoin.upbit.indicator.IIndicator;
-import com.joebrooks.showmethecoin.upbit.indicator.IndicatorResponse;
+import com.joebrooks.showmethecoin.upbit.candles.CandleResponse;
 import com.joebrooks.showmethecoin.upbit.indicator.type.IndicatorAnnotation;
 import com.joebrooks.showmethecoin.upbit.indicator.type.IndicatorType;
 import org.springframework.beans.factory.annotation.Value;
@@ -73,9 +71,7 @@ public class Rsi implements IIndicator {
 
         return IndicatorResponse.builder()
                 .type(IndicatorType.RSI)
-                .olderValue(olderValue)
-                .recentValue(recentValue)
-                .newestValue(rsiLst.get(0))
+                .values(rsiLst)
                 .status(GraphUtil.getStatus(olderValue, recentValue))
                 .build();
     }

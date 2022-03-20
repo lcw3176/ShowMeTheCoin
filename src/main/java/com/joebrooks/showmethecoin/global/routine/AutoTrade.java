@@ -1,6 +1,7 @@
 package com.joebrooks.showmethecoin.global.routine;
 
 import com.joebrooks.showmethecoin.global.exception.type.AutomationException;
+import com.joebrooks.showmethecoin.global.strategy.Strategy;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
 import com.joebrooks.showmethecoin.upbit.account.AccountResponse;
 import com.joebrooks.showmethecoin.upbit.account.AccountService;
@@ -39,7 +40,7 @@ public class AutoTrade {
     private final double initValue = 100000000D;
     private double lastTradePrice = initValue;
     private CandleResponse lastTradeCandle = null;
-
+    private final int averageCount = 60;
 
     private final IndicatorType rsiIndicator = IndicatorType.RSI;
 
@@ -61,8 +62,6 @@ public class AutoTrade {
                 CoinType coinType = user.getTradeCoin();
                 double startPrice = user.getStartPrice();
                 int nowLevel = user.getDifferenceLevel();
-                int buy = user.getStrategy().getBuyValue();
-                int sell = user.getStrategy().getSellValue();
                 double commonDifference = user.getCommonDifference();
 
                 double minCash = startPrice + commonDifference * nowLevel;
@@ -70,11 +69,34 @@ public class AutoTrade {
                 List<CandleResponse> candles = candleService.getCandles(coinType);
                 IndicatorResponse rsi = indicatorService.execute(rsiIndicator, candles);
 
+                double mostRecentValue = rsi.getValues().get(0);
+                double secondRecentValue = rsi.getValues().get(1);
+                double thirdRecentValue = rsi.getValues().get(2);
+
                 CandleResponse nowCandle = candles.get(0);
 
-                if(rsi.getRecentValue() > buy
-                        && rsi.getOlderValue() < buy
-                        && (rsi.getNewestValue() > buy && rsi.getNewestValue() < sell)
+                int buy;
+                int sell;
+
+                if(user.getStrategy().equals(Strategy.AUTO)){
+                    double temp = 0;
+                    for(int i = 0; i < averageCount; i++){
+                        temp += rsi.getValues().get(i);
+                    }
+
+                    double averageRsi = temp / averageCount;
+
+                    buy = (int)averageRsi - 10;
+                    sell = (int)averageRsi + 10;
+
+                } else {
+                    buy = user.getStrategy().getBuyValue();
+                    sell = user.getStrategy().getSellValue();
+                }
+
+                if(secondRecentValue > buy
+                        && thirdRecentValue < buy
+                        && (mostRecentValue > buy && mostRecentValue < sell)
                         && (lastTradeCandle == null || !nowCandle.getDateKst().equals(lastTradeCandle.getDateKst())) ){
 
                     AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
@@ -110,7 +132,7 @@ public class AutoTrade {
 
                 }
 
-                if(rsi.getNewestValue() >= sell){
+                if(mostRecentValue >= sell){
 
                     AccountResponse coinResponse = Arrays.stream(accountService.getAccountData())
                             .filter(data -> data.getCurrency().equals(coinType.toString()))
