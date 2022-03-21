@@ -133,7 +133,7 @@ public class AutoTrade {
                 }
                 
                 // 손절 조건
-                if(lastTradePrice * 0.97 <= nowCandle.getTradePrice()){
+                if(lastTradePrice * 0.985 >= nowCandle.getTradePrice()){
                     AccountResponse coinResponse = accountService.getCoinCurrency(coinType);
 
                     double coinBalance = Double.parseDouble(coinResponse.getBalance());
