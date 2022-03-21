@@ -40,7 +40,7 @@ public class AutoTrade {
     private final double initValue = 100000000D;
     private double lastTradePrice = initValue;
     private CandleResponse lastTradeCandle = null;
-    private final int averageCount = 14;
+    private final int averageCount = 30;
     private final int offset = 6;
     private final IndicatorType rsiIndicator = IndicatorType.RSI;
 
