@@ -1,7 +1,6 @@
 package com.joebrooks.showmethecoin.global.routine;
 
 import com.joebrooks.showmethecoin.global.exception.type.AutomationException;
-import com.joebrooks.showmethecoin.global.strategy.Strategy;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
 import com.joebrooks.showmethecoin.upbit.account.AccountResponse;
 import com.joebrooks.showmethecoin.upbit.account.AccountService;
@@ -13,10 +12,10 @@ import com.joebrooks.showmethecoin.upbit.client.Side;
 import com.joebrooks.showmethecoin.upbit.indicator.IndicatorResponse;
 import com.joebrooks.showmethecoin.upbit.indicator.IndicatorService;
 import com.joebrooks.showmethecoin.upbit.indicator.type.IndicatorType;
-import com.joebrooks.showmethecoin.upbit.order.*;
+import com.joebrooks.showmethecoin.upbit.order.OrderRequest;
+import com.joebrooks.showmethecoin.upbit.order.OrderService;
 import io.netty.handler.timeout.ReadTimeoutException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +25,6 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class AutoTrade {
 
     private final IndicatorService indicatorService;
@@ -40,8 +38,6 @@ public class AutoTrade {
     private final double initValue = 100000000D;
     private double lastTradePrice = initValue;
     private CandleResponse lastTradeCandle = null;
-    private final int averageCount = 30;
-    private final int offset = 10;
     private final IndicatorType rsiIndicator = IndicatorType.RSI;
 
     @Scheduled(fixedDelay = 3000)
@@ -75,28 +71,12 @@ public class AutoTrade {
 
                 CandleResponse nowCandle = candles.get(0);
 
-                int buy;
-                int sell;
-
-                if(user.getStrategy().equals(Strategy.AUTO)){
-                    double temp = 0;
-                    for(int i = 0; i < averageCount; i++){
-                        temp += rsi.getValues().get(i);
-                    }
-
-                    double averageRsi = temp / averageCount;
-
-                    buy = (int)averageRsi - offset;
-                    sell = (int)averageRsi + offset;
-
-                } else {
-                    buy = user.getStrategy().getBuyValue();
-                    sell = user.getStrategy().getSellValue();
-                }
+                int buy = user.getStrategy().getBuyValue();
+                int sell = user.getStrategy().getSellValue();
 
                 if(secondRecentValue > buy
                         && thirdRecentValue < buy
-                        && (mostRecentValue > buy && mostRecentValue < (buy + sell) / 2)
+                        && (mostRecentValue > buy && mostRecentValue < (double)(buy + sell) / 2)
                         && (lastTradeCandle == null || !nowCandle.getDateKst().equals(lastTradeCandle.getDateKst())) ){
 
                     AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
@@ -121,9 +101,6 @@ public class AutoTrade {
                                 .build();
 
                         orderService.requestOrder(orderRequest);
-
-                        log.info("{}: 매수 {}", coinType.getKoreanName(), nowCandle.getTradePrice());
-
                         lastTradePrice = nowCandle.getTradePrice();
                         lastTradeCandle = nowCandle;
                         user.changeDifferenceLevel(user.getDifferenceLevel() + 1);
@@ -151,8 +128,6 @@ public class AutoTrade {
                                 .build();
 
                         orderService.requestOrder(orderRequest);
-
-                        log.info("{}: 매도 {}", coinType.getKoreanName(), nowCandle.getTradePrice());
                         lastTradePrice = initValue;
                         user.changeDifferenceLevel(0);
                         userConfigService.save(user);
@@ -174,8 +149,8 @@ public class AutoTrade {
 
 
 
-        } catch (ReadTimeoutException e){
-            log.info("타임아웃");
+        } catch (ReadTimeoutException ignored){
+
         } catch (Exception e){
             isAvailable = false;
             throw new AutomationException(e, "작동 정지");
