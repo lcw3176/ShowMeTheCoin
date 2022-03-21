@@ -41,7 +41,7 @@ public class AutoTrade {
     private double lastTradePrice = initValue;
     private CandleResponse lastTradeCandle = null;
     private final int averageCount = 30;
-    private final int offset = 6;
+    private final int offset = 10;
     private final IndicatorType rsiIndicator = IndicatorType.RSI;
 
     @Scheduled(fixedDelay = 3000)
