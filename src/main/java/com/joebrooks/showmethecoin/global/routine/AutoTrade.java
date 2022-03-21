@@ -140,11 +140,8 @@ public class AutoTrade {
 
 
 
-        } catch (ReadTimeoutException ignored){
-
         } catch (Exception e){
-            isAvailable = false;
-            throw new AutomationException(e, "작동 정지");
+            throw new AutomationException(e, "에러");
         }
     }
 
