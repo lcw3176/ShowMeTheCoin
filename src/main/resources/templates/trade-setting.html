@@ -55,7 +55,9 @@
           <div class="field-body">
             <div class="field">
               <div class="control">
-                <input type="number" th:value="${userInfo.balance}" class="input" readonly>
+                <input type="number" th:value="${#numbers.formatDecimal(userInfo.balance, 0, 0)}"
+                       class="input"
+                       readonly>
               </div>
             </div>
           </div>
@@ -69,7 +71,9 @@
           <div class="field-body">
             <div class="field">
               <div class="control">
-                <input type="number" name="startPrice" class="input" th:value="${userInfo.startPrice}" required>
+                <input type="number" name="startPrice" class="input"
+                       th:value="${#numbers.formatDecimal(userInfo.startPrice, 0, 0)}"
+                       required>
               </div>
             </div>
           </div>
@@ -82,7 +86,9 @@
           <div class="field-body">
             <div class="field">
               <div class="control">
-                <input type="number" name="commonDifference" class="input" th:value="${userInfo.commonDifference}" required>
+                <input type="number" name="commonDifference" class="input"
+                       th:value="${#numbers.formatDecimal(userInfo.commonDifference, 0, 0)}"
+                       required>
               </div>
             </div>
           </div>
