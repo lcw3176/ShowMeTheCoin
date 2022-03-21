@@ -1,6 +1,7 @@
 package com.joebrooks.showmethecoin.global.routine;
 
 import com.joebrooks.showmethecoin.global.exception.type.AutomationException;
+import com.joebrooks.showmethecoin.global.strategy.Strategy;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
 import com.joebrooks.showmethecoin.upbit.account.AccountResponse;
 import com.joebrooks.showmethecoin.upbit.account.AccountService;
@@ -14,7 +15,6 @@ import com.joebrooks.showmethecoin.upbit.indicator.IndicatorService;
 import com.joebrooks.showmethecoin.upbit.indicator.type.IndicatorType;
 import com.joebrooks.showmethecoin.upbit.order.OrderRequest;
 import com.joebrooks.showmethecoin.upbit.order.OrderService;
-import io.netty.handler.timeout.ReadTimeoutException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -32,8 +32,6 @@ public class AutoTrade {
     private final CandleService candleService;
     private final UserConfigService userConfigService;
 
-    private boolean isAvailable = true;
-
     private final double initValue = 100000000D;
     private double lastTradePrice = initValue;
     private CandleResponse lastTradeCandle = null;
@@ -43,11 +41,6 @@ public class AutoTrade {
     public void mainAutomationRoutine() throws AutomationException {
 
         try {
-
-            if(!isAvailable){
-                return;
-            }
-
 
             userConfigService.getAllUserConfig().forEach(user -> {
                 if(!user.isTrading()){
@@ -72,7 +65,8 @@ public class AutoTrade {
 
                 int buy = user.getStrategy().getBuyValue();
                 int sell = user.getStrategy().getSellValue();
-
+                
+                // 구매 조건
                 if(secondRecentValue > buy
                         && thirdRecentValue < buy
                         && (mostRecentValue > buy && mostRecentValue < (double)(buy + sell) / 2)
@@ -102,7 +96,8 @@ public class AutoTrade {
                     }
 
                 }
-
+                
+                // 익절 조건
                 if(mostRecentValue >= sell){
 
                     AccountResponse coinResponse = accountService.getCoinCurrency(coinType);
@@ -121,6 +116,7 @@ public class AutoTrade {
                         orderService.requestOrder(orderRequest);
                         lastTradePrice = initValue;
                         user.changeDifferenceLevel(0);
+                        user.changeStrategy(Strategy.RISING);
                         userConfigService.save(user);
 
 //                        List<CheckOrderResponse> checkOrderResponses = orderService.checkOrder(CheckOrderRequest.builder()
@@ -133,6 +129,36 @@ public class AutoTrade {
 //                                    .uuid(remainedOrder.getUuid())
 //                                    .build());
 //                        });
+                    }
+                }
+                
+                // 손절 조건
+                if(lastTradePrice * 0.97 <= nowCandle.getTradePrice()){
+                    AccountResponse coinResponse = accountService.getCoinCurrency(coinType);
+
+                    double coinBalance = Double.parseDouble(coinResponse.getBalance());
+
+                    if(coinBalance > 0){
+                        OrderRequest orderRequest = OrderRequest.builder()
+                                .market(coinType.getName())
+                                .side(Side.ask)
+                                .price(Double.toString(nowCandle.getTradePrice()))
+                                .volume(BigDecimal.valueOf(coinBalance).toString())
+                                .ordType(OrderType.limit)
+                                .build();
+
+                        orderService.requestOrder(orderRequest);
+                        lastTradePrice = initValue;
+                        user.changeDifferenceLevel(0);
+
+                        if(user.getStrategy().equals(Strategy.RISING)){
+                            user.changeStrategy(Strategy.STAY);
+                        } else if(user.getStrategy().equals(Strategy.STAY)){
+                            user.changeStrategy(Strategy.FALLING);
+                        }
+
+                        userConfigService.save(user);
+
                     }
                 }
 
