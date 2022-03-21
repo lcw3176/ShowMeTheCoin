@@ -13,7 +13,7 @@
                             <div class="is-widget-label"><h3 class="subtitle is-spaced">
                                 현재 잔고
                             </h3>
-                                <h1 class="title" th:text="${balance} + ' ₩'">
+                                <h1 class="title" th:text="${#numbers.formatInteger(balance, 0, 'COMMA')} + ' ₩'">
                                 </h1>
                             </div>
                         </div>
@@ -34,7 +34,7 @@
                             <div class="is-widget-label"><h3 class="subtitle is-spaced">
                                 누적 수익
                             </h3>
-                                <h1 class="title" th:text="${revenue} + ' ₩'">
+                                <h1 class="title" th:text="${#numbers.formatInteger(revenue, 0, 'COMMA')} + ' ₩'">
                                 </h1>
                             </div>
                         </div>
