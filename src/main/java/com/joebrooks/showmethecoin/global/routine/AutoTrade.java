@@ -96,7 +96,7 @@ public class AutoTrade {
 
                 if(secondRecentValue > buy
                         && thirdRecentValue < buy
-                        && (mostRecentValue > buy && mostRecentValue < sell - offset)
+                        && (mostRecentValue > buy && mostRecentValue < (buy + sell) / 2)
                         && (lastTradeCandle == null || !nowCandle.getDateKst().equals(lastTradeCandle.getDateKst())) ){
 
                     AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
