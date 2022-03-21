@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 public class AccountService {
 
     private final UpBitClient upBitClient;
-
+    
+    // fixme private 으로 변경 후 다른 public 함수들 세분화 
     public AccountResponse[] getAccountData() {
         String uri = "/accounts";
 
