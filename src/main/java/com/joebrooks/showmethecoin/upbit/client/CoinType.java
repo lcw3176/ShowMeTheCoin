@@ -27,6 +27,7 @@ public enum CoinType {
     MFT("KRW-MFT", "메인프레임"),
     CRE("KRW-CRE", "캐리프로토콜"),
     KNC("KRW-KNC", "카이버네트워크"),
+    ETC("KRW-ETC", "이더리움클래식"),
     DOGE("KRW-DOGE", "도지코인");
 
     private String name;
