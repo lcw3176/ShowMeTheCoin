@@ -93,14 +93,6 @@ public class TradeLogManager {
                             .coinType(userConfig.getTradeCoin())
                             .build());
 
-                    AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
-                            .filter(data -> data.getCurrency().equals("KRW"))
-                            .findFirst()
-                            .orElseThrow(() ->{
-                                throw  new RuntimeException("계좌 정보가 없습니다");
-                            });
-
-                    userConfig.changeBalance(Double.parseDouble(accountResponse.getBalance()));
                     userConfigService.save(userConfig);
                     break;
                 }

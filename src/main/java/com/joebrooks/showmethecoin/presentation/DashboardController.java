@@ -5,12 +5,16 @@ import com.joebrooks.showmethecoin.repository.dailyScore.DailyScoreService;
 import com.joebrooks.showmethecoin.repository.user.UserService;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigEntity;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
+import com.joebrooks.showmethecoin.upbit.account.AccountResponse;
+import com.joebrooks.showmethecoin.upbit.account.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -20,6 +24,7 @@ public class DashboardController {
     private final DailyScoreService dailyScoreService;
     private final UserService userService;
     private final UserConfigService userConfigService;
+    private final AccountService accountService;
 
     @GetMapping("/")
     public String redirectDashboard(){
@@ -51,5 +56,29 @@ public class DashboardController {
 
 
         return "dashboard";
+    }
+
+    @PostMapping("/dashboard")
+    public String refreshDashboard(HttpSession session){
+        String id = (String)session.getAttribute("userId");
+
+        userService.getUser(id).ifPresent((user) -> {
+            AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
+                    .filter(data -> data.getCurrency().equals("KRW"))
+                    .findFirst()
+                    .orElseThrow(() ->{
+                        throw new RuntimeException("계좌 정보가 없습니다");
+                    });
+
+            UserConfigEntity userConfigEntity = userConfigService.getUserConfig(user).orElse(
+                    UserConfigEntity.builder()
+                            .balance(0)
+                            .build());
+
+            userConfigEntity.changeBalance(Double.parseDouble(accountResponse.getBalance()));
+            userConfigService.save(userConfigEntity);
+        });
+
+        return "redirect:/dashboard";
     }
 }
