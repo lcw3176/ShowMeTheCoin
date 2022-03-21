@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -63,12 +62,7 @@ public class DashboardController {
         String id = (String)session.getAttribute("userId");
 
         userService.getUser(id).ifPresent((user) -> {
-            AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
-                    .filter(data -> data.getCurrency().equals("KRW"))
-                    .findFirst()
-                    .orElseThrow(() ->{
-                        throw new RuntimeException("계좌 정보가 없습니다");
-                    });
+            AccountResponse accountResponse =accountService.getKRWCurrency();
 
             UserConfigEntity userConfigEntity = userConfigService.getUserConfig(user).orElse(
                     UserConfigEntity.builder()

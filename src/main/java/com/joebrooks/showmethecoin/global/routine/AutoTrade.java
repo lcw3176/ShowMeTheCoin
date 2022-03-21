@@ -20,7 +20,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -79,12 +78,7 @@ public class AutoTrade {
                         && (mostRecentValue > buy && mostRecentValue < (double)(buy + sell) / 2)
                         && (lastTradeCandle == null || !nowCandle.getDateKst().equals(lastTradeCandle.getDateKst())) ){
 
-                    AccountResponse accountResponse = Arrays.stream(accountService.getAccountData())
-                            .filter(data -> data.getCurrency().equals("KRW"))
-                            .findFirst()
-                            .orElseThrow(() ->{
-                                throw new RuntimeException("계좌 정보가 없습니다");
-                            });
+                    AccountResponse accountResponse = accountService.getKRWCurrency();
 
                     double myBalance = Math.ceil(Double.parseDouble(accountResponse.getBalance())) ;
 
@@ -111,10 +105,7 @@ public class AutoTrade {
 
                 if(mostRecentValue >= sell){
 
-                    AccountResponse coinResponse = Arrays.stream(accountService.getAccountData())
-                            .filter(data -> data.getCurrency().equals(coinType.toString()))
-                            .findFirst()
-                            .orElse(AccountResponse.builder().balance("0").build());
+                    AccountResponse coinResponse = accountService.getCoinCurrency(coinType);
 
                     double coinBalance = Double.parseDouble(coinResponse.getBalance());
 
