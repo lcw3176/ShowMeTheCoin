@@ -150,17 +150,10 @@ public class AutoTrade {
                         orderService.requestOrder(orderRequest);
                         lastTradePrice = initValue;
                         user.changeDifferenceLevel(0);
-                        user.changeStrategy(Strategy.FALLING);
 
                         userConfigService.save(user);
 
                     }
-                }
-
-                // 전략 변경 조건
-                if(mostRecentValue >= 60 && user.getStrategy().equals(Strategy.FALLING)){
-                    user.changeStrategy(Strategy.RISING);
-                    userConfigService.save(user);
                 }
 
             });
