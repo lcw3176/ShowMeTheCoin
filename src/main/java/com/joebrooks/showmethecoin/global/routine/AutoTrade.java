@@ -157,6 +157,12 @@ public class AutoTrade {
                     }
                 }
 
+                // 전략 변경 조건
+                if(mostRecentValue >= 60 && user.getStrategy().equals(Strategy.FALLING)){
+                    user.changeStrategy(Strategy.RISING);
+                    userConfigService.save(user);
+                }
+
             });
 
 
