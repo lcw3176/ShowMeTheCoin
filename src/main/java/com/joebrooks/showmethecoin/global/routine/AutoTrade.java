@@ -133,7 +133,7 @@ public class AutoTrade {
                 }
                 
                 // 손절 조건
-                if(initValue != lastTradePrice && lastTradePrice * 0.995 >= nowCandle.getTradePrice()){
+                if(initValue != lastTradePrice && lastTradePrice * 0.998 >= nowCandle.getTradePrice()){
                     AccountResponse coinResponse = accountService.getCoinCurrency(coinType);
 
                     double coinBalance = Double.parseDouble(coinResponse.getBalance());
@@ -150,12 +150,7 @@ public class AutoTrade {
                         orderService.requestOrder(orderRequest);
                         lastTradePrice = initValue;
                         user.changeDifferenceLevel(0);
-
-                        if(user.getStrategy().equals(Strategy.RISING)){
-                            user.changeStrategy(Strategy.STAY);
-                        } else if(user.getStrategy().equals(Strategy.STAY)){
-                            user.changeStrategy(Strategy.FALLING);
-                        }
+                        user.changeStrategy(Strategy.FALLING);
 
                         userConfigService.save(user);
 
