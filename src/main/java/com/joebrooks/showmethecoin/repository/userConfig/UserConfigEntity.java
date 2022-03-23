@@ -7,8 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -43,9 +45,8 @@ public class UserConfigEntity {
     @Column(name = "strategy")
     @Enumerated(EnumType.STRING)
     private Strategy strategy;
-
-
-    @OneToOne(targetEntity = UserEntity.class)
+    
+    @ManyToOne(targetEntity = UserEntity.class)
     @JoinColumn(name = "user_id")
     private UserEntity userId;
 
