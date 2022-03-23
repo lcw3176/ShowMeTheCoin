@@ -4,10 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum Strategy {
-    RISING("상승장 / 모험 전략",40, 60),
-    STAY("횡보장 / 일반 전략",30, 60),
-    FALLING("하락장 / 안전 전략", 50, 60),
-    JACKPOT("불확실장 / 잭팟 전략",20, 60);
+    RISING("거래량 높음 / 거래당 수익 낮음",40, 60),
+    STAY("거래량 보통 / 거래당 수익 보통",30, 60),
+    FALLING("거래량 낮음 / 거래당 수익 높음", 20, 60);
 
     private int buyValue;
     private int sellValue;
