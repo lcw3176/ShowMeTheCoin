@@ -1,8 +1,6 @@
 package com.joebrooks.showmethecoin.repository.trade;
 
 import com.joebrooks.showmethecoin.global.trade.TradeResult;
-import com.joebrooks.showmethecoin.upbit.order.OrderStatus;
-import com.joebrooks.showmethecoin.repository.BaseTimeEntity;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.upbit.client.CoinType;
 import lombok.AllArgsConstructor;
@@ -11,13 +9,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity(name = "trade")
-public class TradeEntity extends BaseTimeEntity {
+public class TradeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,9 +36,9 @@ public class TradeEntity extends BaseTimeEntity {
     @Column(name = "sell_price")
     private double sellPrice;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
 
     @ManyToOne(targetEntity = UserEntity.class)
     @JoinColumn(name = "user_id")

@@ -56,7 +56,6 @@
                 <th>수익</th>
                 <th>구매 가격</th>
                 <th>판매 가격</th>
-                <th>체결 여부</th>
                 <th>거래 시간</th>
               </tr>
               </thead>
@@ -73,7 +72,6 @@
                   <td th:text="${data.sellPrice} - ${data.buyPrice}"></td>
                   <td th:text="${data.buyPrice}"></td>
                   <td th:text="${data.sellPrice}"></td>
-                  <td th:text="${data.status}"></td>
                   <td data-label="Created">
                     <small class="has-text-grey is-abbr-like" th:text="${data.createdDate}"></small>
                   </td>
