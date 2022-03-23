@@ -49,6 +49,6 @@ public class CheckOrderResponse {
 
     public void setPriceByPaidFee(){
         double fee = Double.parseDouble(this.paidFee);
-        this.price = BigDecimal.valueOf(fee / 0.0005 + fee).toString();
+        this.price = BigDecimal.valueOf((fee / 0.0005 + fee) / Double.parseDouble(this.executeVolume)).toString();
     }
 }
