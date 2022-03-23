@@ -29,7 +29,7 @@ upbit:
   client:
     timeout: 3000
   candle:
-    minute: 1
+    minute: 5
     count: 200
   rsi:
     day: 7
