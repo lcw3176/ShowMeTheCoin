@@ -28,6 +28,10 @@ public enum CoinType {
     CRE("KRW-CRE", "캐리프로토콜"),
     KNC("KRW-KNC", "카이버네트워크"),
     ETC("KRW-ETC", "이더리움클래식"),
+    BTG("KRW-BTG", "비트코인골드"),
+    QTUM("KRW-QTUM", "퀀텀"),
+    SRM("KRW-SRM", "세럼"),
+    BORA("KRW-BORA", "보라"),
     DOGE("KRW-DOGE", "도지코인");
 
     private String name;
