@@ -4,8 +4,7 @@ import com.joebrooks.showmethecoin.global.trade.TradeResult;
 import com.joebrooks.showmethecoin.repository.trade.TradeEntity;
 import com.joebrooks.showmethecoin.repository.trade.TradeService;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
-import com.joebrooks.showmethecoin.upbit.account.AccountResponse;
-import com.joebrooks.showmethecoin.upbit.account.AccountService;
+import com.joebrooks.showmethecoin.upbit.client.CoinType;
 import com.joebrooks.showmethecoin.upbit.client.Side;
 import com.joebrooks.showmethecoin.upbit.order.CheckOrderRequest;
 import com.joebrooks.showmethecoin.upbit.order.CheckOrderResponse;
@@ -17,7 +16,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -27,7 +25,6 @@ public class TradeLogManager {
     private final UserConfigService userConfigService;
     private final TradeService tradeService;
     private final OrderService orderService;
-    private final AccountService accountService;
 
     @Scheduled(cron = "0 */30 * * * *")
     public void refreshCompletedOrder(){
@@ -40,23 +37,25 @@ public class TradeLogManager {
 
             for(int i = 0; i < responses.size(); i++){
                 TradeEntity lastRecordedOrder = pages.getContent().get(0);
+                CheckOrderResponse targetResponse = responses.get(i);
+                LocalDateTime targetCreatedTime = LocalDateTime.parse(targetResponse.getCreatedAt().split("\\+")[0]);
 
-                if(LocalDateTime.parse(responses.get(i).getCreatedAt().split("\\+")[0])
-                        .isBefore(lastRecordedOrder.getCreatedDate())){
+                if(targetCreatedTime.isBefore(lastRecordedOrder.getCreatedDate())
+                    || targetCreatedTime.isEqual(lastRecordedOrder.getCreatedDate())){
                     break;
                 }
 
-                if(responses.get(i).getSide().equals(Side.ask.toString())){
+                if(targetResponse.getSide().equals(Side.ask.toString())){
 
                     double sell = 0D;
                     double buy = 0D;
 
                     for(int j = i; j < responses.size(); j++){
                         CheckOrderResponse unknownOrder = responses.get(j);
+                        LocalDateTime unknownOrderCreatedTime = LocalDateTime.parse(unknownOrder.getCreatedAt().split("\\+")[0]);
 
-                        if(LocalDateTime.parse(unknownOrder.getCreatedAt().split("\\+")[0])
-                                .isBefore(lastRecordedOrder.getCreatedDate())
-                                && j != i){
+                        if(unknownOrderCreatedTime.isBefore(lastRecordedOrder.getCreatedDate())
+                                || unknownOrderCreatedTime.isEqual(lastRecordedOrder.getCreatedDate())){
                             break;
                         }
 
@@ -89,8 +88,8 @@ public class TradeLogManager {
                             .tradeResult(result)
                             .sellPrice(sell)
                             .buyPrice(buy)
-                            .status(OrderStatus.done)
-                            .coinType(userConfig.getTradeCoin())
+                            .createdDate(LocalDateTime.parse(targetResponse.getCreatedAt().split("\\+")[0]))
+                            .coinType(CoinType.valueOf(targetResponse.getMarket().split("-")[1]))
                             .build());
 
                     userConfigService.save(userConfig);
