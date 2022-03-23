@@ -68,10 +68,9 @@
 
                   <td th:unless="${data.tradeResult.toString().equals('Benefit')}" th:class="has-text-danger"
                       th:text="손해"></td>
-
-                  <td th:text="${data.sellPrice} - ${data.buyPrice}"></td>
-                  <td th:text="${data.buyPrice}"></td>
-                  <td th:text="${data.sellPrice}"></td>
+                  <td th:text="${#numbers.formatInteger(data.sellPrice - data.buyPrice, 0, 'COMMA')}"></td>
+                  <td th:text="${#numbers.formatInteger(data.buyPrice, 0, 'COMMA')}"></td>
+                  <td th:text="${#numbers.formatInteger(data.sellPrice, 0, 'COMMA')}"></td>
                   <td data-label="Created">
                     <small class="has-text-grey is-abbr-like" th:text="${data.createdDate}"></small>
                   </td>
