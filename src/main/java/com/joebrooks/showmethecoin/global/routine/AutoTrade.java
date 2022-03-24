@@ -48,11 +48,12 @@ public class AutoTrade {
                 }
 
                 CoinType coinType = user.getTradeCoin();
-                double startPrice = user.getStartPrice();
-                int nowLevel = user.getDifferenceLevel();
-                double commonDifference = user.getCommonDifference();
-
-                double minCash = startPrice + commonDifference * nowLevel;
+//                double startPrice = user.getStartPrice();
+//                int nowLevel = user.getDifferenceLevel();
+//                double commonDifference = user.getCommonDifference();
+//
+//                double minCash = startPrice + commonDifference * nowLevel;
+                double minCash = 5100;
                 List<CandleResponse> candles = candleService.getCandles(coinType);
                 IndicatorResponse rsi = indicatorService.execute(rsiIndicator, candles);
 
