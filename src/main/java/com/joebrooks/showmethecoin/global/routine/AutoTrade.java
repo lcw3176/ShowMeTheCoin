@@ -48,12 +48,12 @@ public class AutoTrade {
                 }
 
                 CoinType coinType = user.getTradeCoin();
-//                double startPrice = user.getStartPrice();
-//                int nowLevel = user.getDifferenceLevel();
-//                double commonDifference = user.getCommonDifference();
-//
-//                double minCash = startPrice + commonDifference * nowLevel;
-                double minCash = 5100;
+                double startPrice = user.getStartPrice();
+                int nowLevel = user.getDifferenceLevel();
+                double commonDifference = user.getCommonDifference();
+
+                double minCash = startPrice + commonDifference * nowLevel;
+
                 List<CandleResponse> candles = candleService.getCandles(coinType);
                 IndicatorResponse rsi = indicatorService.execute(rsiIndicator, candles);
 
@@ -78,8 +78,7 @@ public class AutoTrade {
 
 
                     if(myBalance > minCash && nowCandle.getTradePrice() < lastTradePrice){
-                        myBalance = myBalance * 0.999;
-                        double coinVolume = myBalance / nowCandle.getTradePrice();
+                        double coinVolume = minCash / nowCandle.getTradePrice();
 
                         OrderRequest orderRequest = OrderRequest.builder()
                                 .market(coinType.getName())
