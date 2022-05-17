@@ -1,0 +1,133 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/layout">
+<th:block layout:fragment="layout_content">
+
+    <section class="section is-main-section">
+        <div id="chart" style="height: 700px;">
+
+        </div>
+
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js" integrity="sha256-7rldQObjnoCubPizkatB4UZ0sCQzu2ePgyGSUcVN70E=" crossorigin="anonymous"></script>
+    <script>
+        window.onload = function () {
+            // DOM을 준비하고 echart 객체를 만듭니다.
+            var myChart = echarts.init(document.getElementById('chart'));
+
+            //chart의 설정을 정합니다.
+            var option = {
+                title: {
+                    text: '백테스트',
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#283b56'
+                        }
+                    }
+                },
+                legend: {
+                    data: ['매수', '매도','시세']
+                },
+                dataZoom: {
+                    show: true,
+                    start: 0,
+                    end: 100
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        boundaryGap: true,
+                        data: []
+                    },
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        scale: true,
+                        name: '시세',
+                    }
+                ],
+                series: [
+                    {
+                        name: '매수',
+                        type: 'scatter',
+                        yAxisIndex: 0, //yAxis 1번째 사용
+                        data: [],
+                        itemStyle:{
+                            color:'#0000CC'
+                        },
+                    },
+
+                    {
+                        name: '매도',
+                        type: 'scatter',
+                        yAxisIndex: 0, //yAxis 1번째 사용
+                        data: [],
+                        itemStyle:{
+                            color:'#CC0000'
+                        },
+                    },
+
+                    {
+                        name: '시세',
+                        type: 'line',
+                        yAxisIndex: 0, //yAxis 2번째 사용
+                        data: [],
+                        itemStyle:{
+                            color:'#FFCC00'
+                        },
+                    },
+                ]
+            };
+
+            // 위에서 설정한 속성을 차트에 반영합니다.
+            myChart.setOption(option);
+
+            let socket = new WebSocket("ws://localhost:8080/upbit/backtest")
+
+            socket.onmessage = function (e){
+                update(JSON.parse(e.data));
+            }
+            function update(value){
+                var data2 = option.series[2].data; // 시세
+                var data0 = option.series[0].data; // 매수
+                var data1 = option.series[1].data; // 매도
+
+                if(value.trade){
+
+                    if(value.buy){
+                        data0.push(value.tradePrice);
+                        data1.push(undefined)
+                    } else {
+                        data0.push(undefined)
+                        data1.push(value.tradePrice);
+                    }
+
+
+
+                } else {
+                    data0.push(undefined);
+                    data1.push(undefined)
+                }
+
+
+                data2.push(value.tradePrice);
+
+                var axisData = value.dateKst.replace("T", " ").replace(/\..*/, '');
+                option.xAxis[0].data.push(axisData);
+
+                if(value.finish){
+                    myChart.setOption(option);
+                }
+
+            }
+
+        }
+
+    </script>
+</th:block>
