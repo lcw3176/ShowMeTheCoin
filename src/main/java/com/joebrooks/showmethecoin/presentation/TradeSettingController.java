@@ -1,11 +1,11 @@
 package com.joebrooks.showmethecoin.presentation;
 
-import com.joebrooks.showmethecoin.global.strategy.Strategy;
+import com.joebrooks.showmethecoin.strategy.Strategy;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.repository.user.UserService;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigEntity;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
-import com.joebrooks.showmethecoin.upbit.client.CoinType;
+import com.joebrooks.showmethecoin.trade.upbit.client.CoinType;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

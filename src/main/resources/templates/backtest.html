@@ -4,129 +4,264 @@
 <th:block layout:fragment="layout_content">
 
     <section class="section is-main-section">
-        <div id="chart" style="height: 700px;">
+        <div class="card-content">
+            <div id="chart" style="height: 700px;">
 
+            </div>
+
+
+            <form id="data-form" onsubmit="return false">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">거래 코인</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-narrow">
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select name="tradeCoin">
+                                        <option th:each="coin : ${coinList}" th:if="${coin.equals(userInfo.tradeCoin)}"
+                                                th:text="${coin.koreanName}" th:value="${coin.toString()}" selected></option>
+
+                                        <option th:each="coin : ${coinList}" th:unless="${coin.equals(userInfo.tradeCoin)}"
+                                                th:text="${coin.koreanName}" th:value="${coin.toString()}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">시작 원화 잔고</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input type="number"
+                                       class="input"
+                                       name="startBalance">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">시작 가격</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input type="number" name="startPrice" class="input"
+                                       th:value="${#numbers.formatDecimal(userInfo.startPrice, 0, 0)}"
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">기준 분봉</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input type="number" name="candleMinute" class="input"
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">공차</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input type="number" name="commonDifference" class="input"
+                                       th:value="${#numbers.formatDecimal(userInfo.commonDifference, 0, 0)}"
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">매매 전략</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-narrow">
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select name="strategy">
+                                        <option th:each="strategy : ${strategyLst}" th:if="${strategy.equals(userInfo.strategy)}"
+                                                th:text="${strategy.name}" th:value="${strategy.toString()}" selected></option>
+
+                                        <option th:each="strategy : ${strategyLst}" th:unless="${strategy.equals(userInfo.strategy)}"
+                                                th:text="${strategy.name}" th:value="${strategy.toString()}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal"></div>
+                    <div class="field-body">
+                        <div class="field">
+                            <button class="button is-primary" onclick="startBacktest()">
+                                시작
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
 
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js" integrity="sha256-7rldQObjnoCubPizkatB4UZ0sCQzu2ePgyGSUcVN70E=" crossorigin="anonymous"></script>
     <script>
-        window.onload = function () {
-            // DOM을 준비하고 echart 객체를 만듭니다.
-            var myChart = echarts.init(document.getElementById('chart'));
+        let isRun = false;
+        let socket;
 
-            //chart의 설정을 정합니다.
-            var option = {
-                title: {
-                    text: '백테스트',
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'cross',
-                        label: {
-                            backgroundColor: '#283b56'
-                        }
-                    }
-                },
-                legend: {
-                    data: ['매수', '매도','시세']
-                },
-                dataZoom: {
-                    show: true,
-                    start: 0,
-                    end: 100
-                },
-                xAxis: [
-                    {
-                        type: 'category',
-                        boundaryGap: true,
-                        data: []
-                    },
-                ],
-                yAxis: [
-                    {
-                        type: 'value',
-                        scale: true,
-                        name: '시세',
-                    }
-                ],
-                series: [
-                    {
-                        name: '매수',
-                        type: 'scatter',
-                        yAxisIndex: 0, //yAxis 1번째 사용
-                        data: [],
-                        itemStyle:{
-                            color:'#0000CC'
-                        },
-                    },
+        function startBacktest(){
+            if(!isRun){
+                socket = new WebSocket("ws://localhost:8080/upbit/backtest")
 
-                    {
-                        name: '매도',
-                        type: 'scatter',
-                        yAxisIndex: 0, //yAxis 1번째 사용
-                        data: [],
-                        itemStyle:{
-                            color:'#CC0000'
-                        },
-                    },
+                socket.onopen = function (){
+                    socket.send(JSON.stringify(Object.fromEntries(new FormData(document.getElementById("data-form")))));
+                }
 
-                    {
-                        name: '시세',
-                        type: 'line',
-                        yAxisIndex: 0, //yAxis 2번째 사용
-                        data: [],
-                        itemStyle:{
-                            color:'#FFCC00'
-                        },
-                    },
-                ]
-            };
+                socket.onmessage = function (e){
+                    update(JSON.parse(e.data));
+                }
 
-            // 위에서 설정한 속성을 차트에 반영합니다.
-            myChart.setOption(option);
+                socket.onclose = function (e){
+                    isRun = false;
+                }
 
-            let socket = new WebSocket("ws://localhost:8080/upbit/backtest")
-
-            socket.onmessage = function (e){
-                update(JSON.parse(e.data));
+            } else {
+                option.series[0].data = []// 매수
+                option.series[1].data = []; // 매도
+                option.series[2].data = []; // 시세
+                option.xAxis[0].data = [];
+                socket.close();
             }
-            function update(value){
-                var data2 = option.series[2].data; // 시세
-                var data0 = option.series[0].data; // 매수
-                var data1 = option.series[1].data; // 매도
 
-                if(value.trade){
+            isRun = !isRun;
 
-                    if(value.buy){
-                        data0.push(value.tradePrice);
-                        data1.push(undefined)
-                    } else {
-                        data0.push(undefined)
-                        data1.push(value.tradePrice);
+        }
+
+
+        let myChart = echarts.init(document.getElementById('chart'));
+
+        let option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#283b56'
                     }
+                }
+            },
+            legend: {
+                data: ['매수', '매도','시세']
+            },
+            dataZoom: {
+                show: true,
+                start: 0,
+                end: 100
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    boundaryGap: true,
+                    data: []
+                },
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    scale: true,
+                    name: '시세',
+                }
+            ],
+            series: [
+                {
+                    name: '매수',
+                    type: 'scatter',
+                    yAxisIndex: 0, //yAxis 1번째 사용
+                    data: [],
+                    itemStyle:{
+                        color:'#CC0000'
+                    },
+                },
+                {
+                    name: '매도',
+                    type: 'scatter',
+                    yAxisIndex: 0, //yAxis 1번째 사용
+                    data: [],
+                    itemStyle:{
+                        color:'#0000CC'
+                    },
+                },
+                {
+                    name: '시세',
+                    type: 'line',
+                    yAxisIndex: 0, //yAxis 2번째 사용
+                    data: [],
+                    itemStyle:{
+                        color:'#FFCC00'
+                    },
+                },
+            ]
+        };
+        // 위에서 설정한 속성을 차트에 반영합니다.
+        myChart.setOption(option);
 
+        function update(value){
+            let buy = option.series[0].data; // 매수
+            let sell = option.series[1].data; // 매도
+            let price = option.series[2].data; // 시세
 
+            if(value.trade){
 
+                if(value.buy){
+                    buy.push(value.tradePrice);
+                    sell.push(undefined)
                 } else {
-                    data0.push(undefined);
-                    data1.push(undefined)
+                    buy.push(undefined)
+                    sell.push(value.tradePrice);
                 }
 
 
-                data2.push(value.tradePrice);
 
-                var axisData = value.dateKst.replace("T", " ").replace(/\..*/, '');
-                option.xAxis[0].data.push(axisData);
-
-                if(value.finish){
-                    myChart.setOption(option);
-                }
-
+            } else {
+                buy.push(undefined);
+                sell.push(undefined)
             }
 
+
+            price.push(value.tradePrice);
+
+            let axisData = value.dateKst.replace("T", " ").replace(/\..*/, '');
+            option.xAxis[0].data.push(axisData);
+
+            if(value.finish){
+                myChart.setOption(option);
+            }
         }
 
     </script>

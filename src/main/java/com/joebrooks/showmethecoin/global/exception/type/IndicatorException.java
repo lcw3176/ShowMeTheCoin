@@ -1,6 +1,6 @@
 package com.joebrooks.showmethecoin.global.exception.type;
 
-import com.joebrooks.showmethecoin.upbit.indicator.type.IndicatorType;
+import com.joebrooks.showmethecoin.trade.upbit.indicator.type.IndicatorType;
 import lombok.Getter;
 
 @Getter

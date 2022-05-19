@@ -1,16 +1,14 @@
 package com.joebrooks.showmethecoin.repository.userConfig;
 
-import com.joebrooks.showmethecoin.global.strategy.Strategy;
+import com.joebrooks.showmethecoin.strategy.Strategy;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
-import com.joebrooks.showmethecoin.upbit.client.CoinType;
+import com.joebrooks.showmethecoin.trade.upbit.client.CoinType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor

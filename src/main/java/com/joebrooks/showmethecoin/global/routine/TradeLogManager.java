@@ -1,15 +1,15 @@
 package com.joebrooks.showmethecoin.global.routine;
 
-import com.joebrooks.showmethecoin.global.trade.TradeResult;
+import com.joebrooks.showmethecoin.trade.TradeResult;
 import com.joebrooks.showmethecoin.repository.trade.TradeEntity;
 import com.joebrooks.showmethecoin.repository.trade.TradeService;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
-import com.joebrooks.showmethecoin.upbit.client.CoinType;
-import com.joebrooks.showmethecoin.upbit.client.Side;
-import com.joebrooks.showmethecoin.upbit.order.CheckOrderRequest;
-import com.joebrooks.showmethecoin.upbit.order.CheckOrderResponse;
-import com.joebrooks.showmethecoin.upbit.order.OrderService;
-import com.joebrooks.showmethecoin.upbit.order.OrderStatus;
+import com.joebrooks.showmethecoin.trade.upbit.client.CoinType;
+import com.joebrooks.showmethecoin.trade.upbit.client.Side;
+import com.joebrooks.showmethecoin.trade.upbit.order.CheckOrderRequest;
+import com.joebrooks.showmethecoin.trade.upbit.order.CheckOrderResponse;
+import com.joebrooks.showmethecoin.trade.upbit.order.OrderService;
+import com.joebrooks.showmethecoin.trade.upbit.order.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Scheduled;
