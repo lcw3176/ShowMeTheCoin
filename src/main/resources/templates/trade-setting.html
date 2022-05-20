@@ -104,10 +104,10 @@
                 <div class="select is-fullwidth">
                   <select name="strategy">
                     <option th:each="strategy : ${strategyLst}" th:if="${strategy.equals(userInfo.strategy)}"
-                            th:text="${strategy.name}" th:value="${strategy.toString()}" selected></option>
+                            th:text="${strategy.description}" th:value="${strategy.toString()}" selected></option>
 
                     <option th:each="strategy : ${strategyLst}" th:unless="${strategy.equals(userInfo.strategy)}"
-                            th:text="${strategy.name}" th:value="${strategy.toString()}"></option>
+                            th:text="${strategy.description}" th:value="${strategy.toString()}"></option>
                   </select>
                 </div>
               </div>
