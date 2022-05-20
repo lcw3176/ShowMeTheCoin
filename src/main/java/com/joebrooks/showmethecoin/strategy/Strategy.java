@@ -5,10 +5,11 @@ import lombok.Getter;
 @Getter
 public enum Strategy {
 
+    PRICE_STRATEGY("가격 기반 전략"),
     RSI_STRATEGY("rsi 기반 전략");
-    private String name;
+    private String description;
 
-    private Strategy(String name){
-        this.name = name;
+    private Strategy(String description){
+        this.description = description;
     }
 }
