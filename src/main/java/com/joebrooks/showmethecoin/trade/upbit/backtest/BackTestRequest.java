@@ -1,6 +1,5 @@
 package com.joebrooks.showmethecoin.trade.upbit.backtest;
 
-import com.joebrooks.showmethecoin.strategy.Strategy;
 import com.joebrooks.showmethecoin.trade.upbit.client.CoinType;
 import lombok.*;
 
@@ -16,5 +15,6 @@ public class BackTestRequest {
     private long startPrice;
     private long commonDifference;
     private int candleMinute;
-    private Strategy strategy;
+    private double lossRate;
+
 }

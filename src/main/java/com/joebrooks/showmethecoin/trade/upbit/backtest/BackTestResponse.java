@@ -11,4 +11,5 @@ public class BackTestResponse {
     private boolean trade;
     private boolean buy;
     private boolean finish;
+    private double gain;
 }
