@@ -33,6 +33,7 @@ public enum CoinType {
     SRM("KRW-SRM", "세럼"),
     BORA("KRW-BORA", "보라"),
     MANA("KRW-MANA", "디센트럴랜드"),
+    SOL("KRW-SOL", "솔라나"),
     DOGE("KRW-DOGE", "도지코인");
 
     private String name;

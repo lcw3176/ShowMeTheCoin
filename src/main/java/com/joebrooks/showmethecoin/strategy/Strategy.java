@@ -5,8 +5,9 @@ import lombok.Getter;
 @Getter
 public enum Strategy {
 
-    PRICE_STRATEGY("가격 기반 전략"),
-    RSI_STRATEGY("rsi 기반 전략");
+    PRICE_STRATEGY("가격 전략"),
+    TAIL_STRATEGY("꼬리 전략"),
+    QUOTE_STRATEGY("호가 전략");
     private String description;
 
     private Strategy(String description){

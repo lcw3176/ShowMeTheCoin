@@ -28,7 +28,7 @@ public class OrderService {
                                 .queryParam("state", request.getState())
                                 .build();
 
-        return Arrays.asList(upBitClient.get(uri.toString(), request, CheckOrderResponse[].class));
+        return Arrays.asList(upBitClient.get(uri.toString(), true, request, CheckOrderResponse[].class));
     }
 
     public void cancelOrder(CancelOrderRequest request){

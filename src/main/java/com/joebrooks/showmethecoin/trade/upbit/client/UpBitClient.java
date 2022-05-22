@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 @Component
@@ -48,15 +49,23 @@ public class UpBitClient {
         }
     }
 
-    public <T> T[] get(String path, Object queryParams, Class<T[]> clazz){
+    public <T> T[] get(String path, boolean authHeaderRequired, Object queryParams, Class<T[]> clazz){
         HashMap<String, String> map = QueryGenerator.getQueryMap(queryParams);
 
         try {
             return client.getClient(baseUrl, timeoutMillis).get()
                     .uri(path)
                     .accept(MediaType.APPLICATION_JSON)
-                    .header("Authorization",
-                            HeaderGenerator.getJwtHeader(accessKey, secretKey, QueryGenerator.convertQueryToHash(map)))
+                    .headers(headers -> {
+                        if(authHeaderRequired){
+                            try {
+                                headers.add("Authorization",
+                                        HeaderGenerator.getJwtHeader(accessKey, secretKey, QueryGenerator.convertQueryToHash(map)));
+                            } catch (NoSuchAlgorithmException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    })
                     .acceptCharset(StandardCharsets.UTF_8)
                     .retrieve()
                     .onStatus(HttpStatus::isError, response -> Mono.error(new IllegalStateException("failed get")))
