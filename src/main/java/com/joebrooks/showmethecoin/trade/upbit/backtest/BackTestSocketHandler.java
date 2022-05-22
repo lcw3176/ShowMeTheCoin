@@ -28,7 +28,7 @@ public class BackTestSocketHandler extends TextWebSocketHandler {
         sessionList.add(session);
     }
 
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws JsonProcessingException, AutomationException {
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws JsonProcessingException {
         BackTestRequest backTestRequest = mapper.readValue(message.getPayload(), BackTestRequest.class);
         backTestService.start(backTestRequest);
     }

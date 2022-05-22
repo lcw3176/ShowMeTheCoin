@@ -101,19 +101,39 @@
                     <div class="field-body">
                         <div class="field is-narrow">
                             <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select name="strategy">
-                                        <option th:each="strategy : ${strategyLst}" th:if="${strategy.equals(userInfo.strategy)}"
-                                                th:text="${strategy.description}" th:value="${strategy.toString()}" selected></option>
 
-                                        <option th:each="strategy : ${strategyLst}" th:unless="${strategy.equals(userInfo.strategy)}"
-                                                th:text="${strategy.description}" th:value="${strategy.toString()}"></option>
-                                    </select>
-                                </div>
+<!--                                    <select name="strategy">-->
+<!--                                        <option th:each="strategy : ${strategyLst}" th:if="${strategy.equals(userInfo.strategy)}"-->
+<!--                                                th:text="${strategy.description}" th:value="${strategy.toString()}" selected></option>-->
+
+<!--                                        <option th:each="strategy : ${strategyLst}" th:unless="${strategy.equals(userInfo.strategy)}"-->
+<!--                                                th:text="${strategy.description}" th:value="${strategy.toString()}"></option>-->
+<!--                                    </select>-->
+
+<!--                                    <input class="checkbox" type="checkbox" th:each="strategies : ${strategyLst}" th:if="${strategies.equals(userInfo.strategy)}"-->
+<!--                                           th:text="${strategies.description}" th:name="${strategies.toString()}" th:value="${strategies.toString()}" checked>-->
+<!--                                    <input class="checkbox" type="checkbox" th:each="strategies : ${strategyLst}" th:unless="${strategies.equals(userInfo.strategy)}"-->
+<!--                                           th:text="${strategies.description}" th:name="${strategies.toString()}" th:value="${strategies.toString()}">-->
+
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">예상 이득</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" id="backtest-result" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
 
                 <div class="field is-horizontal">
                     <div class="field-label is-normal"></div>
@@ -224,6 +244,7 @@
             if(value.finish){
                 myChart.setOption(option);
                 isRun = false;
+                document.getElementById('backtest-result').value = value.gain;
                 return;
             }
 
