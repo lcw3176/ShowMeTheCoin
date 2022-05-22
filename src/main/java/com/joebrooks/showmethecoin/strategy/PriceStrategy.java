@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 public class PriceStrategy implements IStrategy{
 
-    private final int buyCount = 3;
+    private final int buyCount = 2;
     private final int sellCount = 4;
     private final double lossRate = 0.02;
     private final double gainRate = 0.02;
@@ -22,7 +22,7 @@ public class PriceStrategy implements IStrategy{
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
         int count = 0;
-        CandleResponse mostRecentCandle = candleResponses.get(1);
+        CandleResponse mostRecentCandle = candleResponses.get(0); // 실 매수시 인덱스 +1
 
         if(mostRecentCandle.getTradePrice() - mostRecentCandle.getOpeningPrice() > 0){
             return false;
@@ -34,7 +34,7 @@ public class PriceStrategy implements IStrategy{
 
         double priceGap = Math.abs(mostRecentCandle.getTradePrice() - mostRecentCandle.getOpeningPrice());
 
-        for(int i = 2; i < candleResponses.size(); i++){
+        for(int i = 1; i < candleResponses.size(); i++){ // 실 매수시 i +1
             CandleResponse candle = candleResponses.get(i);
             double price = candle.getTradePrice() - candle.getOpeningPrice();
             
@@ -104,7 +104,7 @@ public class PriceStrategy implements IStrategy{
         double paidFee = getTotalPaidFee(tradeInfo);
         double averagePrice = getAveragePrice(tradeInfo);
 
-        return (averagePrice + paidFee) * (1 - lossRate) > candleResponses.get(1).getTradePrice();
+        return (averagePrice + paidFee) * (1 - lossRate) > candleResponses.get(0).getTradePrice(); // 실 매도시 인덱스 +1
     }
 
     private double getAveragePrice(List<TradeInfo> tradeInfo){

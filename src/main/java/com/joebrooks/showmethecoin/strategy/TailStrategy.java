@@ -10,7 +10,8 @@ import java.util.List;
 @Component(StrategyAnnotation.TAIL_STRATEGY)
 @RequiredArgsConstructor
 public class TailStrategy implements IStrategy{
-    private final int tailCount = 3;
+    private final int tailCount = 2;
+
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
         int count = 0;
