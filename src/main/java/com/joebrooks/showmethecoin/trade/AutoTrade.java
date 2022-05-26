@@ -46,16 +46,21 @@ public class AutoTrade {
     private final StrategyService strategyService;
 
     private double coinBalance = 0D;
+    private double myBalance = 100000D;
+    private double minCash = myBalance / 2;
 
     @PostConstruct
     public void init(){
-        strategyList.add(Strategy.PRICE_STRATEGY);
-        strategyList.add(Strategy.TAIL_STRATEGY);
-        strategyList.add(Strategy.QUOTE_STRATEGY);
+//        strategyList.add(Strategy.PRICE_STRATEGY);
+//        strategyList.add(Strategy.TAIL_STRATEGY);
+//        strategyList.add(Strategy.QUOTE_STRATEGY);
+        strategyList.add(Strategy.ADX_DMI_STRATEGY);
 
         for(Strategy i : strategyList){
             strategy.add(strategyService.get(i));
         }
+
+        minCash *= 0.95;
     }
 
     @Scheduled(fixedDelay = 3000)
@@ -71,21 +76,22 @@ public class AutoTrade {
                 double startPrice = user.getStartPrice();
                 int nowLevel = user.getDifferenceLevel();
                 double commonDifference = user.getCommonDifference();
-                double minCash = startPrice + commonDifference * nowLevel;
+
+
                 List<CandleResponse> candles = candleService.getCandles(coinType);
 
                 CandleResponse nowCandle = candles.get(0);
 
                 if ((tradeInfoList.size() == 0 || !nowCandle.getDateKst().equals(tradeInfoList.get(tradeInfoList.size() - 1).getDateKst()))
-                        && strategy.stream().allMatch(st -> st.isProperToBuy(candles, tradeInfoList))) {
-                    AccountResponse accountResponse = accountService.getKRWCurrency();
+                        && strategy.stream().allMatch(st -> st.isProperToBuy(candles, tradeInfoList))) { // 구매
+//                    AccountResponse accountResponse = accountService.getKRWCurrency();
 
-                    double myBalance = 10000000D;
+
 //                    double myBalance = Math.ceil(Double.parseDouble(accountResponse.getBalance()));
                     // 잔고 체크
                     if (myBalance > minCash) {
-
                         double coinVolume = minCash / nowCandle.getTradePrice();
+                        myBalance -= nowCandle.getTradePrice() * coinVolume - FeeCalculator.calculate(nowCandle.getTradePrice(), coinBalance);
                         coinBalance += coinVolume;
 
                         TradeInfo tradeInfo = TradeInfo.builder()
@@ -114,14 +120,14 @@ public class AutoTrade {
                                 BigDecimal.valueOf(coinVolume));
                     }
                 } else if (tradeInfoList.size() > 0
-                        && strategy.stream().allMatch(st -> st.isProperToSellWithBenefit(candles, tradeInfoList))) {
+                        && strategy.stream().allMatch(st -> st.isProperToSellWithBenefit(candles, tradeInfoList))) {  // 익절
 
 //                    AccountResponse coinResponse = accountService.getCoinCurrency(coinType);
 //
 //                    double coinBal = Double.parseDouble(coinResponse.getBalance());
-                    double coinBal = 1000000D;
 
-                    if (coinBal > 0) {
+
+                    if (coinBalance > 0) {
                         tradeInfoList.clear();
 //                        OrderRequest orderRequest = OrderRequest.builder()
 //                                .market(coinType.getName())
@@ -134,20 +140,23 @@ public class AutoTrade {
 //                        orderService.requestOrder(orderRequest);
                         user.changeDifferenceLevel(0);
                         userConfigService.save(user);
-
-                        log.info("익절 코인:{} 가격:{}",
+                        myBalance += nowCandle.getTradePrice() * coinBalance - FeeCalculator.calculate(nowCandle.getTradePrice(), coinBalance);
+                        minCash = myBalance / 2;
+                        minCash *= 0.95;
+                        coinBalance = 0D;
+                        log.info("익절 코인:{} 가격:{} 잔고:{}",
                                 coinType.getName(),
-                                nowCandle.getTradePrice());
+                                nowCandle.getTradePrice(),
+                                myBalance);
                     }
                 } else if (tradeInfoList.size() > 0
-                        && strategy.stream().allMatch(st -> st.isProperToSellWithLoss(candles, tradeInfoList))) {
+                        && strategy.stream().allMatch(st -> st.isProperToSellWithLoss(candles, tradeInfoList))) { // 손절
 
 
 //                        AccountResponse coinResponse = accountService.getCoinCurrency(coinType);
 //
 //                        double coinBalance = Double.parseDouble(coinResponse.getBalance());
-                    double coinBal = 1000000D;
-                    if (coinBal > 0) {
+                    if (coinBalance > 0) {
                         tradeInfoList.clear();
 //                        OrderRequest orderRequest = OrderRequest.builder()
 //                                .market(coinType.getName())
@@ -161,10 +170,15 @@ public class AutoTrade {
                         user.changeDifferenceLevel(0);
 
                         userConfigService.save(user);
+                        myBalance += nowCandle.getTradePrice() * coinBalance - FeeCalculator.calculate(nowCandle.getTradePrice(), coinBalance);
+                        minCash = myBalance / 2;
+                        minCash *= 0.95;
+                        coinBalance = 0D;
 
-                        log.info("손절 코인:{} 가격:{}",
+                        log.info("손절 코인:{} 가격:{} 잔고:{}",
                                 coinType.getName(),
-                                nowCandle.getTradePrice());
+                                nowCandle.getTradePrice(),
+                                myBalance);
 
                     }
                 }

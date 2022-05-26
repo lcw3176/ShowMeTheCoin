@@ -17,7 +17,7 @@ public class PriceStrategy implements IStrategy{
     private final int buyCount = 2;
     private final int sellCount = 4;
     private final double lossRate = 0.02;
-    private final double gainRate = 0.02;
+//    private final double gainRate = 0.01;
 
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
@@ -60,7 +60,6 @@ public class PriceStrategy implements IStrategy{
     @Override
     public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
 //        int count = 0;
-        double paidFee = getTotalPaidFee(tradeInfo);
         double averagePrice = getAveragePrice(tradeInfo);
 
 //        CandleResponse mostRecentCandle = candleResponses.get(1);
@@ -95,16 +94,15 @@ public class PriceStrategy implements IStrategy{
 //        }
 //
 //
-//        return count >= sellCount && averagePrice + paidFee < candleResponses.get(0).getTradePrice();
-        return averagePrice + paidFee < candleResponses.get(0).getTradePrice();
+//        return count >= sellCount && averagePrice + paidFee + getPayingFee(tradeInfo, candleResponses.get(0).getTradePrice()) < candleResponses.get(0).getTradePrice();
+        return averagePrice * 1.0005 < candleResponses.get(0).getTradePrice();
     }
 
     @Override
     public boolean isProperToSellWithLoss(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        double paidFee = getTotalPaidFee(tradeInfo);
         double averagePrice = getAveragePrice(tradeInfo);
 
-        return (averagePrice + paidFee) * (1 - lossRate) > candleResponses.get(0).getTradePrice(); // 실 매도시 인덱스 +1
+        return (averagePrice * 1.0005) * (1 - lossRate) > candleResponses.get(0).getTradePrice(); // 실 매도시 인덱스 +1
     }
 
     private double getAveragePrice(List<TradeInfo> tradeInfo){
@@ -112,21 +110,11 @@ public class PriceStrategy implements IStrategy{
         double volume = 0;
 
         for(int i = 0; i < tradeInfo.size(); i++){
-            price += tradeInfo.get(i).getTradePrice() * tradeInfo.get(i).getCoinVolume();
+            price += tradeInfo.get(i).getTradePrice() * tradeInfo.get(i).getCoinVolume() * 1.0005;
             volume += tradeInfo.get(i).getCoinVolume();
         }
 
         return price / volume;
     }
 
-    private double getTotalPaidFee(List<TradeInfo> tradeInfo){
-        double pee = 0;
-
-        for(int i = 0; i < tradeInfo.size(); i++){
-            pee += FeeCalculator.calculate(tradeInfo.get(i).getTradePrice(), tradeInfo.get(i).getCoinVolume());
-        }
-
-        return pee;
-
-    }
 }

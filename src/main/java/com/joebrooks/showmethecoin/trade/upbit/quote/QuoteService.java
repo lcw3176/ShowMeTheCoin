@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
+import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class QuoteService {
                 .build();
 
 
-        return List.of(upBitClient.get(uri.toString(), false, QuoteRequest.builder()
+        return Arrays.asList(upBitClient.get(uri.toString(), false, QuoteRequest.builder()
                 .markets(coinType.getName())
                 .build(), QuoteResponse[].class)).get(0);
     }
@@ -37,7 +37,7 @@ public class QuoteService {
                 .queryParam("markets", coinType)
                 .build();
 
-        return List.of(upBitClient.get(uri.toString(), false, QuoteRequest.builder()
+        return Arrays.asList(upBitClient.get(uri.toString(), false, QuoteRequest.builder()
                 .markets(coinType)
                 .build(), QuoteResponse[].class)).get(0);
     }

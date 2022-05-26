@@ -5,6 +5,7 @@ server:
     session:
       timeout: 30m
       tracking-modes: cookie
+#  port: 9090
 
 
 spring:
@@ -29,7 +30,7 @@ upbit:
   client:
     timeout: 3000
   candle:
-    minute: 1
+    minute: 240
     count: 200
   rsi:
     day: 14
