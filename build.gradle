@@ -38,6 +38,10 @@ dependencies {
     implementation  'com.h2database:h2'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+    // https://mvnrepository.com/artifact/org.ta4j/ta4j-core
+    implementation 'org.ta4j:ta4j-core:0.14'
+
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
