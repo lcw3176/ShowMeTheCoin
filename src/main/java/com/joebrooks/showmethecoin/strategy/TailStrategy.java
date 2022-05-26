@@ -15,8 +15,8 @@ public class TailStrategy implements IStrategy{
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
         int count = 0;
-        CandleResponse mostRecentCandle = candleResponses.get(1);
-    
+        CandleResponse mostRecentCandle = candleResponses.get(0);
+
         // 양봉이면 종료
         if(mostRecentCandle.getTradePrice() - mostRecentCandle.getOpeningPrice() > 0){
             return false;
