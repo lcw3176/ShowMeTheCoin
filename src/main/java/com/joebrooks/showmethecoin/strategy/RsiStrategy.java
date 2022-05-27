@@ -1,24 +1,37 @@
-package com.joebrooks.showmethecoin.trade.upbit.indicator;
+package com.joebrooks.showmethecoin.strategy;
 
-import com.joebrooks.showmethecoin.global.graph.GraphUtil;
+import com.joebrooks.showmethecoin.trade.TradeInfo;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
-import com.joebrooks.showmethecoin.trade.upbit.indicator.type.IndicatorAnnotation;
-import com.joebrooks.showmethecoin.trade.upbit.indicator.type.IndicatorType;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
 
-@Component(IndicatorAnnotation.RSI)
-public class Rsi implements IIndicator {
+@Component(StrategyAnnotation.RSI_STRATEGY)
+public class RsiStrategy implements IStrategy {
 
-    @Value("${upbit.rsi.day}")
-    private int day;
-
-    public List<Double> getRsi(List<CandleResponse> data){
+    private final int day = 7;
 
 
+    @Override
+    public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
+        List<Double> rsi = getRsi(candleResponses);
+
+        return rsi.get(1) <= 30 && rsi.get(0) > 30;
+    }
+
+    @Override
+    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
+        return true;
+    }
+
+    @Override
+    public boolean isProperToSellWithLoss(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
+        return true;
+    }
+
+    private List<Double> getRsi(List<CandleResponse> data){
         List<Double> rsiLst = new LinkedList<>();
         List<Double> ups = new LinkedList<>();
         List<Double> downs = new LinkedList<>();
@@ -58,21 +71,5 @@ public class Rsi implements IIndicator {
 
 
         return rsiLst;
-    }
-
-
-
-    @Override
-    public IndicatorResponse execute(List<CandleResponse> candles) {
-        List<Double> rsiLst = getRsi(candles);
-
-        double olderValue = rsiLst.get(2);
-        double recentValue = rsiLst.get(1);
-
-        return IndicatorResponse.builder()
-                .type(IndicatorType.RSI)
-                .values(rsiLst)
-                .status(GraphUtil.getStatus(olderValue, recentValue))
-                .build();
     }
 }
