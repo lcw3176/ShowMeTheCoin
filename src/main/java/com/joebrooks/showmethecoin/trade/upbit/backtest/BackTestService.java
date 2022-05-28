@@ -34,7 +34,8 @@ public class BackTestService {
             Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Seoul")));
             Calendar beforeCal = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Seoul")));
             List<Strategy> strategyList = new LinkedList<>();
-            strategyList.add(Strategy.ADX_DMI_STRATEGY);
+//            strategyList.add(Strategy.ADX_DMI_STRATEGY);
+//            strategyList.add(Strategy.RSI_STRATEGY);
             strategyList.add(Strategy.TAIL_STRATEGY);
             strategyList.add(Strategy.PRICE_STRATEGY);
 
@@ -47,7 +48,7 @@ public class BackTestService {
             int nowLevel = 0;
             double commonDifference = request.getCommonDifference();
             double myBalance = request.getStartBalance();
-            int divideNum = 3;
+            int divideNum = 2;
             double testBalance = myBalance / divideNum;  // test
             testBalance *= 0.95;
             double gain = 0D;
