@@ -30,7 +30,7 @@ import java.util.List;
 public class AdxDmiStrategy implements IStrategy{
 
     private final double lossRate = 0.02;
-    private final double gainRate = 0.005;
+    private final double gainRate = 0.01;
 
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
@@ -46,11 +46,14 @@ public class AdxDmiStrategy implements IStrategy{
         return beforeMinusDi > beforePlusDi
                 && recentMinusDi > recentPlusDi
                 && GraphUtil.getStatus(beforeMinusDi, recentMinusDi).equals(GraphStatus.FALLING)
-                && GraphUtil.getStatus(beforePlusDi, recentPlusDi).equals(GraphStatus.RISING)
+                && GraphUtil.getStatus(beforePlusDi, recentPlusDi).equals(GraphStatus.FALLING)
                 && adxStatus.equals(GraphStatus.RISING);
 
 //        return Math.abs(beforeMinusDi - beforePlusDi) > Math.abs(recentMinusDi - recentPlusDi)
 //                && adxStatus.equals(GraphStatus.RISING);
+
+//        return beforeMinusDi > beforePlusDi
+//                && recentMinusDi < recentPlusDi;
 
     }
 
@@ -58,7 +61,7 @@ public class AdxDmiStrategy implements IStrategy{
     public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
         double averagePrice = getAveragePrice(tradeInfo);
 
-        return (averagePrice * 1.0005) * (1 + gainRate) < candleResponses.get(0).getTradePrice();
+        return (averagePrice * 1.0005) < candleResponses.get(0).getTradePrice();
     }
 
     @Override
