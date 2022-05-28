@@ -10,7 +10,7 @@ import java.util.List;
 @Component(StrategyAnnotation.TAIL_STRATEGY)
 @RequiredArgsConstructor
 public class TailStrategy implements IStrategy{
-    private final int tailCount = 2;
+    private final int tailCount = 3;
 
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
@@ -32,7 +32,7 @@ public class TailStrategy implements IStrategy{
             double tail = candle.getTradePrice() - candle.getLowPrice();
             double priceGap = candle.getTradePrice() - candle.getOpeningPrice();
 
-            if(tail > 0 && Math.abs(priceGap) * 0.4 < tail) { // 꼬리가 충분히 길게 내려온 경우
+            if(tail > 0 && Math.abs(priceGap) * 0.5 < tail) { // 꼬리가 충분히 길게 내려온 경우
                 count++;
             } else {
                 break;

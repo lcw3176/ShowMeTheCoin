@@ -14,10 +14,10 @@ import java.util.List;
 @Slf4j
 public class PriceStrategy implements IStrategy{
 
-    private final int buyCount = 2;
+    private final int buyCount = 3;
     private final int sellCount = 4;
     private final double lossRate = 0.02;
-//    private final double gainRate = 0.01;
+    private final double gainRate = 0.005;
 
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
@@ -39,12 +39,12 @@ public class PriceStrategy implements IStrategy{
             double price = candle.getTradePrice() - candle.getOpeningPrice();
             
 
-            if(price < 0 && Math.abs(price) > priceGap * 0.7) { // 음봉의 크기가 유의미하게 큰 경우
+            if(price < 0 && Math.abs(price) > priceGap * 0.8) { // 음봉의 크기가 유의미하게 큰 경우
                 priceGap = Math.abs(price);
                 count++;
             }
 
-            if(price > 0 && price > priceGap * 0.7){ // 양봉의 크기가 유의미하게 큰 경우
+            if(price > 0 && price > priceGap * 0.8){ // 양봉의 크기가 유의미하게 큰 경우
                 break;
             }
 
@@ -93,9 +93,9 @@ public class PriceStrategy implements IStrategy{
 //            }
 //        }
 //
-//
+// * (1 + gainRate)
 //        return count >= sellCount && averagePrice + paidFee + getPayingFee(tradeInfo, candleResponses.get(0).getTradePrice()) < candleResponses.get(0).getTradePrice();
-        return averagePrice * 1.0005 < candleResponses.get(0).getTradePrice();
+        return (averagePrice * 1.0005) < candleResponses.get(0).getTradePrice();
     }
 
     @Override
