@@ -9,6 +9,9 @@ public class GraphUtil {
         if(secondValue - firstValue > 0){
             return GraphStatus.RISING;
         } else if(secondValue - firstValue < 0){
+            if(secondValue - firstValue < -3){
+                return GraphStatus.STRONG_FALLING;
+            }
             return GraphStatus.FALLING;
         } else{
             return GraphStatus.STAY;
