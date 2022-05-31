@@ -4,5 +4,6 @@ public enum GraphStatus {
     RISING,
     STAY,
     FALLING,
-    STRONG_FALLING
+    STRONG_FALLING,
+    STRONG_RISING
 }
