@@ -24,52 +24,55 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
-@Slf4j
 @Component(StrategyAnnotation.ADX_DMI_STRATEGY)
 @RequiredArgsConstructor
 public class AdxDmiStrategy implements IStrategy{
-
-    private final double lossRate = 0.02;
-    private final double gainRate = 0.01;
 
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
         List<ADXResponse> adxResponseList = getADXResponse(candleResponses);
 
         GraphStatus adxStatus = GraphUtil.getStatus(adxResponseList.get(1).getAdx(), adxResponseList.get(0).getAdx());
-        double recentPlusDi = adxResponseList.get(0).getPlusDI();
-        double recentMinusDi = adxResponseList.get(0).getMinusDI();
+        double recentPDI = adxResponseList.get(0).getPlusDI();
+        double recentMDI = adxResponseList.get(0).getMinusDI();
 
-        double beforePlusDi = adxResponseList.get(1).getPlusDI();
-        double beforeMinusDi = adxResponseList.get(1).getMinusDI();
+        double beforePDI = adxResponseList.get(1).getPlusDI();
+        double beforeMDI = adxResponseList.get(1).getMinusDI();
+//        for(int i = 1; i < 4; i++){
+//            if(GraphUtil.getStatus(adxResponseList.get(i).getMinusDI(), adxResponseList.get(i - 1).getMinusDI()).equals(GraphStatus.STRONG_RISING)){
+//                return false;
+//            }
+//        }
 
-        return beforeMinusDi > beforePlusDi
-                && recentMinusDi > recentPlusDi
-                && GraphUtil.getStatus(beforeMinusDi, recentMinusDi).equals(GraphStatus.FALLING)
-                && GraphUtil.getStatus(beforePlusDi, recentPlusDi).equals(GraphStatus.FALLING)
-                && adxStatus.equals(GraphStatus.RISING);
-
-//        return Math.abs(beforeMinusDi - beforePlusDi) > Math.abs(recentMinusDi - recentPlusDi)
-//                && adxStatus.equals(GraphStatus.RISING);
-
-//        return beforeMinusDi > beforePlusDi
-//                && recentMinusDi < recentPlusDi;
-
+        return        recentMDI > recentPDI
+//                && recentMDI < adxResponseList.get(0).getAdx()
+//                && adxResponseList.get(0).getAdx() - recentMDI < 5
+//                && GraphUtil.getStatus(beforeMDI, recentMDI).equals(GraphStatus.FALLING)
+//                && GraphUtil.getStatus(beforePDI, recentPDI).equals(GraphStatus.RISING)
+                && adxStatus.equals(GraphStatus.RISING)
+                && recentPDI * 1.5 < recentMDI;
     }
 
     @Override
-    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        double averagePrice = getAveragePrice(tradeInfo);
+    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo){
+        List<ADXResponse> adxResponseList = getADXResponse(candleResponses);
 
-        return (averagePrice * 1.0005) < candleResponses.get(0).getTradePrice();
+        GraphStatus adxStatus = GraphUtil.getStatus(adxResponseList.get(1).getAdx(), adxResponseList.get(0).getAdx());
+        double recentPDI = adxResponseList.get(0).getPlusDI();
+        double recentMDI = adxResponseList.get(0).getMinusDI();
+
+        double beforePDI = adxResponseList.get(1).getPlusDI();
+
+        return  recentMDI < recentPDI
+//                recentPDI > adxResponseList.get(0).getAdx()
+//                && GraphUtil.getStatus(beforePDI, recentPDI).equals(GraphStatus.RISING)
+//                && adxResponseList.get(0).getAdx() - recentPDI < 5;
+                && adxStatus.equals(GraphStatus.RISING)
+                && recentMDI * 1.5 < recentPDI;
     }
 
-    @Override
-    public boolean isProperToSellWithLoss(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        double averagePrice = getAveragePrice(tradeInfo);
 
-        return (averagePrice * 1.0005) * (1 - lossRate) > candleResponses.get(0).getTradePrice(); // 실 매도시 인덱스 +1
-    }
+
 
     private List<ADXResponse> getADXResponse(List<CandleResponse> candleResponses){
         BarSeries series = new BaseBarSeriesBuilder().build();
@@ -98,7 +101,7 @@ public class AdxDmiStrategy implements IStrategy{
 
         List<ADXResponse> lst = new LinkedList<>();
 
-        for(int i = candleResponses.size() - 1; i >= 0; i--){
+        for(int i = candleResponses.size() - 1; i >= candleResponses.size() - 5; i--){
             lst.add(ADXResponse.builder()
                     .adx(adxIndicator.getValue(i).doubleValue())
                     .plusDI(plusDIIndicator.getValue(i).doubleValue())
@@ -118,15 +121,15 @@ public class AdxDmiStrategy implements IStrategy{
         private double adx;
     }
 
-    private double getAveragePrice(List<TradeInfo> tradeInfo){
-        double price = 0;
-        double volume = 0;
-
-        for(int i = 0; i < tradeInfo.size(); i++){
-            price += tradeInfo.get(i).getTradePrice() * tradeInfo.get(i).getCoinVolume() * 1.0005;
-            volume += tradeInfo.get(i).getCoinVolume();
-        }
-
-        return price / volume;
-    }
+//    private double getAveragePrice(List<TradeInfo> tradeInfo){
+//        double price = 0;
+//        double volume = 0;
+//
+//        for(int i = 0; i < tradeInfo.size(); i++){
+//            price += tradeInfo.get(i).getTradePrice() * tradeInfo.get(i).getCoinVolume() * 1.0005;
+//            volume += tradeInfo.get(i).getCoinVolume();
+//        }
+//
+//        return price / volume;
+//    }
 }

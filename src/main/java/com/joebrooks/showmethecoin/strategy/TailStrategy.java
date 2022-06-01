@@ -47,13 +47,4 @@ public class TailStrategy implements IStrategy{
         return count >= tailCount;
     }
 
-    @Override
-    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        return true;
-    }
-
-    @Override
-    public boolean isProperToSellWithLoss(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        return true;
-    }
 }

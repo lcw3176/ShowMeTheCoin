@@ -24,13 +24,4 @@ public class QuoteStrategy implements IStrategy{
         return bid < ask && ask / 2 < bid;
     }
 
-    @Override
-    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        return true;
-    }
-
-    @Override
-    public boolean isProperToSellWithLoss(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        return true;
-    }
 }

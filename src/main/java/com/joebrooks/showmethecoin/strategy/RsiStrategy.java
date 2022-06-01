@@ -1,35 +1,45 @@
 package com.joebrooks.showmethecoin.strategy;
 
+import com.joebrooks.showmethecoin.global.graph.GraphStatus;
+import com.joebrooks.showmethecoin.global.graph.GraphUtil;
 import com.joebrooks.showmethecoin.trade.TradeInfo;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @Component(StrategyAnnotation.RSI_STRATEGY)
+@Slf4j
 public class RsiStrategy implements IStrategy {
 
-    private final int day = 7;
-
+    private final int day = 14;
+    private final int buyValue = 30;
+    private final int sellValue = 60;
 
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
         List<Double> rsi = getRsi(candleResponses);
 
-        return rsi.get(1) <= 30 && rsi.get(0) > 30;
+        for(int i = 1 ; i < 6; i++){
+            if(GraphUtil.getStatus(rsi.get(i), rsi.get(i - 1)).equals(GraphStatus.STRONG_FALLING)){
+                return false;
+            }
+        }
+//
+//        return rsi.get(0) < buyValue;
+
+        return rsi.get(0) > buyValue && rsi.get(1) < buyValue;
     }
 
-    @Override
-    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        return true;
-    }
+//    @Override
+//    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
+//        List<Double> rsi = getRsi(candleResponses);
+//
+//        return rsi.get(0) > sellValue;
+//    }
 
-    @Override
-    public boolean isProperToSellWithLoss(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        return true;
-    }
 
     private List<Double> getRsi(List<CandleResponse> data){
         List<Double> rsiLst = new LinkedList<>();
@@ -72,4 +82,38 @@ public class RsiStrategy implements IStrategy {
 
         return rsiLst;
     }
+
+
+//    private List<Double> getRsi(List<CandleResponse> candleResponses){
+//        BarSeries series = new BaseBarSeriesBuilder().build();
+//
+//        for(int i = candleResponses.size() - 1; i >= 0; i--){
+//            CandleResponse response = candleResponses.get(i);
+//
+//            ZonedDateTime endTime = ZonedDateTime.parse(response.getDateKst().replace('T', ' '),
+//                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("Asia/Seoul")));
+//
+//            BaseBar bar = BaseBar.builder(DecimalNum::valueOf, Number.class)
+//                    .timePeriod(Duration.ofMinutes(240))
+//                    .endTime(endTime)
+//                    .openPrice(response.getOpeningPrice())
+//                    .highPrice(response.getHighPrice())
+//                    .lowPrice(response.getLowPrice())
+//                    .closePrice(response.getTradePrice())
+//                    .volume(response.getAccTradeVolume())
+//                    .build();
+//            series.addBar(bar);
+//        }
+//
+//        ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
+//
+//        RSIIndicator rsiIndicator = new RSIIndicator(closePriceIndicator, 14);
+//        List<Double> lst = new LinkedList<>();
+//
+//        for(int i = candleResponses.size() - 1; i >= candleResponses.size() - 5; i--){
+//            lst.add(rsiIndicator.getValue(i).doubleValue());
+//        }
+//
+//        return lst;
+//    }
 }
