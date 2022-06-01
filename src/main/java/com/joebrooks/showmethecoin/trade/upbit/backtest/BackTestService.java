@@ -34,9 +34,9 @@ public class BackTestService {
             Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Seoul")));
             Calendar beforeCal = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Seoul")));
             List<Strategy> strategyList = new LinkedList<>();
-//            strategyList.add(Strategy.ADX_DMI_STRATEGY);
-//            strategyList.add(Strategy.RSI_STRATEGY);
-            strategyList.add(Strategy.TAIL_STRATEGY);
+            strategyList.add(Strategy.ADX_DMI_STRATEGY);
+            strategyList.add(Strategy.RSI_STRATEGY);
+//            strategyList.add(Strategy.TAIL_STRATEGY);
             strategyList.add(Strategy.PRICE_STRATEGY);
 
             Date date = new Date();
@@ -48,14 +48,14 @@ public class BackTestService {
             int nowLevel = 0;
             double commonDifference = request.getCommonDifference();
             double myBalance = request.getStartBalance();
-            int divideNum = 2;
+            int divideNum = 5;
             double testBalance = myBalance / divideNum;  // test
             testBalance *= 0.95;
             double gain = 0D;
             double beforeGain = 0D;
 
-            cal.set(2022, Calendar.JANUARY, 1, 0, 0, 0);
-            beforeCal.set(2022, Calendar.JANUARY, 1, 0, 0, 0);
+            cal.set(2021, Calendar.MAY, 1, 0, 0, 0);
+            beforeCal.set(2021, Calendar.MAY, 1, 0, 0, 0);
             List<IStrategy> strategy = new LinkedList<>();
 
             for(Strategy i : strategyList){
@@ -155,21 +155,7 @@ public class BackTestService {
 
                         if(coinBalance > 0) {
                             double momentGain = gain;
-                            //test
-//                            double sellCoinBalance = coinBalance * 0.3;
-//                            coinBalance -= sellCoinBalance;
-//
-//                            nowLevel += 1;
-//                            TradeInfo tradeInfo = TradeInfo.builder()
-//                                    .tradeCount(nowLevel)
-//                                    .tradePrice(nowCandle.getTradePrice())
-//                                    .coinVolume(coinBalance)
-//                                    .dateKst(nowCandle.getDateKst())
-//                                    .build();
-//
-//                            tradeInfoList.add(tradeInfo);
-//                            myBalance += nowCandle.getTradePrice() * sellCoinBalance - FeeCalculator.calculate(nowCandle.getTradePrice(), sellCoinBalance);
-                            //
+
                             myBalance += nowCandle.getTradePrice() * coinBalance - FeeCalculator.calculate(nowCandle.getTradePrice(), coinBalance);
                             coinBalance = 0;
 

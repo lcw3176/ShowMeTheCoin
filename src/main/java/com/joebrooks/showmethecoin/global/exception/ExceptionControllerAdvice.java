@@ -1,7 +1,6 @@
 package com.joebrooks.showmethecoin.global.exception;
 
 import com.joebrooks.showmethecoin.global.exception.type.AutomationException;
-import com.joebrooks.showmethecoin.global.exception.type.IndicatorException;
 import com.joebrooks.showmethecoin.global.exception.type.LoginException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -34,9 +33,4 @@ public class ExceptionControllerAdvice {
                 e.getStackTrace());
     }
 
-    @ExceptionHandler(IndicatorException.class)
-    public void indicatorException(IndicatorException e){
-        log.warn("\n보조지표 탐색 불가" +
-                "\n종류: {}", e.getIndicatorType().toString());
-    }
 }

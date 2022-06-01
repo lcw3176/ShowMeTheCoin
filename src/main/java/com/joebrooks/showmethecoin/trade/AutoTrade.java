@@ -6,18 +6,10 @@ import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
 import com.joebrooks.showmethecoin.strategy.IStrategy;
 import com.joebrooks.showmethecoin.strategy.Strategy;
 import com.joebrooks.showmethecoin.strategy.StrategyService;
-import com.joebrooks.showmethecoin.trade.upbit.account.AccountResponse;
 import com.joebrooks.showmethecoin.trade.upbit.account.AccountService;
-import com.joebrooks.showmethecoin.trade.upbit.backtest.BackTestResponse;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleService;
 import com.joebrooks.showmethecoin.trade.upbit.client.CoinType;
-import com.joebrooks.showmethecoin.trade.upbit.client.OrderType;
-import com.joebrooks.showmethecoin.trade.upbit.client.Side;
-import com.joebrooks.showmethecoin.trade.upbit.indicator.IndicatorResponse;
-import com.joebrooks.showmethecoin.trade.upbit.indicator.IndicatorService;
-import com.joebrooks.showmethecoin.trade.upbit.indicator.type.IndicatorType;
-import com.joebrooks.showmethecoin.trade.upbit.order.OrderRequest;
 import com.joebrooks.showmethecoin.trade.upbit.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +18,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.time.ZoneId;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
