@@ -1,6 +1,5 @@
 package com.joebrooks.showmethecoin.repository.userConfig;
 
-import com.joebrooks.showmethecoin.strategy.Strategy;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.trade.upbit.client.CoinType;
 import lombok.AllArgsConstructor;
@@ -28,21 +27,11 @@ public class UserConfigEntity {
     @Enumerated(EnumType.STRING)
     private CoinType tradeCoin;
 
-    @Column(name = "start_price")
-    private double startPrice;
-
-    @Column(name = "difference_level")
-    private int differenceLevel;
-
+    @Column(name = "trade_level")
+    private int tradeLevel;
     @Column(name = "is_trading")
     private boolean isTrading;
 
-    @Column(name = "common_difference")
-    private double commonDifference;
-
-    @Column(name = "strategy")
-    @Enumerated(EnumType.STRING)
-    private Strategy strategy;
     
     @ManyToOne(targetEntity = UserEntity.class)
     @JoinColumn(name = "user_id")
@@ -60,19 +49,9 @@ public class UserConfigEntity {
         this.tradeCoin = tradeCoin;
     }
 
-    public void changeDifferenceLevel(int differenceLevel){
-        this.differenceLevel = differenceLevel;
+    public void changeTradeLevel(int tradeLevel){
+        this.tradeLevel = tradeLevel;
     }
 
-    public void changeStartPrice(double startPrice){
-        this.startPrice = startPrice;
-    }
 
-    public void changeCommonDifference(double commonDifference){
-        this.commonDifference = commonDifference;
-    }
-
-    public void changeStrategy(Strategy strategy){
-        this.strategy = strategy;
-    }
 }

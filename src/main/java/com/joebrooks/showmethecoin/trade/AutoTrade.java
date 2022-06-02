@@ -64,9 +64,7 @@ public class AutoTrade {
                 }
 
                 CoinType coinType = user.getTradeCoin();
-                double startPrice = user.getStartPrice();
-                int nowLevel = user.getDifferenceLevel();
-                double commonDifference = user.getCommonDifference();
+                int nowLevel = user.getTradeLevel();
 
 
                 List<CandleResponse> candles = candleService.getCandles(coinType);
@@ -103,7 +101,7 @@ public class AutoTrade {
 //                                .build();
 //
 //                        orderService.requestOrder(orderRequest);
-                        user.changeDifferenceLevel(user.getDifferenceLevel() + 1);
+                        user.changeTradeLevel(user.getTradeLevel() + 1);
                         userConfigService.save(user);
                         log.info("매수 코인:{} 가격:{} 수량:{}",
                                 coinType.getName(),
@@ -129,7 +127,7 @@ public class AutoTrade {
 //                                .build();
 
 //                        orderService.requestOrder(orderRequest);
-                        user.changeDifferenceLevel(0);
+                        user.changeTradeLevel(0);
                         userConfigService.save(user);
                         myBalance += nowCandle.getTradePrice() * coinBalance - FeeCalculator.calculate(nowCandle.getTradePrice(), coinBalance);
                         minCash = myBalance / 2;
@@ -158,7 +156,7 @@ public class AutoTrade {
 //                                .build();
 //
 //                        orderService.requestOrder(orderRequest);
-                        user.changeDifferenceLevel(0);
+                        user.changeTradeLevel(0);
 
                         userConfigService.save(user);
                         myBalance += nowCandle.getTradePrice() * coinBalance - FeeCalculator.calculate(nowCandle.getTradePrice(), coinBalance);

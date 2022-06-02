@@ -31,7 +31,6 @@
                         </div>
                     </div>
                 </div>
-                <hr>
 
 
                 <div class="field is-horizontal">
@@ -44,22 +43,6 @@
                                 <input type="number"
                                        class="input"
                                        name="startBalance">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <hr>
-
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">시작 가격</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <input type="number" name="startPrice" class="input"
-                                       th:value="${#numbers.formatDecimal(userInfo.startPrice, 0, 0)}"
-                                       required>
                             </div>
                         </div>
                     </div>
@@ -79,46 +62,6 @@
                     </div>
                 </div>
 
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">공차</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <input type="number" name="commonDifference" class="input"
-                                       th:value="${#numbers.formatDecimal(userInfo.commonDifference, 0, 0)}"
-                                       required>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">매매 전략</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field is-narrow">
-                            <div class="control">
-
-<!--                                    <select name="strategy">-->
-<!--                                        <option th:each="strategy : ${strategyLst}" th:if="${strategy.equals(userInfo.strategy)}"-->
-<!--                                                th:text="${strategy.description}" th:value="${strategy.toString()}" selected></option>-->
-
-<!--                                        <option th:each="strategy : ${strategyLst}" th:unless="${strategy.equals(userInfo.strategy)}"-->
-<!--                                                th:text="${strategy.description}" th:value="${strategy.toString()}"></option>-->
-<!--                                    </select>-->
-
-<!--                                    <input class="checkbox" type="checkbox" th:each="strategies : ${strategyLst}" th:if="${strategies.equals(userInfo.strategy)}"-->
-<!--                                           th:text="${strategies.description}" th:name="${strategies.toString()}" th:value="${strategies.toString()}" checked>-->
-<!--                                    <input class="checkbox" type="checkbox" th:each="strategies : ${strategyLst}" th:unless="${strategies.equals(userInfo.strategy)}"-->
-<!--                                           th:text="${strategies.description}" th:name="${strategies.toString()}" th:value="${strategies.toString()}">-->
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="field is-horizontal">
                     <div class="field-label is-normal">

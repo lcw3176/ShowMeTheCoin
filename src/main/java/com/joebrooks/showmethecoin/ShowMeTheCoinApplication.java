@@ -21,12 +21,6 @@ public class ShowMeTheCoinApplication {
 
     private final UserConfigService userConfigService;
 
-    @PostConstruct
-    public void init(){
-        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-        userConfigService.initAllUsersTradeLevel(); // fixme 테스트용도, 차후 제거
-    }
-
     public static void main(String[] args) throws MessagingException {
         SpringApplication.run(ShowMeTheCoinApplication.class, args);
     }

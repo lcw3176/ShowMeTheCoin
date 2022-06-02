@@ -38,7 +38,7 @@ public class UserConfigService {
 
     public void initAllUsersTradeLevel(){
         userConfigRepository.findAll().forEach(i -> {
-            i.changeDifferenceLevel(0);
+            i.changeTradeLevel(0);
 
             userConfigRepository.save(i);
         });

@@ -49,9 +49,6 @@ public class TradeSettingController {
         UserConfigEntity userConfigEntity = userConfigService.getUserConfig(userEntity).get();
 
         userConfigEntity.changeTradeCoin(body.getTradeCoin());
-        userConfigEntity.changeStartPrice(body.getStartPrice());
-        userConfigEntity.changeCommonDifference(body.commonDifference);
-        userConfigEntity.changeStrategy(body.strategy);
         userConfigService.save(userConfigEntity);
 
         return "redirect:/trade-setting?result=success";
