@@ -28,9 +28,9 @@ public class RsiStrategy implements IStrategy {
             }
         }
 //
-//        return rsi.get(0) < buyValue;
+        return rsi.get(0) < buyValue;
 
-        return rsi.get(0) > buyValue && rsi.get(1) < buyValue;
+//        return rsi.get(0) > buyValue && rsi.get(1) < buyValue;
     }
 
 //    @Override

@@ -6,7 +6,7 @@ import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
 import java.util.List;
 
 public interface IStrategy {
-    double lossRate = 0.2;
+    double lossRate = 0.1;
     double gainRate = 0.05;
 
     boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo);

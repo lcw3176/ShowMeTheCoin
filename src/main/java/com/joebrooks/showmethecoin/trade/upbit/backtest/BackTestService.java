@@ -38,15 +38,14 @@ public class BackTestService {
             strategyList.add(Strategy.RSI_STRATEGY);
 //            strategyList.add(Strategy.TAIL_STRATEGY);
             strategyList.add(Strategy.PRICE_STRATEGY);
+            strategyList.add(Strategy.QUOTE_STRATEGY);
 
             Date date = new Date();
             running = true;
             double coinBalance = 0D;
             int minute = request.getCandleMinute();
             CoinType coinType = request.getTradeCoin();
-            double startPrice = request.getStartPrice();
             int nowLevel = 0;
-            double commonDifference = request.getCommonDifference();
             double myBalance = request.getStartBalance();
             int divideNum = 5;
             double testBalance = myBalance / divideNum;  // test
@@ -54,8 +53,8 @@ public class BackTestService {
             double gain = 0D;
             double beforeGain = 0D;
 
-            cal.set(2021, Calendar.MAY, 1, 0, 0, 0);
-            beforeCal.set(2021, Calendar.MAY, 1, 0, 0, 0);
+            cal.set(2022, Calendar.JANUARY, 1, 0, 0, 0);
+            beforeCal.set(2022, Calendar.JANUARY, 1, 0, 0, 0);
             List<IStrategy> strategy = new LinkedList<>();
 
             for(Strategy i : strategyList){
