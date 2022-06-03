@@ -14,34 +14,27 @@ import java.util.List;
 @Slf4j
 public class RsiStrategy implements IStrategy {
 
-    private final int day = 14;
     private final int buyValue = 30;
-    private final int sellValue = 60;
 
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        List<Double> rsi = getRsi(candleResponses);
+        List<Double> shortTermRsiLst = getRsi(candleResponses, 7);
+//        List<Double> longTermRsiLst = getRsi(candleResponses, 14);
 
-        for(int i = 1 ; i < 6; i++){
-            if(GraphUtil.getStatus(rsi.get(i), rsi.get(i - 1)).equals(GraphStatus.STRONG_FALLING)){
-                return false;
-            }
-        }
-//
-        return rsi.get(0) < buyValue;
+//        for(int i = 1 ; i < 10; i++){
+//            if(GraphUtil.getStatus(longTermRsiLst.get(i), longTermRsiLst.get(i - 1)).equals(GraphStatus.STRONG_FALLING)){
+//                return false;
+//            }
+//        }
 
-//        return rsi.get(0) > buyValue && rsi.get(1) < buyValue;
+//        return rsi.get(0) < buyValue;
+
+        return shortTermRsiLst.get(0) > buyValue
+                && shortTermRsiLst.get(0) < buyValue + 5
+                && shortTermRsiLst.get(1) < buyValue;
     }
 
-//    @Override
-//    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-//        List<Double> rsi = getRsi(candleResponses);
-//
-//        return rsi.get(0) > sellValue;
-//    }
-
-
-    private List<Double> getRsi(List<CandleResponse> data){
+    private List<Double> getRsi(List<CandleResponse> data, int count){
         List<Double> rsiLst = new LinkedList<>();
         List<Double> ups = new LinkedList<>();
         List<Double> downs = new LinkedList<>();
@@ -66,8 +59,8 @@ public class RsiStrategy implements IStrategy {
                 au.add(ups.get(i));
                 ad.add(downs.get(i));
             } else {
-                au.add(((day - 1) * au.get(i - 1) + ups.get(i)) / day);
-                ad.add(((day - 1) * ad.get(i - 1) + downs.get(i)) / day);
+                au.add(((count - 1) * au.get(i - 1) + ups.get(i)) / count);
+                ad.add(((count - 1) * ad.get(i - 1) + downs.get(i)) / count);
             }
         }
 
@@ -83,37 +76,4 @@ public class RsiStrategy implements IStrategy {
         return rsiLst;
     }
 
-
-//    private List<Double> getRsi(List<CandleResponse> candleResponses){
-//        BarSeries series = new BaseBarSeriesBuilder().build();
-//
-//        for(int i = candleResponses.size() - 1; i >= 0; i--){
-//            CandleResponse response = candleResponses.get(i);
-//
-//            ZonedDateTime endTime = ZonedDateTime.parse(response.getDateKst().replace('T', ' '),
-//                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("Asia/Seoul")));
-//
-//            BaseBar bar = BaseBar.builder(DecimalNum::valueOf, Number.class)
-//                    .timePeriod(Duration.ofMinutes(240))
-//                    .endTime(endTime)
-//                    .openPrice(response.getOpeningPrice())
-//                    .highPrice(response.getHighPrice())
-//                    .lowPrice(response.getLowPrice())
-//                    .closePrice(response.getTradePrice())
-//                    .volume(response.getAccTradeVolume())
-//                    .build();
-//            series.addBar(bar);
-//        }
-//
-//        ClosePriceIndicator closePriceIndicator = new ClosePriceIndicator(series);
-//
-//        RSIIndicator rsiIndicator = new RSIIndicator(closePriceIndicator, 14);
-//        List<Double> lst = new LinkedList<>();
-//
-//        for(int i = candleResponses.size() - 1; i >= candleResponses.size() - 5; i--){
-//            lst.add(rsiIndicator.getValue(i).doubleValue());
-//        }
-//
-//        return lst;
-//    }
 }
