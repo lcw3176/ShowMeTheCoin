@@ -82,7 +82,7 @@ public class AutoTrade {
                         double coinVolume = minCash / nowCandle.getTradePrice();
                         myBalance -= nowCandle.getTradePrice() * coinVolume - FeeCalculator.calculate(nowCandle.getTradePrice(), coinBalance);
                         coinBalance += coinVolume;
-
+    //fixme 순서 고칠것
                         TradeInfo tradeInfo = TradeInfo.builder()
                                 .tradeCount(nowLevel)
                                 .tradePrice(nowCandle.getTradePrice())
