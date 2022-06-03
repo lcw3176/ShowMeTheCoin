@@ -34,11 +34,11 @@ public class BackTestService {
             Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Seoul")));
             Calendar beforeCal = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Seoul")));
             List<Strategy> strategyList = new LinkedList<>();
-            strategyList.add(Strategy.ADX_DMI_STRATEGY);
+//            strategyList.add(Strategy.ADX_DMI_STRATEGY);
             strategyList.add(Strategy.RSI_STRATEGY);
 //            strategyList.add(Strategy.TAIL_STRATEGY);
-            strategyList.add(Strategy.PRICE_STRATEGY);
-            strategyList.add(Strategy.QUOTE_STRATEGY);
+//            strategyList.add(Strategy.PRICE_STRATEGY);
+//            strategyList.add(Strategy.QUOTE_STRATEGY);
 
             Date date = new Date();
             running = true;
@@ -48,10 +48,10 @@ public class BackTestService {
             int nowLevel = 0;
             double myBalance = request.getStartBalance();
             int divideNum = 5;
-            double testBalance = myBalance / divideNum;  // test
-            testBalance *= 0.95;
+//            myBalance = myBalance / divideNum;  // test
+            double cashToBuy = myBalance / divideNum;
+            cashToBuy *= 0.95;
             double gain = 0D;
-            double beforeGain = 0D;
 
             cal.set(2022, Calendar.JANUARY, 1, 0, 0, 0);
             beforeCal.set(2022, Calendar.JANUARY, 1, 0, 0, 0);
@@ -66,44 +66,27 @@ public class BackTestService {
             while(running){
 
                 List<CandleResponse> candles = candleService.getCandles(coinType, format.format(cal.getTime()), minute);
-                CandleResponse beforeCandle = null;
 
                 for (int i = 100; i >= 0; i--) {
-                    double minCash = testBalance;
+                    double minCash = cashToBuy;
 
-                    CandleResponse nowCandle = candles.get(i);
-
-                    if(beforeCandle != null && nowCandle.getTimeStamp() <= beforeCandle.getTimeStamp()){
-                        break;
-                    }
 
                     List<CandleResponse> tempCandles = candles.subList(i, candles.size() - 1);
-
-//                    BackTestResponse response = BackTestResponse.builder()
-//                            .tradePrice(nowCandle.getTradePrice())
-//                            .dateKst(nowCandle.getDateKst())
-//                            .trade(false)
-//                            .build();
+                    CandleResponse nowCandle = tempCandles.get(0);
+                    BackTestResponse response = BackTestResponse.builder()
+                            .tradePrice(nowCandle.getTradePrice())
+                            .dateKst(nowCandle.getDateKst())
+                            .trade(false)
+                            .build();
 
                     // 구매 조건
                     if ((tradeInfoList.size() == 0 || !nowCandle.getDateKst().equals(tradeInfoList.get(0).getDateKst()))
                         && strategy.stream().allMatch(st -> st.isProperToBuy(tempCandles, tradeInfoList))) {
 
                         // 잔고 체크
-                        if (myBalance > minCash) {
+                        if (myBalance >= minCash) {
 
-                            double coinVolume = minCash / nowCandle.getTradePrice();
-                            coinBalance += coinVolume;
-                            myBalance -= nowCandle.getTradePrice() * coinVolume + FeeCalculator.calculate(nowCandle.getTradePrice(), coinBalance);
-
-//                            response = BackTestResponse.builder()
-//                                    .tradePrice(nowCandle.getTradePrice())
-//                                    .dateKst(nowCandle.getDateKst())
-//                                    .trade(true)
-//                                    .buy(true)
-//                                    .build();
-
-
+                            double coinVolume = cashToBuy / nowCandle.getTradePrice();
                             nowLevel += 1;
                             TradeInfo tradeInfo = TradeInfo.builder()
                                     .tradeCount(nowLevel)
@@ -114,71 +97,85 @@ public class BackTestService {
 
                             tradeInfoList.add(tradeInfo);
 
-//                            log.info("구매: 시각 {} 구매 횟수 {}",
+                            coinBalance += coinVolume;
+                            myBalance -= nowCandle.getTradePrice() * coinVolume
+                                    + FeeCalculator.calculate(nowCandle.getTradePrice() * coinBalance, coinBalance);
+
+                            response = BackTestResponse.builder()
+                                    .tradePrice(nowCandle.getTradePrice())
+                                    .dateKst(nowCandle.getDateKst())
+                                    .trade(true)
+                                    .buy(true)
+                                    .build();
+
+//                            log.info("구매: 시각 {} 구매 횟수 {} 구매량 {} 구매 단가 {}",
 //                                    nowCandle.getDateKst(),
-//                                    tradeInfoList.size());
+//                                    tradeInfoList.size(),
+//                                    coinVolume,
+//                                    nowCandle.getTradePrice() * coinVolume);
                         }
                     }
 
                     // 익절 조건
-                    else if (tradeInfoList.size() > 0
+                    if (tradeInfoList.size() > 0
                             && strategy.stream().allMatch(st -> st.isProperToSellWithBenefit(tempCandles, tradeInfoList))) {
 
                         if (coinBalance > 0) {
-                            double momentGain = gain;
-                            myBalance += nowCandle.getTradePrice() * coinBalance - FeeCalculator.calculate(nowCandle.getTradePrice(), coinBalance);
-                            coinBalance = 0;
+                            myBalance += nowCandle.getTradePrice() * coinBalance
+                                    - FeeCalculator.calculate(nowCandle.getTradePrice() * coinBalance, coinBalance);
+                            coinBalance = 0D;
 
-//                            response = BackTestResponse.builder()
-//                                    .tradePrice(nowCandle.getTradePrice())
-//                                    .dateKst(nowCandle.getDateKst())
-//                                    .trade(true)
-//                                    .build();
+                            response = BackTestResponse.builder()
+                                    .tradePrice(nowCandle.getTradePrice())
+                                    .dateKst(nowCandle.getDateKst())
+                                    .trade(true)
+                                    .build();
 
                             nowLevel = 0;
-                            gain = myBalance - request.getStartBalance();
-//                            log.info("익절: 시각 {} 이득 {} 누적 이득 {} 구매 횟수 {}",
+
+//                            log.info("익절: 시각 {} 잔고 {}",
 //                                    nowCandle.getDateKst(),
-//                                    gain - momentGain,
-//                                    gain,
-//                                    tradeInfoList.size());
+//                                    myBalance);
                             tradeInfoList.clear();
-                            testBalance = myBalance / divideNum;
-                            testBalance *= 0.95;
+                            gain = myBalance - request.getStartBalance();
+//                            myBalance = myBalance / divideNum;
+//                            myBalance *= 0.95;
+                            cashToBuy = myBalance / divideNum;
+                            cashToBuy *= 0.95;
+
                         }
                     }
 
                     // 손절 조건
-                    else if (tradeInfoList.size() > 0
+                    if (tradeInfoList.size() > 0
                             && strategy.stream().allMatch(st -> st.isProperToSellWithLoss(tempCandles, tradeInfoList))) {
 
                         if(coinBalance > 0) {
-                            double momentGain = gain;
+                            myBalance += nowCandle.getTradePrice() * coinBalance
+                                    - FeeCalculator.calculate(nowCandle.getTradePrice() * coinBalance, coinBalance);
+                            coinBalance = 0D;
 
-                            myBalance += nowCandle.getTradePrice() * coinBalance - FeeCalculator.calculate(nowCandle.getTradePrice(), coinBalance);
-                            coinBalance = 0;
-
-//                            response = BackTestResponse.builder()
-//                                    .tradePrice(nowCandle.getTradePrice())
-//                                    .dateKst(nowCandle.getDateKst())
-//                                    .trade(true)
-//                                    .build();
+                            response = BackTestResponse.builder()
+                                    .tradePrice(nowCandle.getTradePrice())
+                                    .dateKst(nowCandle.getDateKst())
+                                    .trade(true)
+                                    .build();
 
                             nowLevel = 0;
                             gain = myBalance - request.getStartBalance();
-//                            log.info("손절: 시각 {} 이득 {} 누적 이득 {} 구매 횟수 {}",
+//                            log.info("손절: 시각 {} 구매 횟수 {}",
 //                                    nowCandle.getDateKst(),
-//                                    gain - momentGain,
-//                                    gain,
 //                                    tradeInfoList.size());
                             tradeInfoList.clear();
-                            testBalance = myBalance / divideNum;
-                            testBalance *= 0.95;
+//                            testBalance = myBalance / divideNum;
+//                            testBalance *= 0.95;
+                            cashToBuy = myBalance / divideNum;
+                            cashToBuy *= 0.95;
+
                         }
                     }
 
 //                    applicationEventPublisher.publishEvent(response);
-                    beforeCandle = nowCandle;
                 }
 
                 cal.add(Calendar.MINUTE, minute * 100);
@@ -188,12 +185,12 @@ public class BackTestService {
                 }
 
                 if(cal.get(Calendar.DATE) != beforeCal.get(Calendar.DATE)){
-                    log.info("{}월 {}일 수익: 이득 {} 잔고 {}",
+                    log.info("{}월 {}일 수익: 누적 이득 {} 잔고 {}",
                             beforeCal.get(Calendar.MONTH) + 1,
                             beforeCal.get(Calendar.DATE),
-                            gain - beforeGain,
+                            gain,
                             myBalance);
-                    beforeGain = gain;
+
                     beforeCal.add(Calendar.DATE, 1);
                 }
 
