@@ -7,7 +7,6 @@ import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBar;

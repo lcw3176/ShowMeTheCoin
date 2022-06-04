@@ -8,10 +8,12 @@ import java.util.List;
 
 
 public interface IStrategy {
-    double lossRate = 0.01;
+    double lossRate = 0.1;
     double gainRate = 0.0005;
 
-    boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo);
+    default boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo){
+        return true;
+    }
     default boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo){
         double averageBuyPrice = getAverageBuyPrice(tradeInfo);
         double paidFee = getPaidFee(tradeInfo);
