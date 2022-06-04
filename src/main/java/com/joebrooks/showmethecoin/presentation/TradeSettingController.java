@@ -1,6 +1,6 @@
 package com.joebrooks.showmethecoin.presentation;
 
-import com.joebrooks.showmethecoin.strategy.Strategy;
+import com.joebrooks.showmethecoin.strategy.StrategyType;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.repository.user.UserService;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigEntity;
@@ -33,7 +33,7 @@ public class TradeSettingController {
 
         model.addAttribute("coinList", CoinType.values());
         model.addAttribute("userInfo", userConfigService.getUserConfig(userEntity).get());
-        model.addAttribute("strategyLst", Strategy.values());
+        model.addAttribute("strategyLst", StrategyType.values());
         model.addAttribute("result", result);
 
         return "trade-setting";
@@ -60,6 +60,6 @@ public class TradeSettingController {
         private CoinType tradeCoin;
         private double startPrice;
         private double commonDifference;
-        private Strategy strategy;
+        private StrategyType strategyType;
     }
 }

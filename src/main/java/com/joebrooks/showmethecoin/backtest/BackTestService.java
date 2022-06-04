@@ -1,8 +1,8 @@
-package com.joebrooks.showmethecoin.trade.upbit.backtest;
+package com.joebrooks.showmethecoin.backtest;
 
 import com.joebrooks.showmethecoin.global.fee.FeeCalculator;
 import com.joebrooks.showmethecoin.strategy.IStrategy;
-import com.joebrooks.showmethecoin.strategy.Strategy;
+import com.joebrooks.showmethecoin.strategy.StrategyType;
 import com.joebrooks.showmethecoin.strategy.StrategyService;
 import com.joebrooks.showmethecoin.trade.TradeInfo;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
@@ -33,12 +33,12 @@ public class BackTestService {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Seoul")));
             Calendar beforeCal = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Seoul")));
-            List<Strategy> strategyList = new LinkedList<>();
-            strategyList.add(Strategy.ADX_DMI_STRATEGY);
-            strategyList.add(Strategy.RSI_STRATEGY);
+            List<StrategyType> strategyTypeList = new LinkedList<>();
+//            strategyTypeList.add(StrategyType.AdxDmiStrategy);
+            strategyTypeList.add(StrategyType.RsiStrategy);
 //            strategyList.add(Strategy.TAIL_STRATEGY);
 //            strategyList.add(Strategy.PRICE_STRATEGY);
-//            strategyList.add(Strategy.QUOTE_STRATEGY);
+            strategyTypeList.add(StrategyType.BaseStrategy);
 
             Date date = new Date();
             running = true;
@@ -50,20 +50,22 @@ public class BackTestService {
             int divideNum = 5;
 //            myBalance = myBalance / divideNum;  // test
             double cashToBuy = myBalance / divideNum;
-            cashToBuy *= 0.95;
+            cashToBuy *= 0.99;
             double gain = 0D;
+            double beforeBalance = myBalance;
 
-            cal.set(2021, Calendar.JUNE, 1, 0, 0, 0);
-            beforeCal.set(2021, Calendar.JUNE, 1, 0, 0, 0);
+            cal.set(2021, Calendar.APRIL, 1, 0, 0, 0);
+            beforeCal.set(2021, Calendar.APRIL, 1, 0, 0, 0);
             List<IStrategy> strategy = new LinkedList<>();
 
-            for(Strategy i : strategyList){
+            for(StrategyType i : strategyTypeList){
                 strategy.add(strategyService.get(i));
             }
 
 
 
             while(running){
+
 
                 List<CandleResponse> candles = candleService.getCandles(coinType, format.format(cal.getTime()), minute);
 
@@ -73,11 +75,11 @@ public class BackTestService {
 
                     List<CandleResponse> tempCandles = candles.subList(i, candles.size() - 1);
                     CandleResponse nowCandle = tempCandles.get(0);
-                    BackTestResponse response = BackTestResponse.builder()
-                            .tradePrice(nowCandle.getTradePrice())
-                            .dateKst(nowCandle.getDateKst())
-                            .trade(false)
-                            .build();
+//                    BackTestResponse response = BackTestResponse.builder()
+//                            .tradePrice(nowCandle.getTradePrice())
+//                            .dateKst(nowCandle.getDateKst())
+//                            .trade(false)
+//                            .build();
 
                     // 구매 조건
                     if ((tradeInfoList.size() == 0 || !nowCandle.getDateKst().equals(tradeInfoList.get(0).getDateKst()))
@@ -99,14 +101,14 @@ public class BackTestService {
 
                             coinBalance += coinVolume;
                             myBalance -= nowCandle.getTradePrice() * coinVolume
-                                    + FeeCalculator.calculate(nowCandle.getTradePrice() * coinBalance, coinBalance);
+                                    + FeeCalculator.calculate(nowCandle.getTradePrice() * coinVolume, coinVolume);
 
-                            response = BackTestResponse.builder()
-                                    .tradePrice(nowCandle.getTradePrice())
-                                    .dateKst(nowCandle.getDateKst())
-                                    .trade(true)
-                                    .buy(true)
-                                    .build();
+//                            response = BackTestResponse.builder()
+//                                    .tradePrice(nowCandle.getTradePrice())
+//                                    .dateKst(nowCandle.getDateKst())
+//                                    .trade(true)
+//                                    .buy(true)
+//                                    .build();
 
 //                            log.info("구매: 시각 {} 구매 횟수 {} 구매량 {} 구매 단가 {}",
 //                                    nowCandle.getDateKst(),
@@ -125,11 +127,11 @@ public class BackTestService {
                                     - FeeCalculator.calculate(nowCandle.getTradePrice() * coinBalance, coinBalance);
                             coinBalance = 0D;
 
-                            response = BackTestResponse.builder()
-                                    .tradePrice(nowCandle.getTradePrice())
-                                    .dateKst(nowCandle.getDateKst())
-                                    .trade(true)
-                                    .build();
+//                            response = BackTestResponse.builder()
+//                                    .tradePrice(nowCandle.getTradePrice())
+//                                    .dateKst(nowCandle.getDateKst())
+//                                    .trade(true)
+//                                    .build();
 
                             nowLevel = 0;
 
@@ -141,7 +143,7 @@ public class BackTestService {
 //                            myBalance = myBalance / divideNum;
 //                            myBalance *= 0.95;
                             cashToBuy = myBalance / divideNum;
-                            cashToBuy *= 0.95;
+                            cashToBuy *= 0.99;
 
                         }
                     }
@@ -155,11 +157,11 @@ public class BackTestService {
                                     - FeeCalculator.calculate(nowCandle.getTradePrice() * coinBalance, coinBalance);
                             coinBalance = 0D;
 
-                            response = BackTestResponse.builder()
-                                    .tradePrice(nowCandle.getTradePrice())
-                                    .dateKst(nowCandle.getDateKst())
-                                    .trade(true)
-                                    .build();
+//                            response = BackTestResponse.builder()
+//                                    .tradePrice(nowCandle.getTradePrice())
+//                                    .dateKst(nowCandle.getDateKst())
+//                                    .trade(true)
+//                                    .build();
 
                             nowLevel = 0;
                             gain = myBalance - request.getStartBalance();
@@ -170,7 +172,7 @@ public class BackTestService {
 //                            testBalance = myBalance / divideNum;
 //                            testBalance *= 0.95;
                             cashToBuy = myBalance / divideNum;
-                            cashToBuy *= 0.95;
+                            cashToBuy *= 0.99;
 
                         }
                     }
@@ -186,13 +188,14 @@ public class BackTestService {
                 }
 
                 if(cal.get(Calendar.DATE) != beforeCal.get(Calendar.DATE)){
-                    log.info("{}월 {}일 수익: 누적 이득 {} 잔고 {}",
+                    log.info("{}월 {}일 수익: 이득 {} 잔고 {}",
                             beforeCal.get(Calendar.MONTH) + 1,
                             beforeCal.get(Calendar.DATE),
-                            gain,
+                            myBalance - beforeBalance,
                             myBalance);
 
                     beforeCal.add(Calendar.DATE, 1);
+                    beforeBalance = myBalance;
                 }
 
 

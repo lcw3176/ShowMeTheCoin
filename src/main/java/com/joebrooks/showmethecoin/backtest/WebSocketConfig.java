@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.trade.upbit.backtest;
+package com.joebrooks.showmethecoin.backtest;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

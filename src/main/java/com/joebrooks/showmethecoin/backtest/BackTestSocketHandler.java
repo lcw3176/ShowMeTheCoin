@@ -1,8 +1,7 @@
-package com.joebrooks.showmethecoin.trade.upbit.backtest;
+package com.joebrooks.showmethecoin.backtest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.joebrooks.showmethecoin.global.exception.type.AutomationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

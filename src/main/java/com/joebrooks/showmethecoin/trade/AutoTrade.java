@@ -4,7 +4,7 @@ import com.joebrooks.showmethecoin.global.exception.type.AutomationException;
 import com.joebrooks.showmethecoin.global.fee.FeeCalculator;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
 import com.joebrooks.showmethecoin.strategy.IStrategy;
-import com.joebrooks.showmethecoin.strategy.Strategy;
+import com.joebrooks.showmethecoin.strategy.StrategyType;
 import com.joebrooks.showmethecoin.strategy.StrategyService;
 import com.joebrooks.showmethecoin.trade.upbit.account.AccountService;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
@@ -32,7 +32,7 @@ public class AutoTrade {
     private final UserConfigService userConfigService;
 
     private final List<TradeInfo> tradeInfoList = new LinkedList<>();
-    private final List<Strategy> strategyList = new LinkedList<>();
+    private final List<StrategyType> strategyTypeList = new LinkedList<>();
     private final List<IStrategy> strategy = new LinkedList<>();
     private final StrategyService strategyService;
 
@@ -45,9 +45,9 @@ public class AutoTrade {
 //        strategyList.add(Strategy.PRICE_STRATEGY);
 //        strategyList.add(Strategy.TAIL_STRATEGY);
 //        strategyList.add(Strategy.QUOTE_STRATEGY);
-        strategyList.add(Strategy.ADX_DMI_STRATEGY);
+//        strategyList.add(Strategy.ADX_DMI_STRATEGY);
 
-        for(Strategy i : strategyList){
+        for(StrategyType i : strategyTypeList){
             strategy.add(strategyService.get(i));
         }
 

@@ -12,7 +12,7 @@ public class GraphUtil {
             }
             return GraphStatus.RISING;
         } else if(secondValue - firstValue < 0){
-            if(secondValue - firstValue < -5){
+            if(secondValue - firstValue < -4){
                 return GraphStatus.STRONG_FALLING;
             }
             return GraphStatus.FALLING;

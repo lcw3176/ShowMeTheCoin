@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.trade.upbit.backtest;
+package com.joebrooks.showmethecoin.backtest;
 
 import com.joebrooks.showmethecoin.trade.upbit.client.CoinType;
 import lombok.*;

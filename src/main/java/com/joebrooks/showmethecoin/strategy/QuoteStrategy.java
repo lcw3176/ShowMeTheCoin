@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component(StrategyAnnotation.QUOTE_STRATEGY)
+
 @RequiredArgsConstructor
 public class QuoteStrategy implements IStrategy{
 
@@ -22,13 +22,5 @@ public class QuoteStrategy implements IStrategy{
 //        return bid < ask && ask / 2 < bid;
 //    }
 
-    @Override
-    public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        if(tradeInfo.size() > 0){
-            return tradeInfo.get(tradeInfo.size() - 1).getTradePrice() > candleResponses.get(0).getTradePrice();
-        }
-
-        return true;
-    }
 
 }

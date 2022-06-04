@@ -10,16 +10,16 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedList;
 import java.util.List;
 
-@Component(StrategyAnnotation.RSI_STRATEGY)
+
 @Slf4j
 public class RsiStrategy implements IStrategy {
 
-    private final int buyValue = 30;
+    private final int buyValue = 20;
 
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
         List<Double> shortTermRsiLst = getRsi(candleResponses, 7);
-        List<Double> longTermRsiLst = getRsi(candleResponses, 14);
+        List<Double> longTermRsiLst = getRsi(candleResponses, 30);
 
         for(int i = 1 ; i < 10; i++){
             if(GraphUtil.getStatus(longTermRsiLst.get(i), longTermRsiLst.get(i - 1)).equals(GraphStatus.STRONG_FALLING)){
@@ -32,6 +32,14 @@ public class RsiStrategy implements IStrategy {
                 && shortTermRsiLst.get(0) < buyValue + 5
                 && shortTermRsiLst.get(1) < buyValue;
     }
+
+//    @Override
+//    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
+//        List<Double> shortTermRsiLst = getRsi(candleResponses, 7);
+//
+//        return shortTermRsiLst.get(0) >= 60;
+//    }
+
 
     private List<Double> getRsi(List<CandleResponse> data, int count){
         List<Double> rsiLst = new LinkedList<>();

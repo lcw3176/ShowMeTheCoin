@@ -1,6 +1,6 @@
 package com.joebrooks.showmethecoin.presentation;
 
-import com.joebrooks.showmethecoin.strategy.Strategy;
+import com.joebrooks.showmethecoin.strategy.StrategyType;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.repository.user.UserService;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
@@ -32,7 +32,7 @@ public class BackTestController {
 
         model.addAttribute("coinList", CoinType.values());
         model.addAttribute("userInfo", userConfigService.getUserConfig(userEntity).get());
-        model.addAttribute("strategyLst", Strategy.values());
+        model.addAttribute("strategyLst", StrategyType.values());
 
 
         return "backtest";

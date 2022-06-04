@@ -23,34 +23,34 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
-@Component(StrategyAnnotation.ADX_DMI_STRATEGY)
+
 @RequiredArgsConstructor
 public class AdxDmiStrategy implements IStrategy{
 
-    @Override
-    public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        List<ADXResponse> adxResponseList = getADXResponse(candleResponses);
-
-        GraphStatus adxStatus = GraphUtil.getStatus(adxResponseList.get(1).getAdx(), adxResponseList.get(0).getAdx());
-        double recentPDI = adxResponseList.get(0).getPlusDI();
-        double recentMDI = adxResponseList.get(0).getMinusDI();
-
-        double beforePDI = adxResponseList.get(1).getPlusDI();
-        double beforeMDI = adxResponseList.get(1).getMinusDI();
-//        for(int i = 1; i < 4; i++){
-//            if(GraphUtil.getStatus(adxResponseList.get(i).getMinusDI(), adxResponseList.get(i - 1).getMinusDI()).equals(GraphStatus.STRONG_RISING)){
-//                return false;
-//            }
-//        }
-
-        return        recentMDI > recentPDI
-//                && recentMDI < adxResponseList.get(0).getAdx()
-//                && adxResponseList.get(0).getAdx() - recentMDI < 5
-//                && GraphUtil.getStatus(beforeMDI, recentMDI).equals(GraphStatus.FALLING)
-//                && GraphUtil.getStatus(beforePDI, recentPDI).equals(GraphStatus.RISING)
-                && adxStatus.equals(GraphStatus.RISING)
-                && recentPDI * 1.5 < recentMDI;
-    }
+//    @Override
+//    public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
+//        List<ADXResponse> adxResponseList = getADXResponse(candleResponses);
+//
+//        GraphStatus adxStatus = GraphUtil.getStatus(adxResponseList.get(1).getAdx(), adxResponseList.get(0).getAdx());
+//        double recentPDI = adxResponseList.get(0).getPlusDI();
+//        double recentMDI = adxResponseList.get(0).getMinusDI();
+//
+//        double beforePDI = adxResponseList.get(1).getPlusDI();
+//        double beforeMDI = adxResponseList.get(1).getMinusDI();
+////        for(int i = 1; i < 4; i++){
+////            if(GraphUtil.getStatus(adxResponseList.get(i).getMinusDI(), adxResponseList.get(i - 1).getMinusDI()).equals(GraphStatus.STRONG_RISING)){
+////                return false;
+////            }
+////        }
+//
+//        return        recentMDI > recentPDI
+////                && recentMDI < adxResponseList.get(0).getAdx()
+////                && adxResponseList.get(0).getAdx() - recentMDI < 5
+////                && GraphUtil.getStatus(beforeMDI, recentMDI).equals(GraphStatus.FALLING)
+////                && GraphUtil.getStatus(beforePDI, recentPDI).equals(GraphStatus.RISING)
+//                && adxStatus.equals(GraphStatus.RISING)
+//                && recentPDI * 1.5 < recentMDI;
+//    }
 
     @Override
     public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo){

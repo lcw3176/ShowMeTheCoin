@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component(StrategyAnnotation.PRICE_STRATEGY)
+
 @RequiredArgsConstructor
 @Slf4j
 public class PriceStrategy implements IStrategy{

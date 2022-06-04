@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component(StrategyAnnotation.TAIL_STRATEGY)
-@RequiredArgsConstructor
+
+
 public class TailStrategy implements IStrategy{
     private final int tailCount = 3;
 
