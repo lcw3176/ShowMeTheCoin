@@ -2,15 +2,9 @@ package com.joebrooks.showmethecoin.strategy;
 
 import com.joebrooks.showmethecoin.trade.TradeInfo;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
-import com.joebrooks.showmethecoin.trade.upbit.quote.QuoteResponse;
-import com.joebrooks.showmethecoin.trade.upbit.quote.QuoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component(StrategyAnnotation.QUOTE_STRATEGY)

@@ -19,15 +19,14 @@ public class RsiStrategy implements IStrategy {
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
         List<Double> shortTermRsiLst = getRsi(candleResponses, 7);
-//        List<Double> longTermRsiLst = getRsi(candleResponses, 14);
+        List<Double> longTermRsiLst = getRsi(candleResponses, 14);
 
-//        for(int i = 1 ; i < 10; i++){
-//            if(GraphUtil.getStatus(longTermRsiLst.get(i), longTermRsiLst.get(i - 1)).equals(GraphStatus.STRONG_FALLING)){
-//                return false;
-//            }
-//        }
+        for(int i = 1 ; i < 10; i++){
+            if(GraphUtil.getStatus(longTermRsiLst.get(i), longTermRsiLst.get(i - 1)).equals(GraphStatus.STRONG_FALLING)){
+                return false;
+            }
+        }
 
-//        return rsi.get(0) < buyValue;
 
         return shortTermRsiLst.get(0) > buyValue
                 && shortTermRsiLst.get(0) < buyValue + 5
