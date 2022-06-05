@@ -1,18 +1,14 @@
 package com.joebrooks.showmethecoin.strategy;
 
-import com.joebrooks.showmethecoin.global.fee.FeeCalculator;
 import com.joebrooks.showmethecoin.trade.TradeInfo;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 
-@RequiredArgsConstructor
 @Slf4j
-public class PriceStrategy implements IStrategy{
+public class CandleStrategy implements IStrategy{
 
     private final int buyCount = 3;
     private final int sellCount = 4;
