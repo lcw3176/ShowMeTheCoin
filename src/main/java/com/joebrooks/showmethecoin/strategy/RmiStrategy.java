@@ -1,7 +1,6 @@
 package com.joebrooks.showmethecoin.strategy;
 
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
-import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.LinkedList;

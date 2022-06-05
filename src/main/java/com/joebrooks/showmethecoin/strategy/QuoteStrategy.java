@@ -1,11 +1,6 @@
 package com.joebrooks.showmethecoin.strategy;
 
-import com.joebrooks.showmethecoin.trade.TradeInfo;
-import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 
 @RequiredArgsConstructor
