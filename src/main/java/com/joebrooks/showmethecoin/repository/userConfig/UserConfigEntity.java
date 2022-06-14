@@ -27,8 +27,6 @@ public class UserConfigEntity {
     @Enumerated(EnumType.STRING)
     private CoinType tradeCoin;
 
-    @Column(name = "trade_level")
-    private int tradeLevel;
     @Column(name = "is_trading")
     private boolean isTrading;
 
@@ -47,10 +45,6 @@ public class UserConfigEntity {
 
     public void changeTradeCoin(CoinType tradeCoin){
         this.tradeCoin = tradeCoin;
-    }
-
-    public void changeTradeLevel(int tradeLevel){
-        this.tradeLevel = tradeLevel;
     }
 
 

@@ -28,19 +28,4 @@ public class UserConfigService {
         userConfigRepository.save(userConfig);
     }
 
-    public void stopAllUsersTrade(){
-        userConfigRepository.findAll().forEach(i -> {
-            i.changeTradeStatus(false);
-
-            userConfigRepository.save(i);
-        });
-    }
-
-    public void initAllUsersTradeLevel(){
-        userConfigRepository.findAll().forEach(i -> {
-            i.changeTradeLevel(0);
-
-            userConfigRepository.save(i);
-        });
-    }
 }
