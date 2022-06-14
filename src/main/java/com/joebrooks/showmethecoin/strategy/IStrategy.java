@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public interface IStrategy {
-    double lossRate = 0.002;
+    double lossRate = 0.004; // 0.004
     double gainRate = 0.005;
 
     default boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo){
@@ -59,7 +59,7 @@ public interface IStrategy {
             volume += i.getCoinVolume();
         }
 
-        return volume * candleResponses.get(0).getTradePrice();
+        return volume * candleResponses.get(1).getTradePrice();
     }
 
     default double getPayingFee(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo){
@@ -69,6 +69,6 @@ public interface IStrategy {
             volume += i.getCoinVolume();
         }
 
-        return FeeCalculator.calculate(candleResponses.get(0).getTradePrice(), volume);
+        return FeeCalculator.calculate(candleResponses.get(1).getTradePrice(), volume);
     }
 }
