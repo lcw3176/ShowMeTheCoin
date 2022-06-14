@@ -110,7 +110,9 @@ public class UpBitClient {
                             HeaderGenerator.getJwtHeader(accessKey, secretKey, QueryGenerator.convertQueryToHash(map)))
                     .acceptCharset(StandardCharsets.UTF_8)
                     .retrieve()
-                    .onStatus(HttpStatus::isError, response -> Mono.error(new IllegalStateException("failed delete")));
+                    .onStatus(HttpStatus::isError, response -> Mono.error(new IllegalStateException("failed delete")))
+                    .bodyToMono(String.class)
+                    .block();
         } catch(Exception e){
             throw new RuntimeException(e.getMessage(), e);
         }
