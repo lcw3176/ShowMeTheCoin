@@ -129,7 +129,7 @@
                 }
             },
             legend: {
-                data: ['매수', '매도','시세']
+                data: ['매수', '매도']
             },
             dataZoom: {
                 show: true,
@@ -171,12 +171,12 @@
                 },
                 {
                     name: '시세',
-                    type: 'line',
+                    type: 'candlestick',
                     yAxisIndex: 0, //yAxis 2번째 사용
                     data: [],
-                    itemStyle:{
-                        color:'#FFCC00'
-                    },
+                    // itemStyle:{
+                    //     color:'#FFCC00'
+                    // },
                 },
             ]
         };
@@ -195,14 +195,14 @@
             let sell = option.series[1].data; // 매도
             let price = option.series[2].data; // 시세
 
-            if(value.trade){
+            if(value.traded){
 
                 if(value.buy){
-                    buy.push(value.tradePrice);
+                    buy.push(value.tradedPrice);
                     sell.push(undefined)
                 } else {
                     buy.push(undefined)
-                    sell.push(value.tradePrice);
+                    sell.push(value.tradedPrice);
                 }
 
 
@@ -213,7 +213,7 @@
             }
 
 
-            price.push(value.tradePrice);
+            price.push([value.startPrice, value.closePrice, value.lowPrice, value.highPrice]);
 
             let axisData = value.dateKst.replace("T", " ").replace(/\..*/, '');
             option.xAxis[0].data.push(axisData);

@@ -7,9 +7,17 @@ import lombok.Data;
 @Builder
 public class BackTestResponse {
     private String dateKst;
-    private double tradePrice;
-    private boolean trade;
+    private double startPrice;
+    private double closePrice;
+    private double lowPrice;
+    private double highPrice;
+
+    private double tradedPrice;
+
+    private boolean traded;
     private boolean buy;
     private boolean finish;
     private double gain;
+
+
 }
