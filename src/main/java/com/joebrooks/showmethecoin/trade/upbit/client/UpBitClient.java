@@ -1,7 +1,7 @@
 package com.joebrooks.showmethecoin.trade.upbit.client;
 
 import com.google.gson.Gson;
-import com.joebrooks.showmethecoin.global.httpClient.ClientConfig;
+import com.joebrooks.showmethecoin.global.httpClient.WebClientBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,6 @@ public class UpBitClient {
     private final String accessKey = System.getenv("accessKey");
     private final String secretKey = System.getenv("secretKey");
 
-    private final ClientConfig client;
 
     @Value("${upbit.client.timeout}")
     private int timeoutMillis;
@@ -29,7 +28,7 @@ public class UpBitClient {
 
     public <T> T[] get(String path, boolean authHeaderRequired, Class<T[]> clazz){
         try {
-            return client.getClient(baseUrl, timeoutMillis).get()
+            return new WebClientBuilder().getClient(baseUrl, timeoutMillis).get()
                     .uri(path)
                     .accept(MediaType.APPLICATION_JSON)
                     .headers(headers -> {
@@ -53,7 +52,7 @@ public class UpBitClient {
         HashMap<String, String> map = QueryGenerator.getQueryMap(queryParams);
 
         try {
-            return client.getClient(baseUrl, timeoutMillis).get()
+            return new WebClientBuilder().getClient(baseUrl, timeoutMillis).get()
                     .uri(path)
                     .accept(MediaType.APPLICATION_JSON)
                     .headers(headers -> {
@@ -81,7 +80,7 @@ public class UpBitClient {
         HashMap<String, String> map = QueryGenerator.getQueryMap(body);
 
         try{
-            return client.getClient(baseUrl, timeoutMillis).post()
+            return new WebClientBuilder().getClient(baseUrl, timeoutMillis).post()
                     .uri(path)
                     .accept(MediaType.APPLICATION_JSON)
                     .header("Authorization",
@@ -103,7 +102,7 @@ public class UpBitClient {
         HashMap<String, String> map = QueryGenerator.getQueryMap(queryParams);
 
         try{
-            client.getClient(baseUrl, timeoutMillis).delete()
+            new WebClientBuilder().getClient(baseUrl, timeoutMillis).delete()
                     .uri(path)
                     .accept(MediaType.APPLICATION_JSON)
                     .header("Authorization",
@@ -111,7 +110,7 @@ public class UpBitClient {
                     .acceptCharset(StandardCharsets.UTF_8)
                     .retrieve()
                     .onStatus(HttpStatus::isError, response -> Mono.error(new IllegalStateException("failed delete")))
-                    .bodyToMono(String.class)
+                    .toEntity(String.class)
                     .block();
         } catch(Exception e){
             throw new RuntimeException(e.getMessage(), e);
