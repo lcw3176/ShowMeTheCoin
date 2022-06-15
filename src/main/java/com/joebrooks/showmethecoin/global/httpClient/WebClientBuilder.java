@@ -14,8 +14,8 @@ import reactor.netty.http.client.HttpClient;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-@Component
-public class ClientConfig {
+
+public class WebClientBuilder {
 
     public WebClient getClient(String baseUrl, int timeoutMillis) {
         HttpClient httpClient = HttpClient.create()
