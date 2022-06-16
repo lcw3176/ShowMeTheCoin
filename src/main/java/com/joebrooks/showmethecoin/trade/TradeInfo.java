@@ -11,7 +11,6 @@ public class TradeInfo {
 
     private Double tradePrice;
     private String dateKst;
-    private int tradeCount;
     private Double coinVolume;
     private String uuid;
 

@@ -22,8 +22,7 @@ public class UpBitClient {
     private final String secretKey = System.getenv("secretKey");
 
 
-    @Value("${upbit.client.timeout}")
-    private int timeoutMillis;
+    private final int timeoutMillis = 3000;
 
 
     public <T> T[] get(String path, boolean authHeaderRequired, Class<T[]> clazz){
