@@ -27,16 +27,9 @@ spring:
     suffix: .html
 
 upbit:
-  client:
-    timeout: 3000
   candle:
     minute: 240
     count: 200
-  rsi:
-    day: 14
-  rmi:
-    day: 14
-    n : 5
 
 auto:
   rsi:
