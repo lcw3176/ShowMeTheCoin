@@ -14,15 +14,10 @@ import java.util.*;
 public class CandleService {
 
     private final UpBitClient upBitClient;
-    @Value("${upbit.candle.minute}")
-    private int minute;
 
     private List<CandleResponse> responses = null;
-
-    @Value("${upbit.candle.count}")
-    private int count;
-
     public List<CandleResponse> getCandles(CoinType coinType) {
+        int minute = 1;
 
         if(responses == null){
             responses = request(coinType, minute, 200);
@@ -61,6 +56,8 @@ public class CandleService {
     }
 
     private List<CandleResponse> request(CoinType coinType, String to, int minute){
+        int count = 200;
+
         Map<String, Object> pathVariableMap = new HashMap<>();
 
         pathVariableMap.put("candleMinute", minute);
