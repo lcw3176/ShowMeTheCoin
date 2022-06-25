@@ -11,6 +11,7 @@ public enum StrategyType {
     TailStrategy("꼬리 전략"),
     BaseStrategy("기본 매매 전략"),
     RmiStrategy("RMI 전략"),
+    MACDStrategy("MACD 전략"),
     QuoteStrategy("호가 전략");
     private String description;
 
