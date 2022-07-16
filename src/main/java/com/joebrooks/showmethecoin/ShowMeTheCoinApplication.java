@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import javax.mail.MessagingException;
 
 @SpringBootApplication
 @EnableScheduling
@@ -14,7 +13,7 @@ import javax.mail.MessagingException;
 @RequiredArgsConstructor
 public class ShowMeTheCoinApplication {
 
-    public static void main(String[] args) throws MessagingException {
+    public static void main(String[] args) {
         SpringApplication.run(ShowMeTheCoinApplication.class, args);
     }
 
