@@ -23,7 +23,6 @@ import java.util.List;
 
 public class MACDStrategy implements IStrategy {
 
-    private int count = 0;
 
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
@@ -42,11 +41,20 @@ public class MACDStrategy implements IStrategy {
 //                && macdResponseList.get(0).getMacd() > 0){
 //            count = 0;
 //        }
+//
+//        macdResponseList.get(1).getSignal() > macdResponseList.get(1).getMacd()
+//                && macdResponseList.get(0).getSignal() < macdResponseList.get(0).getMacd()
+//                && macdResponseList.get(0).getSignal() < -50000
+//                && macdResponseList.get(0).getMacd() < -50000;
 
-        return  macdResponseList.get(1).getSignal() > macdResponseList.get(1).getMacd()
-                && macdResponseList.get(0).getSignal() < macdResponseList.get(0).getMacd()
-                && macdResponseList.get(0).getSignal() < -55000
-                && macdResponseList.get(0).getMacd() < -55000;
+//        Math.abs(macdResponseList.get(1).getMacd()) - Math.abs(macdResponseList.get(0).getMacd()) >= 2000
+//                && Math.abs(macdResponseList.get(1).getMacd()) - Math.abs(macdResponseList.get(2).getMacd()) >= 2000
+//                && macdResponseList.get(0).getSignal() < -50000
+//                && macdResponseList.get(0).getMacd() < -50000;
+//        macdResponseList.get(1).getSignal() > macdResponseList.get(1).getMacd()
+//                && macdResponseList.get(0).getSignal() < macdResponseList.get(0).getMacd()
+        return macdResponseList.get(0).getSignal() < -50000
+                && macdResponseList.get(0).getMacd() < -50000;
     }
 
 //    @Override

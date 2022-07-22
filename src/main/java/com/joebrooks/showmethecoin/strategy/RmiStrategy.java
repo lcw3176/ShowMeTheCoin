@@ -1,5 +1,6 @@
 package com.joebrooks.showmethecoin.strategy;
 
+import com.joebrooks.showmethecoin.trade.TradeInfo;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
 
 import java.util.Collections;
@@ -9,10 +10,17 @@ import java.util.List;
 
 public class RmiStrategy implements IStrategy {
 
-    private final int day = 14;
-    private final int n = 5;
+    private final int buyValue = 40;
 
-    private List<Double> getRmi(List<CandleResponse> data){
+    @Override
+    public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
+        List<Double> rmiLst = getRmi(candleResponses, 60, 5);
+
+        return rmiLst.get(0) > buyValue;
+    }
+
+
+    private List<Double> getRmi(List<CandleResponse> data, int day, int n){
         List<CandleResponse> copyData = new LinkedList<>(data);
 
         Collections.copy(copyData, data);

@@ -27,33 +27,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdxDmiStrategy implements IStrategy{
 
-//    @Override
-//    public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-//        List<ADXResponse> adxResponseList = getADXResponse(candleResponses);
-//
-//        GraphStatus adxStatus = GraphUtil.getStatus(adxResponseList.get(1).getAdx(), adxResponseList.get(0).getAdx());
-//        double recentPDI = adxResponseList.get(0).getPlusDI();
-//        double recentMDI = adxResponseList.get(0).getMinusDI();
-//
-//        double beforePDI = adxResponseList.get(1).getPlusDI();
-//        double beforeMDI = adxResponseList.get(1).getMinusDI();
-////        for(int i = 1; i < 4; i++){
-////            if(GraphUtil.getStatus(adxResponseList.get(i).getMinusDI(), adxResponseList.get(i - 1).getMinusDI()).equals(GraphStatus.STRONG_RISING)){
-////                return false;
-////            }
-////        }
-//
-//        return        recentMDI > recentPDI
-////                && recentMDI < adxResponseList.get(0).getAdx()
-////                && adxResponseList.get(0).getAdx() - recentMDI < 5
-////                && GraphUtil.getStatus(beforeMDI, recentMDI).equals(GraphStatus.FALLING)
-////                && GraphUtil.getStatus(beforePDI, recentPDI).equals(GraphStatus.RISING)
-//                && adxStatus.equals(GraphStatus.RISING)
-//                && recentPDI * 1.5 < recentMDI;
-//    }
-
     @Override
-    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo){
+    public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
         List<ADXResponse> adxResponseList = getADXResponse(candleResponses);
 
         GraphStatus adxStatus = GraphUtil.getStatus(adxResponseList.get(1).getAdx(), adxResponseList.get(0).getAdx());
@@ -61,15 +36,39 @@ public class AdxDmiStrategy implements IStrategy{
         double recentMDI = adxResponseList.get(0).getMinusDI();
 
         double beforePDI = adxResponseList.get(1).getPlusDI();
-
-        return  recentMDI < recentPDI
-//                recentPDI > adxResponseList.get(0).getAdx()
-//                && GraphUtil.getStatus(beforePDI, recentPDI).equals(GraphStatus.RISING)
-//                && adxResponseList.get(0).getAdx() - recentPDI < 5;
-                && adxStatus.equals(GraphStatus.RISING)
-                && recentMDI * 1.5 < recentPDI;
+        double beforeMDI = adxResponseList.get(1).getMinusDI();
+//        for(int i = 1; i < 4; i++){
+//            if(GraphUtil.getStatus(adxResponseList.get(i).getMinusDI(), adxResponseList.get(i - 1).getMinusDI()).equals(GraphStatus.STRONG_RISING)){
+//                return false;
+//            }
+//        }
+//recentMDI > recentPDI
+        return
+//                && recentMDI < adxResponseList.get(0).getAdx()
+//                && adxResponseList.get(0).getAdx() - recentMDI < 5
+//                GraphUtil.getStatus(beforeMDI, recentMDI).equals(GraphStatus.FALLING)
+                GraphUtil.getStatus(beforePDI, recentPDI).equals(GraphStatus.RISING)
+                && recentPDI * 4 < recentMDI;
     }
 
+
+//    @Override
+//    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo){
+//        List<ADXResponse> adxResponseList = getADXResponse(candleResponses);
+//
+//        GraphStatus adxStatus = GraphUtil.getStatus(adxResponseList.get(1).getAdx(), adxResponseList.get(0).getAdx());
+//        double recentPDI = adxResponseList.get(0).getPlusDI();
+//        double recentMDI = adxResponseList.get(0).getMinusDI();
+//
+//        double beforePDI = adxResponseList.get(1).getPlusDI();
+//
+//        return  recentMDI < recentPDI
+////                recentPDI > adxResponseList.get(0).getAdx()
+////                && GraphUtil.getStatus(beforePDI, recentPDI).equals(GraphStatus.RISING)
+////                && adxResponseList.get(0).getAdx() - recentPDI < 5;
+//                && adxStatus.equals(GraphStatus.RISING)
+//                && recentMDI * 5 < recentPDI;
+//    }
 
 
 
@@ -83,7 +82,7 @@ public class AdxDmiStrategy implements IStrategy{
                     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("Asia/Seoul")));
 
             BaseBar bar = BaseBar.builder(DecimalNum::valueOf, Number.class)
-                    .timePeriod(Duration.ofMinutes(240))
+                    .timePeriod(Duration.ofMinutes(1))
                     .endTime(endTime)
                     .openPrice(response.getOpeningPrice())
                     .highPrice(response.getHighPrice())
@@ -120,15 +119,4 @@ public class AdxDmiStrategy implements IStrategy{
         private double adx;
     }
 
-//    private double getAveragePrice(List<TradeInfo> tradeInfo){
-//        double price = 0;
-//        double volume = 0;
-//
-//        for(int i = 0; i < tradeInfo.size(); i++){
-//            price += tradeInfo.get(i).getTradePrice() * tradeInfo.get(i).getCoinVolume() * 1.0005;
-//            volume += tradeInfo.get(i).getCoinVolume();
-//        }
-//
-//        return price / volume;
-//    }
 }

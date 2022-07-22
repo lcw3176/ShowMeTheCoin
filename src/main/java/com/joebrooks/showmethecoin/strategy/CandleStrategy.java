@@ -4,6 +4,9 @@ import com.joebrooks.showmethecoin.trade.TradeInfo;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
 import lombok.extern.slf4j.Slf4j;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -11,44 +14,49 @@ import java.util.List;
 public class CandleStrategy implements IStrategy{
 
     private final int buyCount = 3;
-    private final int sellCount = 4;
+    private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
         int count = 0;
-        CandleResponse mostRecentCandle = candleResponses.get(0); // 실 매수시 인덱스 +1
+//        CandleResponse mostRecentCandle = candleResponses.get(0); // 실 매수시 인덱스 +1
+//
+//
+//        if(mostRecentCandle.getTradePrice() - mostRecentCandle.getOpeningPrice() > 0){
+//            return false;
+//        }
+//
 
-        if(mostRecentCandle.getTradePrice() - mostRecentCandle.getOpeningPrice() > 0){
-            return false;
-        }
-
-        if(tradeInfo.size() != 0 && tradeInfo.get(tradeInfo.size() - 1).getDateKst().equals(mostRecentCandle.getDateKst())){
-            return false;
-        }
-
-        double priceGap = Math.abs(mostRecentCandle.getTradePrice() - mostRecentCandle.getOpeningPrice());
-
-        for(int i = 1; i < candleResponses.size(); i++){ // 실 매수시 i +1
+        for(int i = 0; i < buyCount; i++){ // 실 매수시 i +1
             CandleResponse candle = candleResponses.get(i);
+
             double price = candle.getTradePrice() - candle.getOpeningPrice();
 
-
-            if(price < 0 && Math.abs(price) > priceGap * 0.7) { // 음봉의 크기가 유의미하게 큰 경우
-                priceGap = Math.abs(price);
+            if(price < 0) {
                 count++;
-            }
-
-            if(price > 0 && price > priceGap * 0.7){ // 양봉의 크기가 유의미하게 큰 경우
-                break;
-            }
-
-            if(tradeInfo.size() != 0 && tradeInfo.get(tradeInfo.size() - 1).getDateKst().equals(candle.getDateKst())){
-                break;
             }
         }
 
+        if(count >= buyCount){
+            return true;
+//            if(tradeInfo.isEmpty()){
+//                return true;
+//            }
+//
+//            try{
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(format.parse(tradeInfo.get(0).getDateKst()));
+//                calendar.add(Calendar.MINUTE, 3);
+//
+//                return !calendar.before(format.parse(candleResponses.get(0).getDateKst()));
+//
+//            } catch (ParseException e) {
+//                return false;
+//            }
 
-        return count >= buyCount;
+        }
+
+        return false;
     }
 
 //    @Override
@@ -59,6 +67,4 @@ public class CandleStrategy implements IStrategy{
 //
 //        return true;
 //    }
-
-
 }

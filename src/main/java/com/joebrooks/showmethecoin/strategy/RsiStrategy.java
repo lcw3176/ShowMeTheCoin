@@ -1,11 +1,8 @@
 package com.joebrooks.showmethecoin.strategy;
 
-import com.joebrooks.showmethecoin.global.graph.GraphStatus;
-import com.joebrooks.showmethecoin.global.graph.GraphUtil;
 import com.joebrooks.showmethecoin.trade.TradeInfo;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,31 +11,16 @@ import java.util.List;
 @Slf4j
 public class RsiStrategy implements IStrategy {
 
-    private final int buyValue = 20;
+    private final int buyValue = 40;
 
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        List<Double> shortTermRsiLst = getRsi(candleResponses, 7);
         List<Double> longTermRsiLst = getRsi(candleResponses, 30);
 
-        for(int i = 1 ; i < 10; i++){
-            if(GraphUtil.getStatus(longTermRsiLst.get(i), longTermRsiLst.get(i - 1)).equals(GraphStatus.STRONG_FALLING)){
-                return false;
-            }
-        }
-
-
-        return shortTermRsiLst.get(0) > buyValue
-                && shortTermRsiLst.get(0) < buyValue + 5
-                && shortTermRsiLst.get(1) < buyValue;
+        return longTermRsiLst.get(0) > buyValue
+                && longTermRsiLst.get(0) < buyValue + 10;
     }
 
-//    @Override
-//    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-//        List<Double> shortTermRsiLst = getRsi(candleResponses, 7);
-//
-//        return shortTermRsiLst.get(0) >= 60;
-//    }
 
 
     private List<Double> getRsi(List<CandleResponse> data, int count){
