@@ -20,7 +20,7 @@ public interface IStrategy {
         double averageSellPrice = getAverageSellPrice(candleResponses, tradeInfo);
         double payingFee = getPayingFee(candleResponses, tradeInfo);
 
-        return (averageBuyPrice + paidFee + payingFee) * (1 + gainRate) < averageSellPrice; // 실 매도시 인덱스 +1;
+        return (averageBuyPrice + paidFee + payingFee) * (1 + gainRate - (tradeInfo.size() * 0.001)) < averageSellPrice; // 실 매도시 인덱스 +1;
 
     }
 

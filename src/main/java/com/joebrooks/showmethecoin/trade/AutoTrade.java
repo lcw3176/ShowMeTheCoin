@@ -44,6 +44,7 @@ public class AutoTrade {
     public void init(){
         List<StrategyType> strategyTypeList = new LinkedList<>();
         strategyTypeList.add(StrategyType.RsiStrategy);
+        strategyTypeList.add(StrategyType.RmiStrategy);
         strategyTypeList.add(StrategyType.BaseStrategy);
 
         for(StrategyType i : strategyTypeList){
@@ -65,7 +66,7 @@ public class AutoTrade {
     private boolean isOrderDone(){
         return orderService.checkOrder(CheckOrderRequest.builder()
                 .state(OrderStatus.wait)
-                .build()).size() == 0;
+                .build()).isEmpty();
     }
 
     @Scheduled(fixedDelay = 3000)
@@ -109,7 +110,7 @@ public class AutoTrade {
                 CandleResponse beforeCandle = candles.get(1);
 
                 // 구매
-                if ((tradeInfoList.size() == 0 || !nowCandle.getDateKst().equals(tradeInfoList.get(tradeInfoList.size() - 1).getDateKst()))
+                if ((tradeInfoList.isEmpty() || !nowCandle.getDateKst().equals(tradeInfoList.get(tradeInfoList.size() - 1).getDateKst()))
                         && !wasSold
                         && strategy.stream().allMatch(st -> st.isProperToBuy(candles, tradeInfoList))) {
                     AccountResponse accountResponse = accountService.getKRWCurrency();
@@ -144,7 +145,7 @@ public class AutoTrade {
                 }
 
                 // 익절
-                else if (tradeInfoList.size() > 0
+                else if (!tradeInfoList.isEmpty()
                         && strategy.stream().allMatch(st -> st.isProperToSellWithBenefit(candles, tradeInfoList))) {
 
                     AccountResponse coinResponse = accountService.getCoinCurrency(coinType);
@@ -166,7 +167,7 @@ public class AutoTrade {
                 }
 
                 // 손절
-                else if (tradeInfoList.size() > 0
+                else if (!tradeInfoList.isEmpty()
                         && !nowCandle.getDateKst().equals(tradeInfoList.get(tradeInfoList.size() - 1).getDateKst())
                         && strategy.stream().allMatch(st -> st.isProperToSellWithLoss(candles, tradeInfoList))) {
 

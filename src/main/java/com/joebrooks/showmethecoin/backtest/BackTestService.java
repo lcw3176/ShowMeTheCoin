@@ -2,8 +2,8 @@ package com.joebrooks.showmethecoin.backtest;
 
 import com.joebrooks.showmethecoin.global.fee.FeeCalculator;
 import com.joebrooks.showmethecoin.strategy.IStrategy;
-import com.joebrooks.showmethecoin.strategy.StrategyType;
 import com.joebrooks.showmethecoin.strategy.StrategyService;
+import com.joebrooks.showmethecoin.strategy.StrategyType;
 import com.joebrooks.showmethecoin.trade.TradeInfo;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleService;
@@ -14,7 +14,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -31,13 +30,14 @@ public class BackTestService {
         try{
             List<TradeInfo> tradeInfoList = new LinkedList<>();
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Seoul")));
-            Calendar beforeCal = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of("Asia/Seoul")));
+            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul"));
+            Calendar beforeCal = Calendar.getInstance(TimeZone.getTimeZone("Asia/Seoul"));
             List<StrategyType> strategyTypeList = new LinkedList<>();
-            strategyTypeList.add(StrategyType.AdxDmiStrategy);
+//            strategyTypeList.add(StrategyType.AdxDmiStrategy);
             strategyTypeList.add(StrategyType.RsiStrategy);
             strategyTypeList.add(StrategyType.RmiStrategy);
-//            strategyTypeList.add(StrategyType.CandleStrategy);
+//            strategyTypeList.add(StrategyType.MACDStrategy);
+            strategyTypeList.add(StrategyType.CandleStrategy);
 //            strategyTypeList.add(StrategyType.TailStrategy);
 //            strategyTypeList.add(StrategyType.PriceStrategy);
             strategyTypeList.add(StrategyType.BaseStrategy);
@@ -57,9 +57,10 @@ public class BackTestService {
             double beforeBalance = myBalance;
             int tradeCount = 0;
             int maxTradeCount = 0;
+            double accumulatedGain = 0D;
 
-            cal.set(2022, Calendar.JANUARY, 1, 0, 0, 0);
-            beforeCal.set(2022, Calendar.JANUARY, 1, 0, 0, 0);
+            cal.set(2022, Calendar.MAY, 1, 0, 0, 0);
+            beforeCal.set(2022, Calendar.MAY, 1, 0, 0, 0);
             List<IStrategy> strategy = new LinkedList<>();
 
             for(StrategyType i : strategyTypeList){
@@ -69,25 +70,31 @@ public class BackTestService {
 
 
             while(running){
-
+                cal.add(Calendar.MINUTE, minute * 100);
 
                 List<CandleResponse> candles = candleService.getCandles(coinType, format.format(cal.getTime()), minute);
 
-                for (int i = 100; i >= 0; i--) {
+                for (int i = 99; i >= 0; i--) {
                     double minCash = cashToBuy;
-
 
                     List<CandleResponse> tempCandles = candles.subList(i, candles.size() - 1);
                     CandleResponse nowCandle = tempCandles.get(0);
+
                     BackTestResponse response = BackTestResponse.builder()
-                            .tradePrice(nowCandle.getTradePrice())
+                            .startPrice(nowCandle.getOpeningPrice())
+                            .closePrice(nowCandle.getTradePrice())
+                            .lowPrice(nowCandle.getLowPrice())
+                            .highPrice(nowCandle.getHighPrice())
                             .dateKst(nowCandle.getDateKst())
-                            .trade(false)
+                            .traded(false)
                             .build();
 
+                    tempCandles.set(0, nowCandle);
+
+
                     // 구매 조건
-                    if ((tradeInfoList.size() == 0 || !nowCandle.getDateKst().equals(tradeInfoList.get(0).getDateKst()))
-                        && strategy.stream().allMatch(st -> st.isProperToBuy(tempCandles, tradeInfoList))) {
+                    if ((tradeInfoList.isEmpty() || !nowCandle.getDateKst().equals(tradeInfoList.get(tradeInfoList.size() - 1).getDateKst()))
+                            && strategy.stream().allMatch(st -> st.isProperToBuy(tempCandles, tradeInfoList))) {
 
                         // 잔고 체크
                         if (myBalance >= minCash) {
@@ -98,7 +105,6 @@ public class BackTestService {
                             double coinVolume = cashToBuy / nowCandle.getTradePrice();
                             nowLevel += 1;
                             TradeInfo tradeInfo = TradeInfo.builder()
-                                    .tradeCount(nowLevel)
                                     .tradePrice(nowCandle.getTradePrice())
                                     .coinVolume(coinVolume)
                                     .dateKst(nowCandle.getDateKst())
@@ -110,12 +116,10 @@ public class BackTestService {
                             myBalance -= nowCandle.getTradePrice() * coinVolume
                                     + FeeCalculator.calculate(nowCandle.getTradePrice() * coinVolume, coinVolume);
 
-                            response = BackTestResponse.builder()
-                                    .tradePrice(nowCandle.getTradePrice())
-                                    .dateKst(nowCandle.getDateKst())
-                                    .trade(true)
-                                    .buy(true)
-                                    .build();
+                            response.setBuy(true);
+                            response.setTraded(true);
+                            response.setTradedPrice(nowCandle.getTradePrice());
+
 
 //                            log.info("구매: 시각 {} 구매 횟수 {} 구매량 {} 구매 단가 {}",
 //                                    nowCandle.getDateKst(),
@@ -127,7 +131,7 @@ public class BackTestService {
                     }
 
                     // 익절 조건
-                    if (tradeInfoList.size() > 0
+                    if (!tradeInfoList.isEmpty()
                             && strategy.stream().allMatch(st -> st.isProperToSellWithBenefit(tempCandles, tradeInfoList))) {
 
                         if (coinBalance > 0) {
@@ -135,11 +139,8 @@ public class BackTestService {
                                     - FeeCalculator.calculate(nowCandle.getTradePrice() * coinBalance, coinBalance);
                             coinBalance = 0D;
 
-                            response = BackTestResponse.builder()
-                                    .tradePrice(nowCandle.getTradePrice())
-                                    .dateKst(nowCandle.getDateKst())
-                                    .trade(true)
-                                    .build();
+                            response.setTraded(true);
+                            response.setTradedPrice(nowCandle.getTradePrice());
 
                             nowLevel = 0;
 
@@ -156,7 +157,7 @@ public class BackTestService {
                     }
 
                     // 손절 조건
-                    if (tradeInfoList.size() > 0
+                    if (!tradeInfoList.isEmpty()
                             && strategy.stream().allMatch(st -> st.isProperToSellWithLoss(tempCandles, tradeInfoList))) {
 
                         if(coinBalance > 0) {
@@ -164,11 +165,8 @@ public class BackTestService {
                                     - FeeCalculator.calculate(nowCandle.getTradePrice() * coinBalance, coinBalance);
                             coinBalance = 0D;
 
-                            response = BackTestResponse.builder()
-                                    .tradePrice(nowCandle.getTradePrice())
-                                    .dateKst(nowCandle.getDateKst())
-                                    .trade(true)
-                                    .build();
+                            response.setTraded(true);
+                            response.setTradedPrice(nowCandle.getTradePrice());
 
                             nowLevel = 0;
                             gain += myBalance - beforeBalance;
@@ -183,11 +181,10 @@ public class BackTestService {
                         }
                     }
 
-
                     applicationEventPublisher.publishEvent(response);
                 }
 
-                cal.add(Calendar.MINUTE, minute * 100);
+
 
                 if(cal.getTime().getTime() >= date.getTime()){
                     break;
@@ -202,6 +199,7 @@ public class BackTestService {
                             maxTradeCount);
 
                     beforeCal.add(Calendar.DATE, 1);
+                    accumulatedGain += gain;
                     maxTradeCount = 0;
                     gain = 0D;
 
@@ -217,7 +215,7 @@ public class BackTestService {
             }
 
 
-            log.info("최종 잔고 {}, 잔여 코인{}", myBalance, coinBalance);
+            log.info("최종 잔고 {}, 잔여 코인{}, 누적 이득 {}", myBalance, coinBalance, accumulatedGain);
             applicationEventPublisher.publishEvent(BackTestResponse.builder()
                     .finish(true)
                     .gain(gain)
