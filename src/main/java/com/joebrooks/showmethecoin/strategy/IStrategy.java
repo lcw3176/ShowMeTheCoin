@@ -8,10 +8,14 @@ import java.util.List;
 
 
 public interface IStrategy {
-    double lossRate = 0.02; // 0.004
+    double lossRate = 0.01; // 0.004
     double gainRate = 0.005;
 
     default boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo){
+        if(!tradeInfo.isEmpty()){
+            return tradeInfo.get(tradeInfo.size() - 1).getTradePrice() > candleResponses.get(0).getTradePrice();
+        }
+
         return true;
     }
     default boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo){
@@ -20,7 +24,7 @@ public interface IStrategy {
         double averageSellPrice = getAverageSellPrice(candleResponses, tradeInfo);
         double payingFee = getPayingFee(candleResponses, tradeInfo);
 
-        return (averageBuyPrice + paidFee + payingFee) * (1 + gainRate - (tradeInfo.size() * 0.001)) < averageSellPrice; // 실 매도시 인덱스 +1;
+        return (averageBuyPrice + paidFee + payingFee) * (1 + gainRate) < averageSellPrice; // 실 매도시 인덱스 +1;
 
     }
 
