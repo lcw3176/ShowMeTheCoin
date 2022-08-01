@@ -4,6 +4,8 @@ import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -15,9 +17,14 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 
-public class WebClientBuilder {
+@Configuration
+public class ClientConfig {
 
-    public WebClient getClient(String baseUrl, int timeoutMillis) {
+    @Bean
+    public WebClient webClient() {
+        int timeoutMillis = 3000;
+        String baseUrl = "https://api.upbit.com/v1";
+
         HttpClient httpClient = HttpClient.create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, timeoutMillis)
                 .responseTimeout(Duration.ofMillis(timeoutMillis))

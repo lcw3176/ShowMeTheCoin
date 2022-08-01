@@ -1,12 +1,12 @@
 package com.joebrooks.showmethecoin.trade.upbit.client;
 
 import com.google.gson.Gson;
-import com.joebrooks.showmethecoin.global.httpClient.WebClientBuilder;
+import com.joebrooks.showmethecoin.global.httpClient.ClientConfig;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
@@ -21,13 +21,13 @@ public class UpBitClient {
     private final String accessKey = System.getenv("accessKey");
     private final String secretKey = System.getenv("secretKey");
 
-
+    private final WebClient webClient;
     private final int timeoutMillis = 3000;
 
 
     public <T> T[] get(String path, boolean authHeaderRequired, Class<T[]> clazz){
         try {
-            return new WebClientBuilder().getClient(baseUrl, timeoutMillis).get()
+            return webClient.get()
                     .uri(path)
                     .accept(MediaType.APPLICATION_JSON)
                     .headers(headers -> {
@@ -51,7 +51,7 @@ public class UpBitClient {
         HashMap<String, String> map = QueryGenerator.getQueryMap(queryParams);
 
         try {
-            return new WebClientBuilder().getClient(baseUrl, timeoutMillis).get()
+            return webClient.get()
                     .uri(path)
                     .accept(MediaType.APPLICATION_JSON)
                     .headers(headers -> {
@@ -79,7 +79,7 @@ public class UpBitClient {
         HashMap<String, String> map = QueryGenerator.getQueryMap(body);
 
         try{
-            return new WebClientBuilder().getClient(baseUrl, timeoutMillis).post()
+            return webClient.post()
                     .uri(path)
                     .accept(MediaType.APPLICATION_JSON)
                     .header("Authorization",
@@ -101,7 +101,7 @@ public class UpBitClient {
         HashMap<String, String> map = QueryGenerator.getQueryMap(queryParams);
 
         try{
-            new WebClientBuilder().getClient(baseUrl, timeoutMillis).delete()
+            webClient.delete()
                     .uri(path)
                     .accept(MediaType.APPLICATION_JSON)
                     .header("Authorization",
