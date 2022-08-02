@@ -4,9 +4,7 @@ import com.joebrooks.showmethecoin.trade.TradeInfo;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
 import lombok.extern.slf4j.Slf4j;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 
 

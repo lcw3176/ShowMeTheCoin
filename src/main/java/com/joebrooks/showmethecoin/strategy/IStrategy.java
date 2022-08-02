@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IStrategy {
     double lossRate = 0.01; // 0.004
-    double gainRate = 0.005;
+    double gainRate = 0.001;
 
     default boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo){
         if(!tradeInfo.isEmpty()){

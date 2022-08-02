@@ -31,7 +31,6 @@ public class AdxDmiStrategy implements IStrategy{
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
         List<ADXResponse> adxResponseList = getADXResponse(candleResponses);
 
-        GraphStatus adxStatus = GraphUtil.getStatus(adxResponseList.get(1).getAdx(), adxResponseList.get(0).getAdx());
         double recentPDI = adxResponseList.get(0).getPlusDI();
         double recentMDI = adxResponseList.get(0).getMinusDI();
 
@@ -46,9 +45,9 @@ public class AdxDmiStrategy implements IStrategy{
         return
 //                && recentMDI < adxResponseList.get(0).getAdx()
 //                && adxResponseList.get(0).getAdx() - recentMDI < 5
-//                GraphUtil.getStatus(beforeMDI, recentMDI).equals(GraphStatus.FALLING)
-                GraphUtil.getStatus(beforePDI, recentPDI).equals(GraphStatus.RISING)
-                && recentPDI * 4 < recentMDI;
+                GraphUtil.getStatus(beforeMDI, recentMDI).equals(GraphStatus.FALLING)
+                && GraphUtil.getStatus(beforePDI, recentPDI).equals(GraphStatus.RISING);
+//                recentPDI * 3 < recentMDI;
     }
 
 
