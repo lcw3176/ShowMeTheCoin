@@ -2,23 +2,28 @@ package com.joebrooks.showmethecoin.strategy;
 
 import com.joebrooks.showmethecoin.trade.TradeInfo;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedList;
 import java.util.List;
 
 
-@Slf4j
 public class RsiStrategy implements IStrategy {
 
-    private final int buyValue = 40;
+//    private final int buyValue = 30;
+
+//    @Override
+//    public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
+//        List<Double> longTermRsiLst = getRsi(candleResponses, 30);
+//
+//        return longTermRsiLst.get(0) > buyValue
+//                && longTermRsiLst.get(0) < buyValue + 10;
+//    }
 
     @Override
-    public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        List<Double> longTermRsiLst = getRsi(candleResponses, 30);
+    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
+        List<Double> longTermRsiLst = getRsi(candleResponses, 14);
 
-        return longTermRsiLst.get(0) > buyValue
-                && longTermRsiLst.get(0) < buyValue + 10;
+        return longTermRsiLst.get(0) > 70;
     }
 
 

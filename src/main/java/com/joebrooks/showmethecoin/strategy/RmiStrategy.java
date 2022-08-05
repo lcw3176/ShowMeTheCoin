@@ -15,8 +15,21 @@ public class RmiStrategy implements IStrategy {
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
         List<Double> rmiLst = getRmi(candleResponses, 60, 5);
+        int plusCount = 0;
+        int minusCount = 0;
 
-        return rmiLst.get(0) > buyValue;
+        for(int i = 0; i < 10; i++){
+            double temp = rmiLst.get(i) - rmiLst.get(i + 1);
+            if(temp >= 0){
+                plusCount++;
+            } else {
+                minusCount++;
+            }
+        }
+
+        return rmiLst.get(0) > buyValue
+                && rmiLst.get(0) < buyValue + 10
+                && plusCount > minusCount;
     }
 
 
