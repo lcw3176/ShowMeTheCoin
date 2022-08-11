@@ -1,7 +1,5 @@
 package com.joebrooks.showmethecoin.strategy;
 
-import com.joebrooks.showmethecoin.global.graph.GraphStatus;
-import com.joebrooks.showmethecoin.global.graph.GraphUtil;
 import com.joebrooks.showmethecoin.trade.TradeInfo;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleResponse;
 import lombok.Builder;
@@ -27,47 +25,16 @@ public class MACDStrategy implements IStrategy {
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
         List<MACDResponse> macdResponseList = getMACDResponse(candleResponses);
-
-//        if( macdResponseList.get(1).getSignal() > macdResponseList.get(1).getMacd()
-//                && macdResponseList.get(0).getSignal() < macdResponseList.get(0).getMacd()
-//                && macdResponseList.get(0).getSignal() < 0
-//                && macdResponseList.get(0).getMacd() < 0){
-//            count++;
-//        }
+//        double minValue = 0;
 //
-//        if(macdResponseList.get(1).getSignal() < macdResponseList.get(1).getMacd()
-//                && macdResponseList.get(0).getSignal() > macdResponseList.get(0).getMacd()
-//                && macdResponseList.get(0).getSignal() > 0
-//                && macdResponseList.get(0).getMacd() > 0){
-//            count = 0;
-//        }
+//        for(int i = 1; i < 20; i++){
+//            minValue = Math.min(macdResponseList.get(i).getSignal(), minValue);
 //
-//        macdResponseList.get(1).getSignal() > macdResponseList.get(1).getMacd()
-//                && macdResponseList.get(0).getSignal() < macdResponseList.get(0).getMacd()
-//                && macdResponseList.get(0).getSignal() < -50000
-//                && macdResponseList.get(0).getMacd() < -50000;
-
-//        Math.abs(macdResponseList.get(1).getMacd()) - Math.abs(macdResponseList.get(0).getMacd()) >= 2000
-//                && Math.abs(macdResponseList.get(1).getMacd()) - Math.abs(macdResponseList.get(2).getMacd()) >= 2000
-//                && macdResponseList.get(0).getSignal() < -50000
-//                && macdResponseList.get(0).getMacd() < -50000;
-//        macdResponseList.get(1).getSignal() > macdResponseList.get(1).getMacd()
-//                && macdResponseList.get(0).getSignal() < macdResponseList.get(0).getMacd()
-        return macdResponseList.get(0).getSignal() < -50000
-                && macdResponseList.get(0).getMacd() < -50000;
+//        }
+//        minValue < macdResponseList.get(0).getSignal()
+        return macdResponseList.get(0).getSignal() < 0
+                && macdResponseList.get(0).getMacd() < 0;
     }
-
-//    @Override
-//    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-//        List<MACDResponse> macdResponseList = getMACDResponse(candleResponses);
-//
-//
-//        return macdResponseList.get(1).getSignal() < macdResponseList.get(1).getMacd()
-//                && macdResponseList.get(0).getSignal() > macdResponseList.get(0).getMacd()
-//                && macdResponseList.get(0).getSignal() > 0
-//                && macdResponseList.get(0).getMacd() > 0;
-//    }
-
 
     private List<MACDResponse> getMACDResponse(List<CandleResponse> candleResponses){
         BarSeries series = new BaseBarSeriesBuilder().build();
@@ -95,7 +62,7 @@ public class MACDStrategy implements IStrategy {
 
         List<MACDResponse> lst = new LinkedList<>();
 
-        for(int i = candleResponses.size() - 1; i >= candleResponses.size() - 5; i--){
+        for(int i = candleResponses.size() - 1; i >= candleResponses.size() - 100; i--){
             lst.add(MACDResponse.builder()
                     .macd(macdIndicator.getValue(i).doubleValue())
                     .signal(signalIndicator.getValue(i).doubleValue())

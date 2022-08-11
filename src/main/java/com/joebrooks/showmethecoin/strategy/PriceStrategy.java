@@ -7,18 +7,28 @@ import java.util.List;
 
 public class PriceStrategy implements IStrategy{
 
+    private final double percentage = 2;
+
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
+        int count = 0;
 
-        if(tradeInfo.size() == 0){
-            return true;
+        double minValue = 1000000000;
+
+        for(CandleResponse i : candleResponses){
+            minValue = Math.min(i.getTradePrice(), minValue);
         }
 
-        if(tradeInfo.get(tradeInfo.size() - 1).getTradePrice() * 0.995 > candleResponses.get(0).getTradePrice()){
-            return true;
+
+        for(int i = 0; i < 10; i++){
+            CandleResponse temp = candleResponses.get(i);
+            if(Math.min(minValue, temp.getTradePrice()) / Math.max(minValue, temp.getTradePrice()) * 100 > (100 - percentage)){
+                count++;
+            }
+
         }
 
-        return false;
+        return count >= 2;
     }
 
 }
