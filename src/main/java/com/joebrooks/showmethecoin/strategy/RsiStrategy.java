@@ -9,7 +9,7 @@ import java.util.List;
 
 public class RsiStrategy implements IStrategy {
 
-    private final int buyValue = 25;
+    private final int buyValue = 35;
 
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
@@ -19,12 +19,12 @@ public class RsiStrategy implements IStrategy {
                 && longTermRsiLst.get(0) < buyValue + 10;
     }
 
-    @Override
-    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
-        List<Double> longTermRsiLst = getRsi(candleResponses, 14);
-
-        return longTermRsiLst.get(0) > 50;
-    }
+//    @Override
+//    public boolean isProperToSellWithBenefit(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
+//        List<Double> longTermRsiLst = getRsi(candleResponses, 14);
+//
+//        return longTermRsiLst.get(0) > 60;
+//    }
 
 
 

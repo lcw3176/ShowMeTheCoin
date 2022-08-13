@@ -10,7 +10,7 @@ import java.util.List;
 
 public class RmiStrategy implements IStrategy {
 
-    private final int buyValue = 40;
+    private final int buyValue = 30;
 
     @Override
     public boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo) {
