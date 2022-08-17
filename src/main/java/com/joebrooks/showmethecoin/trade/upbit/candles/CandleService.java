@@ -3,7 +3,6 @@ package com.joebrooks.showmethecoin.trade.upbit.candles;
 import com.joebrooks.showmethecoin.trade.upbit.client.CoinType;
 import com.joebrooks.showmethecoin.trade.upbit.client.UpBitClient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -15,25 +14,9 @@ public class CandleService {
 
     private final UpBitClient upBitClient;
 
-    private List<CandleResponse> responses = null;
-    public List<CandleResponse> getCandles(CoinType coinType) {
-        int minute = 1;
+    public List<CandleResponse> getCandles(CoinType coinType, int minute, int count) {
 
-        if(responses == null){
-            responses = request(coinType, minute, 200);
-
-        } else {
-            CandleResponse temp = request(coinType, minute, 1).get(0);
-
-            if(responses.get(0).getDateKst().equals(temp.getDateKst())){
-                responses.set(0, temp);
-            } else {
-                responses.add(0, temp);
-                responses.remove(200);
-            }
-        }
-
-        return responses;
+        return request(coinType, minute, count);
     }
 
     public List<CandleResponse> getCandles(CoinType coinType, String to, int minute) {
