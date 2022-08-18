@@ -8,12 +8,12 @@ import java.util.List;
 
 
 public interface IStrategy {
-    double lossRate = 0.01; // 0.004
-    double gainRate = 0.001;
+    double LOSS = 0.017; // 0.004
+    double GAIN = 0.01;
 
     default boolean isProperToBuy(List<CandleResponse> candleResponses, List<TradeInfo> tradeInfo){
         if(!tradeInfo.isEmpty()){
-            return tradeInfo.get(tradeInfo.size() - 1).getTradePrice() > candleResponses.get(0).getTradePrice();
+            return tradeInfo.get(tradeInfo.size() - 1).getTradePrice() > candleResponses.get(1).getTradePrice();
         }
 
         return true;
@@ -24,7 +24,8 @@ public interface IStrategy {
         double averageSellPrice = getAverageSellPrice(candleResponses, tradeInfo);
         double payingFee = getPayingFee(candleResponses, tradeInfo);
 
-        return (averageBuyPrice + paidFee + payingFee) * (1 + gainRate) < averageSellPrice; // 실 매도시 인덱스 +1;
+
+        return (averageBuyPrice + paidFee + payingFee) * (1 + GAIN) < averageSellPrice;
 
     }
 
@@ -34,7 +35,7 @@ public interface IStrategy {
         double averageSellPrice = getAverageSellPrice(candleResponses, tradeInfo);
         double payingFee = getPayingFee(candleResponses, tradeInfo);
 
-        return (averageBuyPrice + paidFee + payingFee) * (1 - lossRate) > averageSellPrice; // 실 매도시 인덱스 +1
+        return (averageBuyPrice + paidFee + payingFee) * (1 - LOSS) > averageSellPrice;
     }
 
     default double getAverageBuyPrice(List<TradeInfo> tradeInfo){
