@@ -37,7 +37,7 @@ public enum CoinType {
     MTL("KRW-MTL", "메탈"),
     SAND("KRW-SAND", "샌드박스"),
     EOS("KRW-EOS", "이오스"),
-    LST("KRW-LSK", "리스크"),
+    LSK("KRW-LSK", "리스크"),
     CBK("KRW-CBK", "코박토큰"),
     GMT("KRW-GMT", "스테픈"),
     CELO("KRW-CELO", "셀로"),

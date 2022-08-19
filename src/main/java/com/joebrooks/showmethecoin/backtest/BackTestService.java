@@ -37,9 +37,9 @@ public class BackTestService {
 //            strategyTypeList.add(StrategyType.RsiStrategy);
 //            strategyTypeList.add(StrategyType.RmiStrategy);
 //            strategyTypeList.add(StrategyType.CandleStrategy);
-//            strategyTypeList.add(StrategyType.MACDStrategy);
+//            strategyTypeList.add(StrategyType.WStrategy);
+            strategyTypeList.add(StrategyType.MACDStrategy);
 //            strategyTypeList.add(StrategyType.TailStrategy);
-            strategyTypeList.add(StrategyType.WStrategy);
             strategyTypeList.add(StrategyType.BaseStrategy);
 
             Date date = new Date();
@@ -49,7 +49,7 @@ public class BackTestService {
             CoinType coinType = request.getTradeCoin();
             int nowLevel = 0;
             double myBalance = request.getStartBalance();
-            int divideNum = 4;
+            int divideNum = 6;
 //            myBalance = myBalance / divideNum;  // test
             double cashToBuy = myBalance / divideNum;
             cashToBuy *= 0.99;
