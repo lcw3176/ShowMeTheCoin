@@ -46,7 +46,7 @@ public class UpBitClient {
 
 
         } catch (Exception e){
-            throw new RuntimeException(e.getMessage(), e);
+            throw new UpBitException(e.getMessage(), e);
         }
     }
 
@@ -77,7 +77,7 @@ public class UpBitClient {
                     .block();
 
         } catch (Exception e){
-            throw new RuntimeException(e.getMessage(), e);
+            throw new UpBitException(map.toString(), e);
         }
     }
 
@@ -98,7 +98,7 @@ public class UpBitClient {
                     .block();
 
         } catch(Exception e){
-            throw new RuntimeException(e.getMessage(), e);
+            throw new UpBitException(map.toString(), e);
         }
     }
 
@@ -118,7 +118,7 @@ public class UpBitClient {
                     .toEntity(String.class)
                     .block();
         } catch(Exception e){
-            throw new RuntimeException(e.getMessage(), e);
+            throw new UpBitException(map.toString(), e);
         }
     }
 
