@@ -31,10 +31,7 @@ public class LoginController {
                             @RequestParam("pw") String pw,
                             HttpSession session) throws NoSuchAlgorithmException {
 
-        UserEntity user = userService.login(id, pw).orElseThrow(() -> {
-                    throw new LoginException(id, pw);
-                });
-
+        UserEntity user = userService.login(id, pw);
         session.setAttribute("userId", user.getUserId());
 
         return "redirect:/dashboard";

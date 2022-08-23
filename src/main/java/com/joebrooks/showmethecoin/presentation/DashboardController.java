@@ -2,6 +2,7 @@ package com.joebrooks.showmethecoin.presentation;
 
 import com.joebrooks.showmethecoin.repository.dailyScore.DailyScoreEntity;
 import com.joebrooks.showmethecoin.repository.dailyScore.DailyScoreService;
+import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import com.joebrooks.showmethecoin.repository.user.UserService;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigEntity;
 import com.joebrooks.showmethecoin.repository.userConfig.UserConfigService;
@@ -35,23 +36,19 @@ public class DashboardController {
     public String showDashboard(Model model, HttpSession session){
         String id = (String)session.getAttribute("userId");
 
-        userService.getUser(id).ifPresent((user) -> {
-            List<DailyScoreEntity> lst = dailyScoreService.getScore(user);
-            long revenue = 0L;
+        UserEntity user = userService.getUser(id);
+        List<DailyScoreEntity> lst = dailyScoreService.getScore(user);
 
-            for (DailyScoreEntity dailyScore : lst) {
-                revenue += dailyScore.getTodayEarnPrice();
-            }
+        long revenue = 0L;
 
-            UserConfigEntity userConfigEntity = userConfigService.getUserConfig(user).orElse(
-                    UserConfigEntity.builder()
-                            .balance(0)
-                            .build());
+        for (DailyScoreEntity dailyScore : lst) {
+            revenue += dailyScore.getTodayEarnPrice();
+        }
 
-            model.addAttribute("balance",  (long)userConfigEntity.getBalance());
-            model.addAttribute("revenue", revenue);
-            model.addAttribute("daily", lst);
-        });
+        UserConfigEntity userConfigEntity = userConfigService.getUserConfig(user);
+        model.addAttribute("balance",  (long)userConfigEntity.getBalance());
+        model.addAttribute("revenue", revenue);
+        model.addAttribute("daily", lst);
 
 
         return "dashboard";
@@ -61,17 +58,12 @@ public class DashboardController {
     public String refreshDashboard(HttpSession session){
         String id = (String)session.getAttribute("userId");
 
-        userService.getUser(id).ifPresent((user) -> {
-            AccountResponse accountResponse =accountService.getKRWCurrency();
+        UserEntity user = userService.getUser(id);
+        AccountResponse accountResponse = accountService.getKRWCurrency();
+        UserConfigEntity userConfigEntity = userConfigService.getUserConfig(user);
+        userConfigEntity.changeBalance(Double.parseDouble(accountResponse.getBalance()));
+        userConfigService.save(userConfigEntity);
 
-            UserConfigEntity userConfigEntity = userConfigService.getUserConfig(user).orElse(
-                    UserConfigEntity.builder()
-                            .balance(0)
-                            .build());
-
-            userConfigEntity.changeBalance(Double.parseDouble(accountResponse.getBalance()));
-            userConfigService.save(userConfigEntity);
-        });
 
         return "redirect:/dashboard";
     }
