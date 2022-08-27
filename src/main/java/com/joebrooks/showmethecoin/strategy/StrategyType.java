@@ -4,16 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum StrategyType {
-    RsiStrategy("RSI 전략"),
-    AdxDmiStrategy("Adx, Dmi 전략"),
-    CandleStrategy("캔들 전략"),
-    PriceStrategy("가격 전략"),
-    TailStrategy("꼬리 전략"),
-    BaseStrategy("기본 매매 전략"),
-    RmiStrategy("RMI 전략"),
-    MACDStrategy("MACD 전략"),
-    WStrategy("W 전략"),
-    QuoteStrategy("호가 전략");
+    baseStrategy("기본적인 매매 전략, 필수 포함"),
+    chaserStrategy("추격 매매 전략"),
+    shortStrategy("저가 탐색 기반 단타 전략");
     private String description;
 
     private StrategyType(String description){
