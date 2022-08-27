@@ -38,5 +38,3 @@ auto:
   rmi:
     buy: 10
     sell: 70
-
-# fixme 20, 50으로 변경해볼것
