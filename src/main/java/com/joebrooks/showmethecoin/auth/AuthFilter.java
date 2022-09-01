@@ -31,7 +31,7 @@ public class AuthFilter implements Filter {
             if (isLoginCheckPath(requestURI)) {
                 HttpSession session = httpRequest.getSession(false);
 
-                if (session == null || !AuthManager.isExist(session)) {
+                if (session == null || session.getAttribute(AuthManager.SESSION_KEY) == null) {
                     ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper((HttpServletRequest) request);
                     ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) response);
 
