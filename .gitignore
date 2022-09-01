@@ -40,3 +40,9 @@ out/
 /was-logs
 *.log
 *.db
+
+### 전략들 ###
+**/policy/shorts/
+**/policy/chaser/
+**/policy/base/
+**/policy/candle/
