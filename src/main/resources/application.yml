@@ -26,15 +26,3 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
 
-upbit:
-  candle:
-    minute: 240
-    count: 200
-
-auto:
-  rsi:
-    buy: 40
-    sell : 60
-  rmi:
-    buy: 10
-    sell: 70
