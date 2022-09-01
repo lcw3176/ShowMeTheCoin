@@ -46,3 +46,6 @@ out/
 **/policy/chaser/
 **/policy/base/
 **/policy/candle/
+
+### 초기화 스크립트 ###
+**/showmethecoin/initScript.java
