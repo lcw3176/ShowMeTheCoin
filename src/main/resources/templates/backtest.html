@@ -5,10 +5,6 @@
 
     <section class="section is-main-section">
         <div class="card-content">
-            <div id="chart" style="height: 700px;">
-
-            </div>
-
 
             <form id="data-form" onsubmit="return false">
                 <div class="field is-horizontal">
@@ -20,11 +16,9 @@
                             <div class="control">
                                 <div class="select is-fullwidth">
                                     <select name="tradeCoin">
-                                        <option th:each="coin : ${coinList}" th:if="${coin.equals(userInfo.tradeCoin)}"
-                                                th:text="${coin.koreanName}" th:value="${coin.toString()}" selected></option>
-
-                                        <option th:each="coin : ${coinList}" th:unless="${coin.equals(userInfo.tradeCoin)}"
-                                                th:text="${coin.koreanName}" th:value="${coin.toString()}"></option>
+                                        <option th:each="coin : ${coinList}"
+                                                th:text="${coin.koreanName}"
+                                                th:value="${coin.toString()}"></option>
                                     </select>
                                 </div>
                             </div>
@@ -50,17 +44,92 @@
 
                 <div class="field is-horizontal">
                     <div class="field-label is-normal">
-                        <label class="label">기준 분봉</label>
+                        <label class="label">최대 분할 횟수</label>
                     </div>
                     <div class="field-body">
                         <div class="field">
                             <div class="control">
-                                <input type="number" name="candleMinute" class="input"
+                                <input type="number" name="maxBetCount" class="input"
                                        required>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">사용 전략</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-narrow">
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select name="strategyType" >
+                                        <option th:each="strategy : ${strategyList}"
+                                                th:text="${strategy.getDescription()}"
+                                                th:value="${strategy.toString()}"></option>
+
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">기준 분봉</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-narrow">
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select name="candleMinute" >
+                                        <option th:each="candle : ${candleMinuteList}"
+                                                th:text="${candle.getDescription()}"
+                                                th:value="${candle.toString()}"></option>
+
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">시작 날짜</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input type="date" name="startDate">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">종료 날짜</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input type="date" name="endDate">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
 
                 <div class="field is-horizontal">
@@ -74,8 +143,9 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
+
+
 
 
                 <div class="field is-horizontal">
@@ -89,14 +159,20 @@
                     </div>
                 </div>
             </form>
+
+
+            <div id="chart" style="height: 600px;">
+
+            </div>
         </div>
 
     </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js" integrity="sha256-7rldQObjnoCubPizkatB4UZ0sCQzu2ePgyGSUcVN70E=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/lightweight-charts@3.8.0/dist/lightweight-charts.standalone.production.js"></script>
     <script>
+
         let isRun = false;
-        let socket = new WebSocket("ws://localhost:8080/upbit/backtest")
+        let socket = new WebSocket("ws://localhost:8080/backtest/upbit")
 
         socket.onmessage = function (e){
             update(JSON.parse(e.data));
@@ -105,123 +181,64 @@
         function startBacktest(){
             if(!isRun){
                 isRun = true;
-                option.series[0].data = []// 매수
-                option.series[1].data = []; // 매도
-                option.series[2].data = []; // 시세
-                option.xAxis[0].data = [];
+                markers = [];
+                document.getElementById("chart").innerHTML = "";
+                chart = LightweightCharts.createChart(document.getElementById("chart"), {
+                    crosshair: {
+                        mode: LightweightCharts.CrosshairMode.Normal,
+                    },
+                });
 
+                candleSeries = chart.addCandlestickSeries();
                 socket.send(JSON.stringify(Object.fromEntries(new FormData(document.getElementById("data-form")))));
             }
 
         }
 
+        let chart = LightweightCharts.createChart(document.getElementById("chart"), {
+            crosshair: {
+                mode: LightweightCharts.CrosshairMode.Normal,
+            },
+        });
 
-        let myChart = echarts.init(document.getElementById('chart'));
-
-        let option = {
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                    label: {
-                        backgroundColor: '#283b56'
-                    }
-                }
-            },
-            legend: {
-                data: ['매수', '매도']
-            },
-            dataZoom: {
-                show: true,
-                start: 0,
-                end: 100
-            },
-            xAxis: [
-                {
-                    type: 'category',
-                    boundaryGap: true,
-                    data: []
-                },
-            ],
-            yAxis: [
-                {
-                    type: 'value',
-                    scale: true,
-                    name: '시세',
-                }
-            ],
-            series: [
-                {
-                    name: '매수',
-                    type: 'scatter',
-                    yAxisIndex: 0, //yAxis 1번째 사용
-                    data: [],
-                    itemStyle:{
-                        color:'#CC0000'
-                    },
-                },
-                {
-                    name: '매도',
-                    type: 'scatter',
-                    yAxisIndex: 0, //yAxis 1번째 사용
-                    data: [],
-                    itemStyle:{
-                        color:'#0000CC'
-                    },
-                },
-                {
-                    name: '시세',
-                    type: 'candlestick',
-                    yAxisIndex: 0, //yAxis 2번째 사용
-                    data: [],
-                    // itemStyle:{
-                    //     color:'#FFCC00'
-                    // },
-                },
-            ]
-        };
-        // 위에서 설정한 속성을 차트에 반영합니다.
-        myChart.setOption(option);
+        let candleSeries = chart.addCandlestickSeries();
+        let markers = [];
 
         function update(value){
             if(value.finish){
-                myChart.setOption(option);
                 isRun = false;
                 document.getElementById('backtest-result').value = value.gain;
                 return;
             }
 
-            let buy = option.series[0].data; // 매수
-            let sell = option.series[1].data; // 매도
-            let price = option.series[2].data; // 시세
-
             if(value.traded){
 
                 if(value.buy){
-                    buy.push(value.tradedPrice);
-                    sell.push(undefined)
-                } else {
-                    buy.push(undefined)
-                    sell.push(value.tradedPrice);
+                    markers.push({ time: Date.parse(value.time) / 1000, position: 'belowBar', color: '#2196F3', shape: 'arrowUp', text: 'Buy: ' + value.tradedPrice });
+
+                } else{
+                    markers.push({ time:  Date.parse(value.time) / 1000, position: 'aboveBar', color: '#e91e63', shape: 'arrowDown', text: 'Sell: ' + value.tradedPrice });
                 }
 
+                candleSeries.setMarkers(markers);
 
-
-            } else {
-                buy.push(undefined);
-                sell.push(undefined)
             }
 
 
-            price.push([value.startPrice, value.closePrice, value.lowPrice, value.highPrice]);
+            let currentBar = {
+                open: value.open,
+                high: value.high,
+                low: value.low,
+                close: value.close,
+                time: Date.parse(value.time) / 1000,
+            };
 
-            let axisData = value.dateKst.replace("T", " ").replace(/\..*/, '');
-            option.xAxis[0].data.push(axisData);
 
-            if(option.series[2].data.length % 300 === 0){
-                myChart.setOption(option);
-            }
+            candleSeries.update(currentBar)
         }
+
+
+
 
     </script>
 </th:block>
