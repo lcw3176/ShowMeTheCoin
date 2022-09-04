@@ -172,7 +172,7 @@
     <script>
 
         let isRun = false;
-        let socket = new WebSocket("ws://localhost:8080/backtest/upbit")
+        let socket = new WebSocket("ws://richshrimp.tk/backtest/upbit")
 
         socket.onmessage = function (e){
             update(JSON.parse(e.data));

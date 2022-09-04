@@ -3,14 +3,17 @@ package com.joebrooks.showmethecoin.backtest;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @Builder
 public class BackTestResponse {
-    private String dateKst;
-    private double startPrice;
-    private double closePrice;
-    private double lowPrice;
-    private double highPrice;
+
+    private Date time;
+    private double open;
+    private double high;
+    private double low;
+    private double close;
 
     private double tradedPrice;
 
