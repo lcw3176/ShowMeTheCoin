@@ -169,10 +169,13 @@
     </section>
 
     <script src="https://unpkg.com/lightweight-charts@3.8.0/dist/lightweight-charts.standalone.production.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"
+            integrity="sha256-Hg830HNmYZawhI/X2A1SUmjVrfR+oexFljLwW7+OH1Q="
+            crossorigin="anonymous"></script>
     <script>
 
         let isRun = false;
-        let socket = new WebSocket("wss://richshrimp.tk/backtest/upbit")
+        let socket = new SockJS("/backtest/upbit")
 
         socket.onmessage = function (e){
             update(JSON.parse(e.data));
