@@ -164,7 +164,7 @@ public class AutoTrade {
     }
 
 
-
+    // fixme 혼자 쓰려고 만든 구조인데 여러명이 사용하게 됬다. 다중 이용자 방식에 맞춰서 다시 재설계할것
     @Scheduled(fixedDelay = 500)
     public void autoTrade() {
 
