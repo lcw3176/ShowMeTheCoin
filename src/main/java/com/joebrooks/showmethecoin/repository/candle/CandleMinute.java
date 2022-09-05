@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.backtest;
+package com.joebrooks.showmethecoin.repository.candle;
 
 import lombok.Getter;
 

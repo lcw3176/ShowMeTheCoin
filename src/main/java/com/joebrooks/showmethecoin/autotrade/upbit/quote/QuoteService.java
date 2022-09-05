@@ -2,6 +2,7 @@ package com.joebrooks.showmethecoin.autotrade.upbit.quote;
 
 import com.joebrooks.showmethecoin.autotrade.upbit.CoinType;
 import com.joebrooks.showmethecoin.autotrade.upbit.client.UpBitClient;
+import com.joebrooks.showmethecoin.repository.userkey.UserKeyEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
@@ -15,7 +16,7 @@ public class QuoteService {
 
     private final UpBitClient upBitClient;
 
-    public QuoteResponse getQuote(CoinType coinType){
+    public QuoteResponse getQuote(CoinType coinType) {
         String path = "/orderbook";
 
         UriComponents uri = UriComponentsBuilder.newInstance()
@@ -24,7 +25,7 @@ public class QuoteService {
                 .build();
 
 
-        return Arrays.asList(upBitClient.get(uri.toString(), false, QuoteRequest.builder()
+        return Arrays.asList(upBitClient.get(uri.toString(), false, null, QuoteRequest.builder()
                 .markets(coinType.getName())
                 .build(), QuoteResponse[].class)).get(0);
     }
@@ -37,7 +38,7 @@ public class QuoteService {
                 .queryParam("markets", coinType)
                 .build();
 
-        return Arrays.asList(upBitClient.get(uri.toString(), false, QuoteRequest.builder()
+        return Arrays.asList(upBitClient.get(uri.toString(), false, null, QuoteRequest.builder()
                 .markets(coinType)
                 .build(), QuoteResponse[].class)).get(0);
     }

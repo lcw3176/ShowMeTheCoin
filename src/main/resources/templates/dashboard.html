@@ -54,9 +54,6 @@
                     <span class="icon"><i class="mdi mdi-finance"></i></span>
                     매매 현황
                 </p>
-                <form action="/dashboard" method="post" class="card-header-icon">
-                    <span class="icon" onclick="this.parentElement.submit();"><i class="mdi mdi-reload"></i></span>
-                </form>
 
             </header>
             <div class="card-content">
@@ -87,7 +84,7 @@
         let date = [];
 
         for(let i in daily){
-            value.push(daily[i].todayEarnPrice);
+            value.push(Math.floor(daily[i].todayEarnPrice));
             date.push(daily[i].createdDate.split("T")[0]);
         }
 

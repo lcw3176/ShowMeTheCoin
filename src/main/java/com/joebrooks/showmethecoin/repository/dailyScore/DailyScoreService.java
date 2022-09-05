@@ -1,6 +1,7 @@
 package com.joebrooks.showmethecoin.repository.dailyScore;
 
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
+import com.joebrooks.showmethecoin.repository.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,6 @@ public class DailyScoreService {
 
     public List<DailyScoreEntity> getScore(UserEntity user){
 
-        return dailyScoreRepository.findAllByUserId(user);
+        return dailyScoreRepository.findAllByUser(user);
     }
 }

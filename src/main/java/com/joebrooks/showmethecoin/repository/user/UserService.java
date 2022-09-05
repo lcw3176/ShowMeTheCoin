@@ -1,13 +1,12 @@
 package com.joebrooks.showmethecoin.repository.user;
 
-import com.joebrooks.showmethecoin.global.encrypto.SHA256;
+import com.joebrooks.showmethecoin.auth.AuthException;
+import com.joebrooks.showmethecoin.auth.SHA256;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,12 +15,16 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public Optional<UserEntity> login(String id, String pw) throws NoSuchAlgorithmException {
-        return userRepository.findByUserIdAndUserPw(id, SHA256.encrypt(pw));
+    public UserEntity login(String id, String pw) {
+        return userRepository.findByUserIdAndUserPw(id, SHA256.encrypt(pw)).orElseThrow(() -> {
+            throw new AuthException("id: " + id + "  pw:" + pw);
+        });
     }
 
-    public Optional<UserEntity> getUser(String id) {
-        return userRepository.findByUserId(id);
+    public UserEntity getUser(String id) {
+        return userRepository.findByUserId(id).orElseThrow(() -> {
+            throw new RuntimeException("유저 없음: " + id);
+        });
     }
 
     public void save(UserEntity user){

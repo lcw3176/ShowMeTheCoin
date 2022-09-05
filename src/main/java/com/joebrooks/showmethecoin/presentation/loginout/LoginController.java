@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/login")
 public class LoginController {
 
+    private final AuthManager authManager;
     private final UserService userService;
 
     @GetMapping
@@ -31,7 +32,7 @@ public class LoginController {
                             HttpSession session) {
 
         userService.login(id, pw);
-        AuthManager.saveSession(session, id);
+        authManager.saveSession(session, id);
 
         return "redirect:/dashboard";
     }

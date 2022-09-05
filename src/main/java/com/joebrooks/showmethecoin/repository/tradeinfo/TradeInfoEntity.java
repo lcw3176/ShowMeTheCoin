@@ -1,8 +1,8 @@
 package com.joebrooks.showmethecoin.repository.tradeinfo;
 
-import com.joebrooks.showmethecoin.repository.trade.TradeEntity;
+import com.joebrooks.showmethecoin.repository.CompanyType;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
-import com.joebrooks.showmethecoin.trade.upbit.CoinType;
+import com.joebrooks.showmethecoin.autotrade.upbit.CoinType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +26,10 @@ public class TradeInfoEntity {
     @Enumerated(EnumType.STRING)
     private CoinType coinType;
 
+    @Column(name = "company_type")
+    @Enumerated(EnumType.STRING)
+    private CompanyType companyType;
+
     @Column(name = "trade_price")
     private double tradePrice;
 
@@ -48,8 +52,8 @@ public class TradeInfoEntity {
     private boolean completed;
 
     @ManyToOne(targetEntity = UserEntity.class)
-    @JoinColumn(name = "user_id")
-    private UserEntity userId;
+    @JoinColumn(name = "user")
+    private UserEntity user;
 
     public void complete(){
         this.completed = true;

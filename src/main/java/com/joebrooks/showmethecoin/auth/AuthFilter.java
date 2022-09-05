@@ -63,7 +63,7 @@ public class AuthFilter implements Filter {
             chain.doFilter(request, response);
 
         } catch (Exception e) {
-            throw new AuthException(e.getMessage(), e);
+            throw new AuthException(e.getMessage());
         }
     }
 

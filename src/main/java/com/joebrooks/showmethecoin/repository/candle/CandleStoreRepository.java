@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface CandleStoreRepository extends JpaRepository<CandleStoreEntity, Long> {
 
-    List<CandleStoreEntity> findAllByMarket(String market);
 
-    List<CandleStoreEntity> findAllByMarket(String market, Sort sort);
+    long countAllByMarketAndCandleMinute(String market, CandleMinute candleMinute);
+
+    List<CandleStoreEntity> findAllByMarketAndCandleMinute(String market, CandleMinute candleMinute, Sort sort);
 }

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 class UpbitUtilTest {
 
     @Test
-    public void 단위(){
+    void 단위(){
         System.out.println(UpbitUtil.getTickSize(2275));
     }
 }

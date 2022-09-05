@@ -2,6 +2,7 @@ package com.joebrooks.showmethecoin.autotrade.upbit.ticker;
 
 import com.joebrooks.showmethecoin.autotrade.upbit.CoinType;
 import com.joebrooks.showmethecoin.autotrade.upbit.client.UpBitClient;
+import com.joebrooks.showmethecoin.repository.userkey.UserKeyEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
@@ -24,7 +25,7 @@ public class TickerService {
                 .build();
 
 
-        return Arrays.asList(upBitClient.get(uri.toString(), false, TickerRequest.builder()
+        return Arrays.asList(upBitClient.get(uri.toString(), false, null, TickerRequest.builder()
                 .markets(coinType.getName())
                 .build(), TickerResponse[].class)).get(0);
     }

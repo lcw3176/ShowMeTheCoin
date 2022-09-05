@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface DailyScoreRepository extends JpaRepository<DailyScoreEntity, Long> {
 
-    List<DailyScoreEntity> findAllByUserId(UserEntity user);
+    List<DailyScoreEntity> findAllByUser(UserEntity user);
 }

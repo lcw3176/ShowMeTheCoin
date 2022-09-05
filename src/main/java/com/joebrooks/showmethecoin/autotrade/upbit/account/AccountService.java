@@ -2,6 +2,7 @@ package com.joebrooks.showmethecoin.autotrade.upbit.account;
 
 import com.joebrooks.showmethecoin.autotrade.upbit.CoinType;
 import com.joebrooks.showmethecoin.autotrade.upbit.client.UpBitClient;
+import com.joebrooks.showmethecoin.repository.userkey.UserKeyEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +15,14 @@ public class AccountService {
     private final UpBitClient upBitClient;
     
 
-    private AccountResponse[] getAccountData() {
+    private AccountResponse[] getAccountData(UserKeyEntity userKey) {
         String uri = "/accounts";
 
-        return upBitClient.get(uri, true, AccountResponse[].class);
+        return upBitClient.get(uri, true, userKey, AccountResponse[].class);
     }
 
-    public AccountResponse getKRWCurrency(){
-        return Arrays.stream(getAccountData())
+    public AccountResponse getKRWCurrency(UserKeyEntity userKey){
+        return Arrays.stream(getAccountData(userKey))
                 .filter(data -> data.getCurrency().equals("KRW"))
                 .findFirst()
                 .orElseThrow(() ->{
@@ -29,8 +30,8 @@ public class AccountService {
                 });
     }
 
-    public AccountResponse getCoinCurrency(CoinType coinType){
-        return Arrays.stream(getAccountData())
+    public AccountResponse getCoinCurrency(UserKeyEntity userKey, CoinType coinType){
+        return Arrays.stream(getAccountData(userKey))
                 .filter(data -> data.getCurrency().equals(coinType.toString()))
                 .findFirst()
                 .orElse(AccountResponse.builder().balance("0").build());

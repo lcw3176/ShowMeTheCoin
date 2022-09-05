@@ -1,8 +1,9 @@
 package com.joebrooks.showmethecoin.repository.tradeinfo;
 
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
-import com.joebrooks.showmethecoin.trade.upbit.CoinType;
+import com.joebrooks.showmethecoin.autotrade.upbit.CoinType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,7 @@ public class TradeInfoService {
     }
 
     public void acceptOrder(UserEntity user, CoinType coinType){
-        List<TradeInfoEntity> lst = tradeInfoRepository.findAllByUserIdAndCoinType(user, coinType);
+        List<TradeInfoEntity> lst = tradeInfoRepository.findAllByUserAndCoinType(user, coinType);
 
         for(TradeInfoEntity i : lst){
             i.acceptOrder();
@@ -29,7 +30,7 @@ public class TradeInfoService {
     }
 
     public void orderComplete(UserEntity user, CoinType coinType){
-        List<TradeInfoEntity> lst = tradeInfoRepository.findAllByUserIdAndCoinType(user, coinType);
+        List<TradeInfoEntity> lst = tradeInfoRepository.findAllByUserAndCoinType(user, coinType);
 
         for(TradeInfoEntity i : lst){
             i.complete();
@@ -40,7 +41,7 @@ public class TradeInfoService {
 
 
     public void orderCanceled(UserEntity user, CoinType coinType){
-        List<TradeInfoEntity> lst = tradeInfoRepository.findAllByUserIdAndCoinType(user, coinType);
+        List<TradeInfoEntity> lst = tradeInfoRepository.findAllByUserAndCoinType(user, coinType);
 
         for(TradeInfoEntity i : lst){
             i.cancelOrder();
@@ -48,8 +49,8 @@ public class TradeInfoService {
         }
     }
 
-    public void removeAll(UserEntity user, CoinType coinType){
-        tradeInfoRepository.removeAllByUserIdAndCoinType(user, coinType);
+    public void removeTradeLogs(UserEntity user, CoinType coinType){
+        tradeInfoRepository.removeAllByUserAndCoinType(user, coinType);
     }
 
     public void removeOrder(String uuid){
@@ -57,16 +58,24 @@ public class TradeInfoService {
     }
 
     public List<TradeInfoEntity> getAllTrades(UserEntity user){
-        return tradeInfoRepository.findAllByUserId(user);
+        return tradeInfoRepository.findAllByUser(user);
+    }
+
+    public List<CoinType> getAllTradeCoins(UserEntity user){
+        return tradeInfoRepository.findDistinctCoinTypeByUser(user);
     }
 
 
+    public TradeInfoEntity getRecentTrade(UserEntity user, CoinType coinType){
+        return tradeInfoRepository.findTopByUserAndCoinTypeOrderByOrderedAtDesc(user, coinType);
+    }
+
     public List<TradeInfoEntity> getTradeLogs(UserEntity user, CoinType coinType){
-        return tradeInfoRepository.findAllByUserIdAndCoinType(user, coinType);
+        return tradeInfoRepository.findAllByUserAndCoinType(user, coinType);
     }
 
     public int getTradeCoinsCount(UserEntity user){
-        return tradeInfoRepository.countDistinctCoinTypeByUserId(user);
+        return tradeInfoRepository.countDistinctCoinTypeByUser(user);
     }
 
 }

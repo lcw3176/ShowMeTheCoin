@@ -19,16 +19,16 @@ import java.util.concurrent.TimeUnit;
 public class ClientConfig {
 
     @Bean
-    public WebClient webClient() {
-        int timeoutMillis = 3000;
+    public WebClient upBitWebClient() {
+        int timeoutMillis = 10000;
         String baseUrl = "https://api.upbit.com/v1";
 
         HttpClient httpClient = HttpClient.create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, timeoutMillis)
                 .responseTimeout(Duration.ofMillis(timeoutMillis))
                 .doOnConnected( conn ->
-                        conn.addHandlerLast(new ReadTimeoutHandler(timeoutMillis, TimeUnit.MILLISECONDS))  //sec
-                                .addHandlerLast(new WriteTimeoutHandler(timeoutMillis, TimeUnit.MILLISECONDS)) //sec
+                        conn.addHandlerLast(new ReadTimeoutHandler(timeoutMillis, TimeUnit.MILLISECONDS))
+                                .addHandlerLast(new WriteTimeoutHandler(timeoutMillis, TimeUnit.MILLISECONDS))
                 );
 
         return WebClient.builder()
