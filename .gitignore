@@ -41,10 +41,6 @@ out/
 *.log
 *.db
 
-### 전략들 ###
-**/policy/
-**/strategy/type/
-
 
 ### 초기화 스크립트 ###
 **/showmethecoin/initScript.java
