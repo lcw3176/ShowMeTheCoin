@@ -55,6 +55,12 @@ public class AuthFilter implements Filter {
                     httpResponse.sendRedirect("/login");
                     return;
                 } else {
+                    String ipAddress = httpRequest.getHeader("X-FORWARDED-FOR");
+
+                    if (ipAddress == null) {
+                        ipAddress = request.getRemoteAddr();
+                    }
+
                     log.info("\n{} 로그" +
                                     "\n[REQUEST] {} " +
                                     "\n[PATH] {} " +
@@ -63,7 +69,7 @@ public class AuthFilter implements Filter {
                             session.getAttribute(AuthManager.SESSION_KEY),
                             ((HttpServletRequest) request).getMethod(),
                             ((HttpServletRequest) request).getRequestURI(),
-                            httpRequest.getRemoteAddr());
+                            ipAddress);
                 }
             }
 
