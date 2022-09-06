@@ -1,8 +1,7 @@
 package com.joebrooks.showmethecoin.repository.tradeinfo;
 
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
-import com.joebrooks.showmethecoin.autotrade.upbit.CoinType;
-import org.springframework.data.domain.Sort;
+import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

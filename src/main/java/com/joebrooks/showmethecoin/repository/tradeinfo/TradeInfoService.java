@@ -1,9 +1,8 @@
 package com.joebrooks.showmethecoin.repository.tradeinfo;
 
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
-import com.joebrooks.showmethecoin.autotrade.upbit.CoinType;
+import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

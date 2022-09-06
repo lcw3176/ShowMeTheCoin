@@ -1,6 +1,6 @@
 package com.joebrooks.showmethecoin.presentation.userconfig;
 
-import com.joebrooks.showmethecoin.autotrade.strategy.StrategyType;
+import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
 import com.joebrooks.showmethecoin.repository.candle.CandleMinute;
 import lombok.Data;
 

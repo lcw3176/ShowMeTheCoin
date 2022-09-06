@@ -1,11 +1,11 @@
 package com.joebrooks.showmethecoin.routine;
 
-import com.joebrooks.showmethecoin.autotrade.upbit.CoinType;
-import com.joebrooks.showmethecoin.autotrade.upbit.client.Side;
-import com.joebrooks.showmethecoin.autotrade.upbit.order.CheckOrderRequest;
-import com.joebrooks.showmethecoin.autotrade.upbit.order.CheckOrderResponse;
-import com.joebrooks.showmethecoin.autotrade.upbit.order.OrderService;
-import com.joebrooks.showmethecoin.autotrade.upbit.order.OrderStatus;
+import com.joebrooks.showmethecoin.trade.upbit.CoinType;
+import com.joebrooks.showmethecoin.trade.upbit.client.Side;
+import com.joebrooks.showmethecoin.trade.upbit.order.CheckOrderRequest;
+import com.joebrooks.showmethecoin.trade.upbit.order.CheckOrderResponse;
+import com.joebrooks.showmethecoin.trade.upbit.order.OrderService;
+import com.joebrooks.showmethecoin.trade.upbit.order.OrderStatus;
 import com.joebrooks.showmethecoin.repository.CompanyType;
 import com.joebrooks.showmethecoin.repository.tradelog.TradeLogEntity;
 import com.joebrooks.showmethecoin.repository.tradelog.TradeLogService;

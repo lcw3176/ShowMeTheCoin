@@ -1,12 +1,12 @@
 package com.joebrooks.showmethecoin.backtest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.joebrooks.showmethecoin.autotrade.strategy.IStrategy;
-import com.joebrooks.showmethecoin.autotrade.strategy.StrategyService;
-import com.joebrooks.showmethecoin.autotrade.strategy.StrategyType;
-import com.joebrooks.showmethecoin.autotrade.upbit.CoinType;
+import com.joebrooks.showmethecoin.trade.strategy.IStrategy;
+import com.joebrooks.showmethecoin.trade.strategy.StrategyService;
+import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
+import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import com.joebrooks.showmethecoin.repository.candle.CandleMinute;
-import com.joebrooks.showmethecoin.autotrade.upbit.candles.CandleService;
+import com.joebrooks.showmethecoin.trade.upbit.candles.CandleService;
 import com.joebrooks.showmethecoin.global.fee.FeeCalculator;
 import com.joebrooks.showmethecoin.repository.CompanyType;
 import com.joebrooks.showmethecoin.repository.candle.CandleStoreEntity;

@@ -2,7 +2,7 @@ package com.joebrooks.showmethecoin.repository.userconfig;
 
 import com.joebrooks.showmethecoin.repository.candle.CandleMinute;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
-import com.joebrooks.showmethecoin.autotrade.strategy.StrategyType;
+import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

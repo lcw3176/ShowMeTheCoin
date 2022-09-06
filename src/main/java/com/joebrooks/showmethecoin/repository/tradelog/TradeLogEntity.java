@@ -1,6 +1,6 @@
 package com.joebrooks.showmethecoin.repository.tradelog;
 
-import com.joebrooks.showmethecoin.autotrade.upbit.CoinType;
+import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import com.joebrooks.showmethecoin.repository.CompanyType;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.joebrooks.showmethecoin.repository.candle;
 
-import com.joebrooks.showmethecoin.autotrade.upbit.CoinType;
+import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

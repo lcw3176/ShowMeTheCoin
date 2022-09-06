@@ -1,7 +1,7 @@
 package com.joebrooks.showmethecoin.presentation.backtest;
 
-import com.joebrooks.showmethecoin.autotrade.strategy.StrategyType;
-import com.joebrooks.showmethecoin.autotrade.upbit.CoinType;
+import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
+import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import com.joebrooks.showmethecoin.repository.candle.CandleMinute;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

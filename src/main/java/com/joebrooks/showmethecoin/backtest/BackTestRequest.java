@@ -2,8 +2,8 @@ package com.joebrooks.showmethecoin.backtest;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joebrooks.showmethecoin.autotrade.strategy.StrategyType;
-import com.joebrooks.showmethecoin.autotrade.upbit.CoinType;
+import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
+import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import com.joebrooks.showmethecoin.repository.candle.CandleMinute;
 import com.joebrooks.showmethecoin.global.serializer.CalendarDeserializer;
 import com.joebrooks.showmethecoin.global.serializer.CalendarSerializer;
