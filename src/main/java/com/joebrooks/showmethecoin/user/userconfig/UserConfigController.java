@@ -3,10 +3,8 @@ package com.joebrooks.showmethecoin.user.userconfig;
 
 import com.joebrooks.showmethecoin.auth.AuthManager;
 import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
-import com.joebrooks.showmethecoin.repository.candle.CandleMinute;
-import com.joebrooks.showmethecoin.repository.user.UserEntity;
-import com.joebrooks.showmethecoin.repository.userconfig.UserConfigEntity;
-import com.joebrooks.showmethecoin.repository.userconfig.UserConfigService;
+import com.joebrooks.showmethecoin.trade.candle.CandleMinute;
+import com.joebrooks.showmethecoin.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;

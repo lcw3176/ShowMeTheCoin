@@ -1,9 +1,9 @@
 package com.joebrooks.showmethecoin.trade.upbit.candles;
 
-import com.joebrooks.showmethecoin.repository.CompanyType;
-import com.joebrooks.showmethecoin.repository.candle.CandleMinute;
-import com.joebrooks.showmethecoin.repository.candle.CandleStoreEntity;
-import com.joebrooks.showmethecoin.repository.candle.CandleStoreService;
+import com.joebrooks.showmethecoin.trade.CompanyType;
+import com.joebrooks.showmethecoin.trade.candle.CandleMinute;
+import com.joebrooks.showmethecoin.trade.candle.CandleStoreEntity;
+import com.joebrooks.showmethecoin.trade.candle.CandleStoreService;
 import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import com.joebrooks.showmethecoin.trade.upbit.client.UpBitClient;
 import lombok.RequiredArgsConstructor;

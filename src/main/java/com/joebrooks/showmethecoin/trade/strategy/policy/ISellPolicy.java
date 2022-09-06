@@ -1,7 +1,7 @@
 package com.joebrooks.showmethecoin.trade.strategy.policy;
 
-import com.joebrooks.showmethecoin.repository.candle.CandleStoreEntity;
-import com.joebrooks.showmethecoin.repository.tradeinfo.TradeInfoEntity;
+import com.joebrooks.showmethecoin.trade.candle.CandleStoreEntity;
+import com.joebrooks.showmethecoin.trade.tradeinfo.TradeInfoEntity;
 
 import java.util.List;
 

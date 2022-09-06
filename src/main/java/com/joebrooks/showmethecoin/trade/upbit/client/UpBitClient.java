@@ -1,7 +1,7 @@
 package com.joebrooks.showmethecoin.trade.upbit.client;
 
 import com.google.gson.Gson;
-import com.joebrooks.showmethecoin.repository.userkey.UserKeyEntity;
+import com.joebrooks.showmethecoin.user.userkey.UserKeyEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

@@ -2,11 +2,9 @@ package com.joebrooks.showmethecoin.user.tradelog;
 
 import com.joebrooks.showmethecoin.auth.AuthManager;
 import com.joebrooks.showmethecoin.global.util.PageGenerator;
-import com.joebrooks.showmethecoin.repository.tradelog.TradeLogEntity;
-import com.joebrooks.showmethecoin.repository.tradelog.TradeLogService;
-import com.joebrooks.showmethecoin.repository.user.UserEntity;
-import com.joebrooks.showmethecoin.repository.userconfig.UserConfigEntity;
-import com.joebrooks.showmethecoin.repository.userconfig.UserConfigService;
+import com.joebrooks.showmethecoin.user.UserEntity;
+import com.joebrooks.showmethecoin.user.userconfig.UserConfigEntity;
+import com.joebrooks.showmethecoin.user.userconfig.UserConfigService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

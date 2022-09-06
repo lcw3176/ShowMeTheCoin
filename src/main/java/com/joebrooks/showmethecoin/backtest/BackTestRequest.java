@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
 import com.joebrooks.showmethecoin.trade.upbit.CoinType;
-import com.joebrooks.showmethecoin.repository.candle.CandleMinute;
+import com.joebrooks.showmethecoin.trade.candle.CandleMinute;
 import com.joebrooks.showmethecoin.global.serializer.CalendarDeserializer;
 import com.joebrooks.showmethecoin.global.serializer.CalendarSerializer;
 import lombok.*;

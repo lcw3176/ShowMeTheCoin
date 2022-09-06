@@ -1,7 +1,7 @@
 package com.joebrooks.showmethecoin.trade.upbit.order;
 
 import com.joebrooks.showmethecoin.trade.upbit.client.UpBitClient;
-import com.joebrooks.showmethecoin.repository.userkey.UserKeyEntity;
+import com.joebrooks.showmethecoin.user.userkey.UserKeyEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;

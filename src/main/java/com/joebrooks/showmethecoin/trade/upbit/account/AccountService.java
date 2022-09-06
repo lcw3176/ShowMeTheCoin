@@ -2,7 +2,7 @@ package com.joebrooks.showmethecoin.trade.upbit.account;
 
 import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import com.joebrooks.showmethecoin.trade.upbit.client.UpBitClient;
-import com.joebrooks.showmethecoin.repository.userkey.UserKeyEntity;
+import com.joebrooks.showmethecoin.user.userkey.UserKeyEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

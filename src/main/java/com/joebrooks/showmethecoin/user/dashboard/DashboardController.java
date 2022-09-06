@@ -1,10 +1,8 @@
 package com.joebrooks.showmethecoin.user.dashboard;
 
 import com.joebrooks.showmethecoin.auth.AuthManager;
-import com.joebrooks.showmethecoin.repository.account.UserAccountService;
-import com.joebrooks.showmethecoin.repository.dailyScore.DailyScoreEntity;
-import com.joebrooks.showmethecoin.repository.dailyScore.DailyScoreService;
-import com.joebrooks.showmethecoin.repository.user.UserEntity;
+import com.joebrooks.showmethecoin.user.account.UserAccountService;
+import com.joebrooks.showmethecoin.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

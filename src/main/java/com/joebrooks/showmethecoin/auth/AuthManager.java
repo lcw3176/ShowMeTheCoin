@@ -1,7 +1,7 @@
 package com.joebrooks.showmethecoin.auth;
 
-import com.joebrooks.showmethecoin.repository.user.UserEntity;
-import com.joebrooks.showmethecoin.repository.user.UserService;
+import com.joebrooks.showmethecoin.user.UserEntity;
+import com.joebrooks.showmethecoin.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

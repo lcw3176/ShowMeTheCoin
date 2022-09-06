@@ -1,6 +1,6 @@
 package com.joebrooks.showmethecoin.trade.indicator.rsi;
 
-import com.joebrooks.showmethecoin.repository.candle.CandleStoreEntity;
+import com.joebrooks.showmethecoin.trade.candle.CandleStoreEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;

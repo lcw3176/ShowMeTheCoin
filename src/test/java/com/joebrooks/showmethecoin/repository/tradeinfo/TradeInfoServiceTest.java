@@ -1,7 +1,8 @@
 package com.joebrooks.showmethecoin.repository.tradeinfo;
 
+import com.joebrooks.showmethecoin.trade.tradeinfo.TradeInfoService;
 import com.joebrooks.showmethecoin.trade.upbit.CoinType;
-import com.joebrooks.showmethecoin.repository.user.UserService;
+import com.joebrooks.showmethecoin.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

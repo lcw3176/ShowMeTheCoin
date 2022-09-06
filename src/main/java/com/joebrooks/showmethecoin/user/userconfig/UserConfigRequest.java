@@ -1,7 +1,7 @@
 package com.joebrooks.showmethecoin.user.userconfig;
 
 import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
-import com.joebrooks.showmethecoin.repository.candle.CandleMinute;
+import com.joebrooks.showmethecoin.trade.candle.CandleMinute;
 import lombok.Data;
 
 @Data
