@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.presentation.userconfig;
+package com.joebrooks.showmethecoin.user.userconfig;
 
 
 import com.joebrooks.showmethecoin.auth.AuthManager;

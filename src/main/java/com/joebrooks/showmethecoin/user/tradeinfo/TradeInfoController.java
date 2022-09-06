@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.presentation.tradeinfo;
+package com.joebrooks.showmethecoin.user.tradeinfo;
 
 import com.joebrooks.showmethecoin.auth.AuthManager;
 import com.joebrooks.showmethecoin.global.util.PageGenerator;

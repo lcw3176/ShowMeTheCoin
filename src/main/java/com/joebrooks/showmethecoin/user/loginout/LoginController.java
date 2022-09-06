@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.presentation.loginout;
+package com.joebrooks.showmethecoin.user.loginout;
 
 
 import com.joebrooks.showmethecoin.auth.AuthManager;

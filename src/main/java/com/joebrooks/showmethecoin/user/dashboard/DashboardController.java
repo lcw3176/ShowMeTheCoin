@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.presentation.dashboard;
+package com.joebrooks.showmethecoin.user.dashboard;
 
 import com.joebrooks.showmethecoin.auth.AuthManager;
 import com.joebrooks.showmethecoin.repository.account.UserAccountService;
