@@ -23,7 +23,7 @@ public class UserService {
 
     public UserEntity getUser(String id) {
         return userRepository.findByUserId(id).orElseThrow(() -> {
-            throw new RuntimeException("유저 없음: " + id);
+            throw new AuthException("유저 없음: " + id);
         });
     }
 

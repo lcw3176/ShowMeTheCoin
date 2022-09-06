@@ -18,11 +18,11 @@ import java.util.Map;
 
 @Slf4j
 public class AuthFilter implements Filter {
-    private static final String[] whitelist = {"/login", "/favicon.ico"};
+    private static final String[] whitelist = {"/login", "/favicon.ico", "/css/*", "/js/*"};
 
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String requestURI = httpRequest.getRequestURI();
         HttpServletResponse httpResponse = (HttpServletResponse) response;
@@ -30,10 +30,11 @@ public class AuthFilter implements Filter {
         try {
             if (isLoginCheckPath(requestURI)) {
                 HttpSession session = httpRequest.getSession(false);
+                ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper((HttpServletRequest) request);
+                ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) response);
+
 
                 if (session == null || session.getAttribute(AuthManager.SESSION_KEY) == null) {
-                    ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper((HttpServletRequest) request);
-                    ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) response);
 
                     log.info("\n미인증 사용자 요청" +
                                     "\n[REQUEST] {} " +
@@ -53,6 +54,16 @@ public class AuthFilter implements Filter {
 
                     httpResponse.sendRedirect("/login");
                     return;
+                } else {
+                    log.info("\n{} 로그" +
+                                    "\n[REQUEST] {} " +
+                                    "\n[PATH] {} " +
+                                    "\n[IP] {}" +
+                                    "\n",
+                            session.getAttribute(AuthManager.SESSION_KEY),
+                            ((HttpServletRequest) request).getMethod(),
+                            ((HttpServletRequest) request).getRequestURI(),
+                            httpRequest.getRemoteAddr());
                 }
             }
 
