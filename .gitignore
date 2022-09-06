@@ -42,10 +42,7 @@ out/
 *.db
 
 ### 전략들 ###
-**/policy/shorts/
-**/policy/chaser/
-**/policy/base/
-**/policy/candle/
+**/policy/
 **/strategy/type/
 
 
