@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.user.tradeinfo;
+package com.joebrooks.showmethecoin.user.tradelog;
 
 import com.joebrooks.showmethecoin.auth.AuthManager;
 import com.joebrooks.showmethecoin.global.util.PageGenerator;
@@ -20,8 +20,8 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/trade-info")
-public class TradeInfoController {
+@RequestMapping("/trade-log")
+public class TradeLogController {
 
     private final TradeLogService tradeLogService;
     private final AuthManager authManager;
@@ -50,7 +50,7 @@ public class TradeInfoController {
 
         model.addAttribute("posts", lst);
 
-        model.addAttribute("pageResponse", TradePageResponse.builder()
+        model.addAttribute("pageResponse", TradeLogResponse.builder()
                 .startPage(startPage)
                 .lastPage(lastPage)
                 .nowPage(page)
@@ -61,7 +61,7 @@ public class TradeInfoController {
         model.addAttribute("status", userConfig.isTrading());
 
 
-        return "trade-info";
+        return "trade-log";
     }
 
 }

@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.user.tradeinfo;
+package com.joebrooks.showmethecoin.user.tradelog;
 
 
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TradePageResponse {
+public class TradeLogResponse {
 
     private int startPage;
     private int lastPage;
