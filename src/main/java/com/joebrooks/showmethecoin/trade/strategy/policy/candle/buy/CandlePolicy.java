@@ -4,22 +4,22 @@ package com.joebrooks.showmethecoin.trade.strategy.policy.candle.buy;
 import com.joebrooks.showmethecoin.trade.candle.CandleStoreEntity;
 import com.joebrooks.showmethecoin.trade.strategy.policy.IBuyPolicy;
 import com.joebrooks.showmethecoin.trade.tradeinfo.TradeInfoEntity;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 
-@Slf4j
+@Component
 public class CandlePolicy implements IBuyPolicy {
 
 
 
     @Override
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
-        int buyCount = 4;
+        int buyCount = 3;
         int count = 0;
 
-        for(int i = 1; i < buyCount + 1; i++){
+        for(int i = 0; i < buyCount; i++){
             CandleStoreEntity candle = candleResponses.get(i);
 
             double price = candle.getTradePrice() - candle.getOpeningPrice();
