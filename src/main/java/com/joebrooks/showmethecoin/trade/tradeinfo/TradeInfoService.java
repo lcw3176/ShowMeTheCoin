@@ -74,7 +74,7 @@ public class TradeInfoService {
     }
 
     public int getTradeCoinsCount(UserEntity user){
-        return tradeInfoRepository.countDistinctCoinTypeByUser(user);
+        return tradeInfoRepository.findDistinctCoinTypeByUser(user).size();
     }
 
 }
