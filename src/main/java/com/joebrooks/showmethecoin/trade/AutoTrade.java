@@ -69,7 +69,7 @@ public class AutoTrade {
     }
 
     private void setWhiteList(){
-        int whiteListSize = 20;
+        int whiteListSize = 15;
         int delayMillis = 100;
 
         CoinManager.WHITE_LIST.clear();
