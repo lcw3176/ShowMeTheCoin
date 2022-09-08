@@ -42,21 +42,14 @@ public class BackTestService {
             double coinBalance = 0D;
             CandleMinute minute = request.getCandleMinute();
             CoinType coinType = request.getTradeCoin();
-            int nowLevel = 0;
             double myBalance = request.getStartBalance();
             int maxBetCount = request.getMaxBetCount();
             double cashToBuy = myBalance / maxBetCount;
             cashToBuy *= 0.99;
-            double gain = 0D;
-            double beforeBalance = myBalance;
-            int tradeCount = 0;
-            int maxTradeCount = 0;
             double accumulatedGain = 0D;
 
             List<IStrategy> strategy = strategyService.get(StrategyType.BASE, request.getStrategyType());
             Calendar startDate = request.getStartDate();
-            Calendar beforeCal = Calendar.getInstance(request.getStartDate().getTimeZone());
-
 
 
             while(true){
@@ -88,16 +81,11 @@ public class BackTestService {
 
                     // 구매
                     if (strategy.stream().allMatch(st -> st.isProperToBuy(tempCandles, tradeInfoList))
-                            && tradeInfoList.isEmpty()){
+                        && tradeInfoList.isEmpty()){
 
                         // 잔고 체크
                         if (myBalance >= minCash) {
-                            if(nowLevel == 0){
-                                beforeBalance = myBalance;
-                            }
-
                             double coinVolume = cashToBuy / nowCandle.getTradePrice();
-                            nowLevel += 1;
                             TradeInfoEntity tradeInfo = TradeInfoEntity.builder()
                                     .tradePrice(nowCandle.getTradePrice())
                                     .coinVolume(coinVolume)
@@ -108,24 +96,22 @@ public class BackTestService {
                             tradeInfoList.add(tradeInfo);
 
                             coinBalance += coinVolume;
-                            myBalance -= nowCandle.getTradePrice() * coinVolume
-                                    + FeeCalculator.calculate(nowCandle.getTradePrice() * coinVolume, coinVolume, CompanyType.UPBIT);
+                            myBalance -= getPrice(candles, tradeInfoList);
 
                             response.setBuy(true);
                             response.setTraded(true);
                             response.setTradedPrice(nowCandle.getTradePrice());
 
 
-//                            log.info("구매: 시각 {} 구매 횟수 {} 구매량 {} 구매 단가 {}",
-//                                    nowCandle.getDateKst(),
-//                                    tradeInfoList.size(),
-//                                    coinVolume,
-//                                    nowCandle.getTradePrice() * coinVolume);
-                            tradeCount += 1;
+                            log.info("구매: 시각 {} 구매 횟수 {} 구매량 {} 잔고 {}",
+                                    nowCandle.getDateKst(),
+                                    tradeInfoList.size(),
+                                    coinVolume,
+                                    myBalance);
                         }
                     }
 
-                    // 재구매 주문
+//                    // 재구매 주문
                     else if (!tradeInfoList.isEmpty()
                             && strategy.stream().allMatch(st -> st.isProperToSellWithLoss(tempCandles, tradeInfoList))
                             && tradeInfoList.size() < maxBetCount) {
@@ -133,12 +119,7 @@ public class BackTestService {
 
                         // 잔고 체크
                         if (myBalance >= minCash) {
-                            if(nowLevel == 0){
-                                beforeBalance = myBalance;
-                            }
-
                             double coinVolume = cashToBuy / nowCandle.getTradePrice();
-                            nowLevel += 1;
                             TradeInfoEntity tradeInfo = TradeInfoEntity.builder()
                                     .tradePrice(nowCandle.getTradePrice())
                                     .coinVolume(coinVolume)
@@ -149,20 +130,20 @@ public class BackTestService {
                             tradeInfoList.add(tradeInfo);
 
                             coinBalance += coinVolume;
-                            myBalance -= nowCandle.getTradePrice() * coinVolume
-                                    + FeeCalculator.calculate(nowCandle.getTradePrice() * coinVolume, coinVolume, CompanyType.UPBIT);
+                            myBalance -= getPrice(candles, tradeInfoList);
 
                             response.setBuy(true);
                             response.setTraded(true);
                             response.setTradedPrice(nowCandle.getTradePrice());
 
 
-//                            log.info("구매: 시각 {} 구매 횟수 {} 구매량 {} 구매 단가 {}",
-//                                    nowCandle.getDateKst(),
-//                                    tradeInfoList.size(),
-//                                    coinVolume,
-//                                    nowCandle.getTradePrice() * coinVolume);
-                            tradeCount += 1;
+
+                            log.info("구매: 시각 {} 구매 횟수 {} 구매량 {} 잔고 {}",
+                                    nowCandle.getDateKst(),
+                                    tradeInfoList.size(),
+                                    coinVolume,
+                                    myBalance);
+
                         }
                     }
 
@@ -172,25 +153,19 @@ public class BackTestService {
                             && strategy.stream().allMatch(st -> st.isProperToSellWithBenefit(tempCandles, tradeInfoList))) {
 
                         if (coinBalance > 0) {
-                            myBalance += nowCandle.getTradePrice() * coinBalance
-                                    - FeeCalculator.calculate(nowCandle.getTradePrice() * coinBalance, coinBalance, CompanyType.UPBIT);
+                            myBalance += getGain(candles, tradeInfoList);
+                            accumulatedGain = myBalance;
                             coinBalance = 0D;
 
                             response.setTraded(true);
                             response.setTradedPrice(nowCandle.getTradePrice());
 
-                            nowLevel = 0;
-
-//                            log.info("익절: 시각 {} 잔고 {}",
-//                                    nowCandle.getDateKst(),
-//                                    myBalance);
+                            log.info("익절: 시각 {} 잔고 {}",
+                                    nowCandle.getDateKst(),
+                                    myBalance);
                             tradeInfoList.clear();
-                            gain += myBalance - beforeBalance;
                             cashToBuy = myBalance / maxBetCount;
                             cashToBuy *= 0.99;
-                            maxTradeCount = Math.max(tradeCount, maxTradeCount);
-                            tradeCount = 0;
-                            accumulatedGain += gain;
                         }
                     }
 
@@ -200,24 +175,20 @@ public class BackTestService {
                             && tradeInfoList.size() >= maxBetCount) {
 
                         if(coinBalance > 0) {
-                            myBalance += nowCandle.getTradePrice() * coinBalance
-                                    - FeeCalculator.calculate(nowCandle.getTradePrice() * coinBalance, coinBalance, CompanyType.UPBIT);
+                            myBalance += getGain(candles, tradeInfoList);
+                            accumulatedGain = myBalance;
                             coinBalance = 0D;
 
                             response.setTraded(true);
                             response.setTradedPrice(nowCandle.getTradePrice());
 
-                            nowLevel = 0;
-                            gain += myBalance - beforeBalance;
-//                            log.info("손절: 시각 {} 구매 횟수 {}",
-//                                    nowCandle.getDateKst(),
-//                                    tradeInfoList.size());
+                            log.info("손절: 시각 {} 잔고 {}",
+                                    nowCandle.getDateKst(),
+                                    myBalance);
                             tradeInfoList.clear();
                             cashToBuy = myBalance / maxBetCount;
                             cashToBuy *= 0.99;
-                            maxTradeCount = Math.max(tradeCount, maxTradeCount);
-                            tradeCount = 0;
-                            accumulatedGain += gain;
+
                         }
                     }
 
@@ -235,19 +206,19 @@ public class BackTestService {
                     break;
                 }
 
-                if(startDate.get(Calendar.DATE) != beforeCal.get(Calendar.DATE)){
-                    log.info("{}월 {}일 수익: 이득 {} 잔고 {} 최대 분할 횟수 {}",
-                            beforeCal.get(Calendar.MONTH),
-                            beforeCal.get(Calendar.DATE),
-                            gain,
-                            myBalance,
-                            maxTradeCount);
-
-                    beforeCal.add(Calendar.DATE, 1);
-                    maxTradeCount = 0;
-                    gain = 0D;
-
-                }
+//                if(startDate.get(Calendar.DATE) != beforeCal.get(Calendar.DATE)){
+//                    log.info("{}월 {}일 수익: 이득 {} 잔고 {} 최대 분할 횟수 {}",
+//                            beforeCal.get(Calendar.MONTH),
+//                            beforeCal.get(Calendar.DATE),
+//                            gain,
+//                            myBalance,
+//                            maxTradeCount);
+//
+//                    beforeCal.add(Calendar.DATE, 1);
+//                    maxTradeCount = 0;
+//                    gain = 0D;
+//
+//                }
 
             }
 
@@ -256,7 +227,7 @@ public class BackTestService {
 
             session.sendMessage(new TextMessage(mapper.writeValueAsString(BackTestResponse.builder()
                     .finish(true)
-                    .gain(accumulatedGain)
+                    .gain(accumulatedGain - request.getStartBalance())
                     .build())));
 
 
@@ -265,5 +236,61 @@ public class BackTestService {
         }
     }
 
+    private double getGain(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo){
+        double averageSellPrice = getAverageSellPrice(candleResponses, tradeInfo);
+        double paidFee = getPaidFee(tradeInfo);
+        double payingFee = getPayingFee(candleResponses, tradeInfo);
+
+
+        return averageSellPrice - paidFee - payingFee;
+    }
+
+    private double getPrice(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo){
+        double averageBuyPrice = getAverageBuyPrice(tradeInfo);
+        double paidFee = getPaidFee(tradeInfo);
+
+        return averageBuyPrice - paidFee;
+    }
+
+
+    private double getAverageBuyPrice(List<TradeInfoEntity> tradeInfo){
+        double price = 0;
+
+//        for(TradeInfoEntity i : tradeInfo){
+//            price += i.getTradePrice() * i.getCoinVolume();
+//        }
+        price += tradeInfo.get(tradeInfo.size() - 1).getTradePrice() * tradeInfo.get(tradeInfo.size() - 1).getCoinVolume();
+        return price;
+    }
+
+    private double getPaidFee(List<TradeInfoEntity> tradeInfo){
+        double fee = 0;
+
+        for(TradeInfoEntity i : tradeInfo){
+            fee += FeeCalculator.calculate(i.getTradePrice(), i.getCoinVolume(), i.getCompanyType());
+        }
+
+        return fee;
+    }
+
+    private double getAverageSellPrice(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo){
+        double volume = 0;
+
+        for(TradeInfoEntity i : tradeInfo){
+            volume += i.getCoinVolume();
+        }
+
+        return volume * candleResponses.get(0).getTradePrice();
+    }
+
+    private double getPayingFee(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo){
+        double volume = 0;
+
+        for(TradeInfoEntity i : tradeInfo){
+            volume += i.getCoinVolume();
+        }
+
+        return FeeCalculator.calculate(candleResponses.get(0).getTradePrice(), volume, tradeInfo.get(0).getCompanyType());
+    }
 
 }
