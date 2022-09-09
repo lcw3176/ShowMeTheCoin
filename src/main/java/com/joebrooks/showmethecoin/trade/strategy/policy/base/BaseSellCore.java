@@ -46,11 +46,11 @@ public class BaseSellCore implements ISellPolicy {
         CandleStoreEntity candleStore = candleResponses.get(0);
 
         if(candleStore.getTradePrice() >= 10000000){
-            LOSS = 0.015D;
+            LOSS = 0.02D;
         } else if(candleStore.getTradePrice() >= 1000000){
-            LOSS = 0.025D;
+            LOSS = 0.03D;
         } else {
-            LOSS = 0.035D;
+            LOSS = 0.04D;
         }
 
 
