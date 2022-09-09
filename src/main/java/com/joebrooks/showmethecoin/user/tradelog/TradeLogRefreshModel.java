@@ -4,6 +4,7 @@ import com.joebrooks.showmethecoin.user.UserEntity;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class TradeLogRefreshModel {
     private List<Double> sellPrice;
     private List<Double> buyPrice;
     private LocalDateTime lastOrder;
-    private double executeVolume;
+    private BigDecimal executeVolume;
 
 
     public void changeLastOrderTime(LocalDateTime time){

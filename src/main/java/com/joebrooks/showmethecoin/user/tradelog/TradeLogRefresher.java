@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -54,7 +55,6 @@ public class TradeLogRefresher {
                 }
 
 
-
                 CoinType key = CoinType.valueOf(targetResponse.getMarket().split("-")[1]);
                 LocalDateTime orderTime = LocalDateTime.parse(targetResponse.getCreatedAt().split("\\+")[0]);
 
@@ -65,7 +65,7 @@ public class TradeLogRefresher {
                             .lastOrder(orderTime)
                             .sellPrice(new LinkedList<>())
                             .buyPrice(new LinkedList<>())
-                            .executeVolume(0D)
+                            .executeVolume(BigDecimal.valueOf(0))
                             .build());
                 }
 
@@ -79,7 +79,7 @@ public class TradeLogRefresher {
 
                     map.get(key).getSellPrice().add(tradedPrice);
                     map.get(key).setExecuteVolume(
-                            map.get(key).getExecuteVolume() - Double.parseDouble(targetResponse.getExecuteVolume()));
+                            map.get(key).getExecuteVolume().subtract(new BigDecimal(targetResponse.getExecuteVolume())));
                 } else {
                     double tradedPrice = Double.parseDouble(targetResponse.getPrice())
                             * Double.parseDouble(targetResponse.getExecuteVolume())
@@ -87,7 +87,7 @@ public class TradeLogRefresher {
 
                     map.get(key).getBuyPrice().add(tradedPrice);
                     map.get(key).setExecuteVolume(
-                            map.get(key).getExecuteVolume() + Double.parseDouble(targetResponse.getExecuteVolume()));
+                            map.get(key).getExecuteVolume().add(new BigDecimal(targetResponse.getExecuteVolume())));
                 }
 
                 if(map.get(key).getLastOrder().isBefore(orderTime)){
@@ -95,8 +95,7 @@ public class TradeLogRefresher {
                 }
 
 
-                if(map.get(key).getExecuteVolume() == 0){
-
+                if(map.get(key).getExecuteVolume().compareTo(BigDecimal.ZERO) == 0){
                     if (map.get(key).getLastOrder().isBefore(lastRecordedOrderDate)
                             || map.get(key).getLastOrder().isEqual(lastRecordedOrderDate)) {
 
@@ -133,7 +132,6 @@ public class TradeLogRefresher {
 
                     map.remove(key);
                 }
-
             }
 
 
