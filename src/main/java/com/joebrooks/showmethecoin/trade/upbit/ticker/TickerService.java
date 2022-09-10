@@ -24,9 +24,7 @@ public class TickerService {
                 .build();
 
 
-        return Arrays.asList(upBitClient.get(uri.toString(), false, null, TickerRequest.builder()
-                .markets(coinType.getName())
-                .build(), TickerResponse[].class)).get(0);
+        return Arrays.asList(upBitClient.get(uri.toString(), TickerResponse[].class)).get(0);
     }
 
 }

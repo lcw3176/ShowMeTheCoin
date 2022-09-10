@@ -18,4 +18,5 @@ public class FilterConfig {
 
         return filterRegistrationBean;
     }
+
 }

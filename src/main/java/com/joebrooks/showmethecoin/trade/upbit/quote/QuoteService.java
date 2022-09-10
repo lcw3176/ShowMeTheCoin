@@ -24,9 +24,7 @@ public class QuoteService {
                 .build();
 
 
-        return Arrays.asList(upBitClient.get(uri.toString(), false, null, QuoteRequest.builder()
-                .markets(coinType.getName())
-                .build(), QuoteResponse[].class)).get(0);
+        return Arrays.asList(upBitClient.get(uri.toString(), QuoteResponse[].class)).get(0);
     }
 
     public QuoteResponse getQuote(String coinType){
@@ -37,9 +35,7 @@ public class QuoteService {
                 .queryParam("markets", coinType)
                 .build();
 
-        return Arrays.asList(upBitClient.get(uri.toString(), false, null, QuoteRequest.builder()
-                .markets(coinType)
-                .build(), QuoteResponse[].class)).get(0);
+        return Arrays.asList(upBitClient.get(uri.toString(), QuoteResponse[].class)).get(0);
     }
 
 }

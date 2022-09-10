@@ -1,19 +1,20 @@
 package com.joebrooks.showmethecoin.trade.upbit.candles;
 
+import com.joebrooks.showmethecoin.repository.candlestore.CandleMinute;
+import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreEntity;
+import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreService;
 import com.joebrooks.showmethecoin.trade.CompanyType;
-import com.joebrooks.showmethecoin.trade.candle.CandleMinute;
-import com.joebrooks.showmethecoin.trade.candle.CandleStoreEntity;
-import com.joebrooks.showmethecoin.trade.candle.CandleStoreService;
 import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import com.joebrooks.showmethecoin.trade.upbit.client.UpBitClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +23,6 @@ public class CandleService {
     private final UpBitClient upBitClient;
     private final CandleStoreService candleStoreService;
 
-    @PostConstruct
-    private void init(){
-        candleStoreService.deleteAll();
-    }
 
     public List<CandleStoreEntity> getCandles(CoinType coinType, CandleMinute minute, int count) {
         List<CandleResponse> candleResponseList = request(coinType, minute, count);
@@ -95,7 +92,24 @@ public class CandleService {
     }
 
     public List<CandleStoreEntity> getCandles(CoinType coinType, String to, CandleMinute minute) {
-        return request(coinType, to, minute);
+
+        return request(coinType, to, minute).stream().map(i ->
+                        CandleStoreEntity.builder()
+                                .market(i.getMarket())
+                                .dateUtc(i.getDateUtc())
+                                .dateKst(i.getDateKst())
+                                .openingPrice(i.getOpeningPrice())
+                                .highPrice(i.getHighPrice())
+                                .lowPrice(i.getLowPrice())
+                                .tradePrice(i.getTradePrice())
+                                .timeStamp(i.getTimeStamp())
+                                .accTradePrice(i.getAccTradePrice())
+                                .accTradeVolume(i.getAccTradeVolume())
+                                .unit(i.getUnit())
+                                .candleMinute(minute)
+                                .build())
+                .sorted(Comparator.comparing(CandleStoreEntity::getDateKst).reversed())
+                .collect(Collectors.toList());
     }
 
     private List<CandleResponse> request(CoinType coinType, CandleMinute minute, int count){
@@ -122,10 +136,10 @@ public class CandleService {
                     .toUriString();
         }
 
-        return List.of(upBitClient.get(uri, false, null, CandleResponse[].class));
+        return List.of(upBitClient.get(uri, CandleResponse[].class));
     }
 
-    private List<CandleStoreEntity> request(CoinType coinType, String to, CandleMinute minute){
+    private List<CandleResponse> request(CoinType coinType, String to, CandleMinute minute){
         int count = 200;
 
         Map<String, Object> pathVariableMap = new HashMap<>();
@@ -140,24 +154,7 @@ public class CandleService {
                 .buildAndExpand(pathVariableMap)
                 .toUriString();
 
-        return Stream.of(upBitClient.get(uri, false, null, CandleResponse[].class))
-                .map(i ->
-                        CandleStoreEntity.builder()
-                        .market(i.getMarket())
-                        .dateUtc(i.getDateUtc())
-                        .dateKst(i.getDateKst())
-                        .openingPrice(i.getOpeningPrice())
-                        .highPrice(i.getHighPrice())
-                        .lowPrice(i.getLowPrice())
-                        .tradePrice(i.getTradePrice())
-                        .timeStamp(i.getTimeStamp())
-                        .accTradePrice(i.getAccTradePrice())
-                        .accTradeVolume(i.getAccTradeVolume())
-                        .unit(i.getUnit())
-                        .candleMinute(minute)
-                        .build())
-                .sorted(Comparator.comparing(CandleStoreEntity::getDateKst).reversed())
-                .collect(Collectors.toList());
+        return List.of(upBitClient.get(uri, CandleResponse[].class));
     }
 
 }

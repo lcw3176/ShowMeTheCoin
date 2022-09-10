@@ -1,7 +1,7 @@
 package com.joebrooks.showmethecoin.trade.indicator.macd;
 
 
-import com.joebrooks.showmethecoin.trade.candle.CandleStoreEntity;
+import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreEntity;
 import org.springframework.stereotype.Component;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBar;

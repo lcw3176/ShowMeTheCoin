@@ -6,7 +6,10 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 import org.springframework.web.util.WebUtils;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -19,7 +22,6 @@ import java.util.Map;
 @Slf4j
 public class AuthFilter implements Filter {
     private static final String[] whitelist = {"/login", "/favicon.ico", "/css/*", "/js/*"};
-
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
@@ -34,7 +36,7 @@ public class AuthFilter implements Filter {
                 ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) response);
 
 
-                if (session == null || session.getAttribute(AuthManager.SESSION_KEY) == null) {
+                if (session == null || session.getAttribute("userId") == null) {
 
                     log.info("\n미인증 사용자 요청" +
                                     "\n[REQUEST] {} " +
@@ -66,7 +68,7 @@ public class AuthFilter implements Filter {
                                     "\n[PATH] {} " +
                                     "\n[IP] {}" +
                                     "\n",
-                            session.getAttribute(AuthManager.SESSION_KEY),
+                            session.getAttribute("userId"),
                             ((HttpServletRequest) request).getMethod(),
                             ((HttpServletRequest) request).getRequestURI(),
                             ipAddress);

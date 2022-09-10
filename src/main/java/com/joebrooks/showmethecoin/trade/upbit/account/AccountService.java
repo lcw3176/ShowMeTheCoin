@@ -2,7 +2,7 @@ package com.joebrooks.showmethecoin.trade.upbit.account;
 
 import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import com.joebrooks.showmethecoin.trade.upbit.client.UpBitClient;
-import com.joebrooks.showmethecoin.user.userkey.UserKeyEntity;
+import com.joebrooks.showmethecoin.repository.userkey.UserKeyEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ public class AccountService {
     private AccountResponse[] getAccountData(UserKeyEntity userKey) {
         String uri = "/accounts";
 
-        return upBitClient.get(uri, true, userKey, AccountResponse[].class);
+        return upBitClient.get(uri, userKey, AccountResponse[].class);
     }
 
     public AccountResponse getKRWCurrency(UserKeyEntity userKey){

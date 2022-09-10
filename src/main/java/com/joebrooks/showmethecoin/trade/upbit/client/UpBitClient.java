@@ -1,7 +1,7 @@
 package com.joebrooks.showmethecoin.trade.upbit.client;
 
 import com.google.gson.Gson;
-import com.joebrooks.showmethecoin.user.userkey.UserKeyEntity;
+import com.joebrooks.showmethecoin.repository.userkey.UserKeyEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,7 +22,25 @@ public class UpBitClient {
     private static final String AUTH_HEADER = "Authorization";
     private static final int READ_TIMEOUT = 5000;
 
-    public <T> T[] get(String path, boolean authHeaderRequired, UserKeyEntity userKey, Class<T[]> clazz){
+
+    public <T> T[] get(String path, Class<T[]> clazz){
+        try {
+            return upBitWebClient.get()
+                    .uri(path)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .acceptCharset(StandardCharsets.UTF_8)
+                    .retrieve()
+                    .onStatus(HttpStatus::isError, response -> Mono.error(new UpBitException("failed get")))
+                    .bodyToMono(clazz)
+                    .timeout(Duration.ofMillis(READ_TIMEOUT), Mono.error(new UpBitException("Read Timeout: " + path)))
+                    .block();
+
+        } catch (Exception e){
+            throw new UpBitException(e.getMessage(), e);
+        }
+    }
+
+    public <T> T[] get(String path, UserKeyEntity userKey, Class<T[]> clazz){
         try {
 
             return upBitWebClient.get()
@@ -30,9 +48,7 @@ public class UpBitClient {
                     .accept(MediaType.APPLICATION_JSON)
                     .acceptCharset(StandardCharsets.UTF_8)
                     .headers(httpHeaders -> {
-                        if(authHeaderRequired) {
-                            httpHeaders.set(AUTH_HEADER, HeaderGenerator.getJwtHeader(userKey.getAccessKey(), userKey.getSecretKey()));
-                        }
+                        httpHeaders.set(AUTH_HEADER, HeaderGenerator.getJwtHeader(userKey.getAccessKey(), userKey.getSecretKey()));
                     })
                     .retrieve()
                     .onStatus(HttpStatus::isError, response -> Mono.error(new UpBitException("failed get")))
@@ -45,7 +61,8 @@ public class UpBitClient {
         }
     }
 
-    public <T> T[] get(String path, boolean authHeaderRequired, UserKeyEntity userKey, Object queryParams, Class<T[]> clazz){
+
+    public <T> T[] get(String path, UserKeyEntity userKey, Object queryParams, Class<T[]> clazz){
         HashMap<String, String> map = QueryGenerator.getQueryMap(queryParams);
 
         try {
@@ -54,10 +71,8 @@ public class UpBitClient {
                     .accept(MediaType.APPLICATION_JSON)
                     .acceptCharset(StandardCharsets.UTF_8)
                     .headers(httpHeaders -> {
-                        if(authHeaderRequired){
-                            httpHeaders.set(AUTH_HEADER,
-                                    HeaderGenerator.getJwtHeader(userKey.getAccessKey(), userKey.getSecretKey(), QueryGenerator.convertQueryToHash(map)));
-                        }
+                        httpHeaders.set(AUTH_HEADER,
+                            HeaderGenerator.getJwtHeader(userKey.getAccessKey(), userKey.getSecretKey(), QueryGenerator.convertQueryToHash(map)));
                     })
                     .retrieve()
                     .onStatus(HttpStatus::isError, response -> Mono.error(new UpBitException("failed get")))

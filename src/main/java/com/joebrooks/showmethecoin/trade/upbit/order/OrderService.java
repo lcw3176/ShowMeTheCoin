@@ -1,7 +1,7 @@
 package com.joebrooks.showmethecoin.trade.upbit.order;
 
 import com.joebrooks.showmethecoin.trade.upbit.client.UpBitClient;
-import com.joebrooks.showmethecoin.user.userkey.UserKeyEntity;
+import com.joebrooks.showmethecoin.repository.userkey.UserKeyEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
@@ -29,7 +29,7 @@ public class OrderService {
                                 .queryParam("state", request.getState())
                                 .build();
 
-        return Arrays.asList(upBitClient.get(uri.toString(), true, userKey, request, CheckOrderResponse[].class));
+        return Arrays.asList(upBitClient.get(uri.toString(), userKey, request, CheckOrderResponse[].class));
     }
 
     public void cancelOrder(CancelOrderRequest request, UserKeyEntity userKey){
@@ -41,6 +41,12 @@ public class OrderService {
                 .build();
 
         upBitClient.delete(uri.toString(), userKey, request);
+    }
+
+    public boolean isEveryOrderDone(UserKeyEntity userKey){
+        return checkOrder(CheckOrderRequest.builder()
+                .state(OrderStatus.wait)
+                .build(), userKey).isEmpty();
     }
 
 }
