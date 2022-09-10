@@ -1,11 +1,17 @@
-package com.joebrooks.showmethecoin.trade;
+package com.joebrooks.showmethecoin.trade.autotrade;
 
 
+import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreEntity;
+import com.joebrooks.showmethecoin.repository.tradeinfo.TradeInfoEntity;
+import com.joebrooks.showmethecoin.repository.tradeinfo.TradeInfoService;
+import com.joebrooks.showmethecoin.repository.useraccount.UserAccountService;
+import com.joebrooks.showmethecoin.repository.userconfig.UserConfigEntity;
+import com.joebrooks.showmethecoin.repository.userconfig.UserConfigService;
+import com.joebrooks.showmethecoin.repository.userkey.UserKeyService;
+import com.joebrooks.showmethecoin.trade.CompanyType;
 import com.joebrooks.showmethecoin.trade.strategy.IStrategy;
 import com.joebrooks.showmethecoin.trade.strategy.StrategyService;
 import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
-import com.joebrooks.showmethecoin.trade.tradeinfo.TradeInfoEntity;
-import com.joebrooks.showmethecoin.trade.tradeinfo.TradeInfoService;
 import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import com.joebrooks.showmethecoin.trade.upbit.UpbitUtil;
 import com.joebrooks.showmethecoin.trade.upbit.account.AccountResponse;
@@ -14,27 +20,14 @@ import com.joebrooks.showmethecoin.trade.upbit.candles.CandleService;
 import com.joebrooks.showmethecoin.trade.upbit.client.OrderType;
 import com.joebrooks.showmethecoin.trade.upbit.client.Side;
 import com.joebrooks.showmethecoin.trade.upbit.order.*;
-import com.joebrooks.showmethecoin.trade.upbit.ticker.TickerResponse;
-import com.joebrooks.showmethecoin.trade.upbit.ticker.TickerService;
-import com.joebrooks.showmethecoin.user.account.UserAccountService;
-import com.joebrooks.showmethecoin.trade.candle.CandleStoreEntity;
-import com.joebrooks.showmethecoin.trade.candle.CandleStoreService;
-import com.joebrooks.showmethecoin.user.UserEntity;
-import com.joebrooks.showmethecoin.user.userconfig.UserConfigEntity;
-import com.joebrooks.showmethecoin.user.userconfig.UserConfigService;
-import com.joebrooks.showmethecoin.user.userkey.UserKeyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 @Component
 @RequiredArgsConstructor
@@ -44,126 +37,18 @@ public class AutoTrade {
 
     private final AccountService accountService;
     private final OrderService orderService;
-    private final CandleStoreService candleStoreService;
+    private final FilteredCoinList filteredCoinList;
     private final UserConfigService userConfigService;
     private final TradeInfoService tradeInfoService;
     private final StrategyService strategyService;
-    private final UserAccountService userAccountService;
     private final UserKeyService userKeyService;
-
     private final CandleService candleService;
-
-    private final TickerService tickerService;
+    private final UserAccountService userAccountService;
 
     private static final int UPBIT_MIN_BET_MONEY = 5100;
 
-    @PostConstruct
-    private void init(){
-        setBlackList();
-        setWhiteList();
-    }
-
-    private void setBlackList(){
-        CoinManager.BLACK_LIST.add(CoinType.XRP);
-        CoinManager.BLACK_LIST.add(CoinType.SAND);
-    }
-
-    private void setWhiteList(){
-        int whiteListSize = 15;
-        int delayMillis = 100;
-
-        CoinManager.WHITE_LIST.clear();
-
-        Map<Double, CoinType> tempMap = new TreeMap<>(Comparator.reverseOrder());
-
-        for(CoinType coinType : CoinType.values()){
-            TickerResponse response = tickerService.getTicker(coinType);
-            tempMap.put(response.getAccTradePrice24h(), coinType);
-
-            UpbitUtil.delay(delayMillis);
-        }
-
-        for(Map.Entry<Double, CoinType> coinTypeEntry : tempMap.entrySet()){
-            if(!CoinManager.BLACK_LIST.contains(coinTypeEntry.getValue())){
-                CoinManager.WHITE_LIST.add(coinTypeEntry.getValue());
-            }
-
-            if(CoinManager.WHITE_LIST.size() >= whiteListSize){
-                break;
-            }
-        }
-
-        // fixme 거래 했었던 코인 중 화이트리스트 제외되었을대 대책 세우기
-        userConfigService.getAllUserConfig().forEach(user -> {
-            tradeInfoService.getAllTradeCoins(user.getUser()).forEach(coin -> {
-                if(!CoinManager.WHITE_LIST.contains(coin)){
-                    CoinManager.WHITE_LIST.add(coin);
-                }
-            });
-        });
 
 
-        log.info("\n" +
-                "\n거래 대상 코인 초기화" +
-                "\n{}" +
-                "\n", CoinManager.WHITE_LIST.toString());
-    }
-
-    @Scheduled(cron = "0 0 0/3 * * *", zone = "Asia/Seoul")
-    public void resetWhiteList(){
-
-        userConfigService.getAllUserConfig().forEach(user -> {
-            user.stopTrading();
-            userConfigService.save(user);
-        });
-
-
-        setWhiteList();
-        candleStoreService.deleteAll();
-
-        userConfigService.getAllUserConfig().forEach(user -> {
-            user.startTrading();
-            userConfigService.save(user);
-        });
-    }
-
-    private void initMinCash(UserConfigEntity user){
-        int divideNum = user.getCashDividedCount();
-
-        AccountResponse accountResponse = accountService.getKRWCurrency(
-                userKeyService.getKeySet(user.getUser(), CompanyType.UPBIT));
-        double myBalance = Math.ceil(Double.parseDouble(accountResponse.getBalance()));
-
-        userAccountService.changeBalance(user.getUser(), myBalance);
-
-        log.info("\n" +
-                "\n현재 잔고" +
-                "\n유저: {}" +
-                "\n사용가능: {}" +
-                "\n사용불가능: {}" +
-                "\n", user.getUser().getUserId(), accountResponse.getBalance(), accountResponse.getLocked());
-
-        double minCash = Math.ceil(myBalance / divideNum * 0.99);
-        user.setBetMoney(minCash);
-
-        log.info("\n" +
-                "\n거래 금액 초기화" +
-                "\n유저: {}" +
-                "\n거래 최소 금액: {}" +
-                "\n", user.getUser().getUserId(), minCash);
-
-
-        userConfigService.save(user);
-    }
-
-    private boolean isOrderDone(UserEntity user, CompanyType companyType){
-        return orderService.checkOrder(CheckOrderRequest.builder()
-                .state(OrderStatus.wait)
-                .build(), userKeyService.getKeySet(user, companyType)).isEmpty();
-    }
-
-
-    // fixme 혼자 쓰려고 만든 구조인데 여러명이 사용하게 됬다. 다중 이용자 방식에 맞춰서 다시 재설계할것
     @Scheduled(fixedDelay = 500)
     public void autoTrade() {
 
@@ -171,7 +56,9 @@ public class AutoTrade {
         int candleDelayMillis = 100;
         int orderDelayMillis = 150;
 
+
         try {
+
             userConfigService.getAllUserConfig().forEach(user -> {
                 if (!user.isTrading()) {
                     return;
@@ -184,7 +71,7 @@ public class AutoTrade {
                     // 주문 완료 처리
                     if(tradeInfo.isOrdered()
                             && !tradeInfo.isCompleted()
-                            && isOrderDone(user.getUser(), tradeInfo.getCompanyType())){
+                            && orderService.isEveryOrderDone(userKeyService.getKeySet(user.getUser(), tradeInfo.getCompanyType()))){
 
                         tradeInfoService.orderComplete(user.getUser(), tradeInfo.getCoinType());
 
@@ -207,7 +94,7 @@ public class AutoTrade {
                                 "\n", user.getUser().getUserId(), tradeInfo.getCoinType().getKoreanName());
 
                         if(tradeInfoService.getAllTrades(user.getUser()).isEmpty()){
-                            initMinCash(user);
+                            resetUserBetMoney(user);
                         }
 
                     }
@@ -227,7 +114,6 @@ public class AutoTrade {
                                         .uuid(order.getUuid())
                                         .build(), userKeyService.getKeySet(user.getUser(), tradeInfo.getCompanyType()));
 
-
                                 log.info("\n" +
                                         "\n주문 취소" +
                                         "\n유저: {}" +
@@ -237,14 +123,16 @@ public class AutoTrade {
                                 // 매수 주문이면 삭제 처리
                                 if(order.getSide().equals(Side.bid.toString())){
 
+                                    tradeInfoService.removeOrder(tradeInfo.getUuid());
+
                                     log.info("\n" +
                                             "\n재거래 가능" +
                                             "\n유저: {}" +
                                             "\n코인: {}" +
                                             "\n", user.getUser().getUserId(), tradeInfo.getCoinType().getKoreanName());
 
-                                    tradeInfoService.removeOrder(tradeInfo.getUuid());
                                 }
+
                                 // 매도 주문이면 주문 취소 처리
                                 else {
                                     tradeInfoService.orderCanceled(user.getUser(), tradeInfo.getCoinType());
@@ -257,10 +145,9 @@ public class AutoTrade {
                     UpbitUtil.delay(orderDelayMillis);
                 }
 
-
                 List<IStrategy> strategyList = strategyService.get(StrategyType.BASE, user.getStrategy());
 
-                for (CoinType coinType : CoinManager.WHITE_LIST) {
+                for (CoinType coinType : filteredCoinList.getTradingAllowedList()) {
 
                     List<CandleStoreEntity> candles = candleService.getCandles(coinType, user.getCandleMinute(), loadCandleCount);
                     CandleStoreEntity nowCandle = candles.get(0);
@@ -345,6 +232,35 @@ public class AutoTrade {
             log.error(e.getMessage(), e);
         }
 
+    }
+
+    private void resetUserBetMoney(UserConfigEntity user){
+        int divideNum = user.getCashDividedCount();
+
+        AccountResponse accountResponse = accountService.getKRWCurrency(
+                userKeyService.getKeySet(user.getUser(), CompanyType.UPBIT));
+        double myBalance = Math.ceil(Double.parseDouble(accountResponse.getBalance()));
+
+        userAccountService.changeBalance(user.getUser(), myBalance);
+
+        log.info("\n" +
+                "\n현재 잔고" +
+                "\n유저: {}" +
+                "\n사용가능: {}" +
+                "\n사용불가능: {}" +
+                "\n", user.getUser().getUserId(), accountResponse.getBalance(), accountResponse.getLocked());
+
+        double minCash = Math.ceil(myBalance / divideNum * 0.99);
+        user.setBetMoney(minCash);
+
+        log.info("\n" +
+                "\n거래 금액 초기화" +
+                "\n유저: {}" +
+                "\n거래 최소 금액: {}" +
+                "\n", user.getUser().getUserId(), minCash);
+
+
+        userConfigService.save(user);
     }
 
     private boolean buyCoin(UserConfigEntity user, CandleStoreEntity nowCandle, CoinType coinType, List<TradeInfoEntity> tradeInfoEntities){
