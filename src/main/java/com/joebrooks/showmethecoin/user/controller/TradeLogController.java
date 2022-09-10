@@ -1,37 +1,38 @@
-package com.joebrooks.showmethecoin.user.tradelog;
+package com.joebrooks.showmethecoin.user.controller;
 
-import com.joebrooks.showmethecoin.auth.AuthManager;
 import com.joebrooks.showmethecoin.global.util.PageGenerator;
-import com.joebrooks.showmethecoin.user.UserEntity;
-import com.joebrooks.showmethecoin.user.userconfig.UserConfigEntity;
-import com.joebrooks.showmethecoin.user.userconfig.UserConfigService;
+import com.joebrooks.showmethecoin.repository.user.UserEntity;
+import com.joebrooks.showmethecoin.repository.user.UserService;
+import com.joebrooks.showmethecoin.user.model.TradeLogResponse;
+import com.joebrooks.showmethecoin.repository.tradelog.TradeLogEntity;
+import com.joebrooks.showmethecoin.repository.tradelog.TradeLogService;
+import com.joebrooks.showmethecoin.repository.userconfig.UserConfigEntity;
+import com.joebrooks.showmethecoin.repository.userconfig.UserConfigService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/trade-log")
 public class TradeLogController {
 
-    private final TradeLogService tradeLogService;
-    private final AuthManager authManager;
+    private final UserService userService;
     private final UserConfigService userConfigService;
+    private final TradeLogService tradeLogService;
 
-    @GetMapping
+    @GetMapping("/trade-log")
     public String showTradeInfo(Model model,
                                 @Positive @RequestParam(name="page", defaultValue = "1") int page,
                                 @RequestParam(name="command", required = false, defaultValue = "") String command,
-                                HttpSession session) {
+                                @SessionAttribute String userId) {
 
-        UserEntity user = authManager.extractUserId(session);
+        UserEntity user = userService.getUser(userId);
         UserConfigEntity userConfig = userConfigService.getUserConfig(user);
 
         if(command.equals("start")){
@@ -61,5 +62,6 @@ public class TradeLogController {
 
         return "trade-log";
     }
+
 
 }

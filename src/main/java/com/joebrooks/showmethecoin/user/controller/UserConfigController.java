@@ -1,31 +1,31 @@
-package com.joebrooks.showmethecoin.user.userconfig;
+package com.joebrooks.showmethecoin.user.controller;
 
-
-import com.joebrooks.showmethecoin.auth.AuthManager;
+import com.joebrooks.showmethecoin.repository.candlestore.CandleMinute;
 import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
-import com.joebrooks.showmethecoin.trade.candle.CandleMinute;
-import com.joebrooks.showmethecoin.user.UserEntity;
+import com.joebrooks.showmethecoin.repository.user.UserEntity;
+import com.joebrooks.showmethecoin.repository.user.UserService;
+import com.joebrooks.showmethecoin.repository.userconfig.UserConfigEntity;
+import com.joebrooks.showmethecoin.user.model.UserConfigRequest;
+import com.joebrooks.showmethecoin.repository.userconfig.UserConfigService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/user-config")
 public class UserConfigController {
 
+    private final UserService userService;
     private final UserConfigService userConfigService;
-    private final AuthManager authManager;
 
-    @GetMapping
-    public String showUserSetting(Model model, HttpSession session) {
-        UserEntity userEntity = authManager.extractUserId(session);
+    @GetMapping("/user-config")
+    public String showUserSetting(Model model, @SessionAttribute String userId) {
+        UserEntity userEntity = userService.getUser(userId);
 
         model.addAttribute("strategyLst", Arrays.stream(StrategyType.values())
                 .filter(i -> !i.equals(StrategyType.BASE))
@@ -37,11 +37,12 @@ public class UserConfigController {
         return "user-config";
     }
 
-    @PostMapping
+    @PostMapping("/user-config")
     @ResponseStatus(value = HttpStatus.OK)
-    public void saveUserSetting(@RequestBody UserConfigRequest request, HttpSession session) {
-        UserEntity userId = authManager.extractUserId(session);
-        userConfigService.changeConfig(userId, UserConfigEntity.builder()
+    public void saveUserSetting(@RequestBody UserConfigRequest request, @SessionAttribute String userId) {
+        UserEntity userEntity = userService.getUser(userId);
+
+        userConfigService.changeConfig(userEntity, UserConfigEntity.builder()
                 .strategy(request.getStrategyType())
                 .maxBetCount(request.getMaxBetCount())
                 .maxTradeCoinCount(request.getMaxTradeCoinCount())
@@ -51,7 +52,4 @@ public class UserConfigController {
                 .cashDividedCount(request.getCashDividedCount())
                 .build());
     }
-
-
-
 }
