@@ -19,10 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -53,6 +50,11 @@ public class TradeLogRefreshScheduler {
             Map<CoinType, TradeLogReprocessor> map = new HashMap<>();
 
             for (CheckOrderResponse targetResponse : responses) {
+
+                if (Arrays.stream(CoinType.values())
+                        .noneMatch(i -> i.toString().equals(targetResponse.getMarket().split("-")[1]))) {
+                    continue;
+                }
 
                 if (targetResponse.getPrice() == null) {
                     targetResponse.setPriceByPaidFee();
