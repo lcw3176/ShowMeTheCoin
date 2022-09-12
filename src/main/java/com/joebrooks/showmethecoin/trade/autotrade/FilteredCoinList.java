@@ -37,11 +37,9 @@ public class FilteredCoinList {
     private void setBlackList(){
         blackList.add(CoinType.XRP);
         blackList.add(CoinType.SAND);
-        blackList.add(CoinType.AXS);
     }
 
     private void setWhiteList(){
-        int whiteListSize = 15;
         int delayMillis = 100;
 
         whiteList.clear();
@@ -56,14 +54,12 @@ public class FilteredCoinList {
         }
 
         for(Map.Entry<Double, CoinType> coinTypeEntry : tempMap.entrySet()){
-            if(!blackList.contains(coinTypeEntry.getValue())){
+            if(!blackList.contains(coinTypeEntry.getValue()) && coinTypeEntry.getKey() / 1000000 >= 10000){
                 whiteList.add(coinTypeEntry.getValue());
             }
 
-            if(whiteList.size() >= whiteListSize){
-                break;
-            }
         }
+
 
         // fixme 거래 했었던 코인 중 화이트리스트 제외되었을대 대책 세우기
         userConfigService.getAllUserConfig().forEach(user -> {
