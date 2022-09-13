@@ -1,55 +1,46 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Show Me The Coin</title>
-    <meta property="og:title" content="Rich-Shrimp" />
-    <meta property="og:description" content="부자새우?" />
-    <meta property="og:image" content="https://user-images.githubusercontent.com/59993347/188344529-460d6deb-2bad-49c2-a43d-2cddc0e38671.png" />
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/layout">
+<th:block layout:fragment="layout_content">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-</head>
-<body>
-<div class="container is-fluid mt-5">
-    <div class="columns mt-5">
-        <div class="column is-3">
+    <div class="container is-max-desktop">
+        <div class="columns mt-5 section is-main-section">
+            <div class="column is-3">
 
-        </div>
+            </div>
 
-        <div class="column">
-            <form action="/login" method="post">
-                <div class="box">
-                    <div class="field">
-                        <label class="label">ID</label>
-                        <div class="control">
-                            <input class="input" name="id" type="text" placeholder="아이디">
+            <div class="column">
+                <form action="/login" method="post">
+                    <div class="box">
+                        <div class="field">
+                            <label class="label">ID</label>
+                            <div class="control">
+                                <input class="input" name="id" type="text" placeholder="아이디">
+                            </div>
+                        </div>
+
+
+                        <div class="field">
+                            <label class="label">PW</label>
+                            <div class="control">
+                                <input class="input" name="pw" type="password" placeholder="비밀번호">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <button type="submit" class="button is-info">로그인</button>
+                            </div>
                         </div>
                     </div>
+                </form>
+            </div>
 
+            <div class="column is-3">
 
-                    <div class="field">
-                        <label class="label">PW</label>
-                        <div class="control">
-                            <input class="input" name="pw" type="password" placeholder="비밀번호">
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <div class="control">
-                            <button type="submit" class="button is-primary">로그인</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <div class="column is-3">
-
+            </div>
         </div>
     </div>
-</div>
 
 
-</body>
-</html>
+</th:block>
