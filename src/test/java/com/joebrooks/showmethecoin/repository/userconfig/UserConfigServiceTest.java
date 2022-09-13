@@ -19,5 +19,9 @@ class UserConfigServiceTest {
         userConfigService.getSameStrategyUsers(StrategyType.SHORT).forEach(i -> {
             assertEquals(StrategyType.SHORT, i.getStrategy());
         });
+
+        userConfigService.getSameStrategyUsers(StrategyType.CHASER).forEach(i -> {
+            assertEquals(StrategyType.CHASER, i.getStrategy());
+        });
     }
 }
