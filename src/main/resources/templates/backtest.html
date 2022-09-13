@@ -3,170 +3,173 @@
       layout:decorate="layout/layout">
 <th:block layout:fragment="layout_content">
 
-    <section class="section is-main-section">
-        <div class="card-content">
+    <div class="container is-max-desktop">
+        <section class="section is-main-section">
+            <div class="card-content">
 
-            <form id="data-form" onsubmit="return false">
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">거래 코인</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field is-narrow">
-                            <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select name="tradeCoin">
-                                        <option th:each="coin : ${coinList}"
-                                                th:text="${coin.koreanName}"
-                                                th:value="${coin.toString()}"></option>
-                                    </select>
+                <form id="data-form" onsubmit="return false">
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">거래 코인</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field is-narrow">
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select name="tradeCoin">
+                                            <option th:each="coin : ${coinList}"
+                                                    th:text="${coin.koreanName}"
+                                                    th:value="${coin.toString()}"></option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
 
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">시작 원화 잔고</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <input type="number"
-                                       class="input"
-                                       name="startBalance">
-                            </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">시작 원화 잔고</label>
                         </div>
-                    </div>
-                </div>
-
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">최대 분할 횟수</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <input type="number" name="maxBetCount" class="input"
-                                       required>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">사용 전략</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field is-narrow">
-                            <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select name="strategyType" >
-                                        <option th:each="strategy : ${strategyList}"
-                                                th:text="${strategy.getDescription()}"
-                                                th:value="${strategy.toString()}"></option>
-
-                                    </select>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                    <input type="number"
+                                           class="input"
+                                           name="startBalance">
                                 </div>
-
                             </div>
                         </div>
                     </div>
 
-                </div>
-
-
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">기준 분봉</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field is-narrow">
-                            <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select name="candleMinute" >
-                                        <option th:each="candle : ${candleMinuteList}"
-                                                th:text="${candle.getDescription()}"
-                                                th:value="${candle.toString()}"></option>
-
-                                    </select>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">최대 분할 횟수</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                    <input type="number" name="maxBetCount" class="input"
+                                           required>
                                 </div>
-
                             </div>
                         </div>
                     </div>
 
-                </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">사용 전략</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field is-narrow">
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select name="strategyType" >
+                                            <option th:each="strategy : ${strategyList}"
+                                                    th:text="${strategy.getDescription()}"
+                                                    th:value="${strategy.toString()}"></option>
 
+                                        </select>
+                                    </div>
 
+                                </div>
+                            </div>
+                        </div>
 
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">시작 날짜</label>
                     </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <input type="date" name="startDate">
+
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">기준 분봉</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field is-narrow">
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select name="candleMinute" >
+                                            <option th:each="candle : ${candleMinuteList}"
+                                                    th:text="${candle.getDescription()}"
+                                                    th:value="${candle.toString()}"></option>
+
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">시작 날짜</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                    <input type="date" name="startDate">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
 
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">종료 날짜</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <input type="date" name="endDate">
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">종료 날짜</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                    <input type="date" name="endDate">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
 
 
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">예상 이득</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <input class="input" id="backtest-result" readonly>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">예상 이득</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input" id="backtest-result" readonly>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
 
 
 
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal"></div>
-                    <div class="field-body">
-                        <div class="field">
-                            <button class="button is-primary" onclick="startBacktest()">
-                                시작
-                            </button>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal"></div>
+                        <div class="field-body">
+                            <div class="field">
+                                <button class="button is-primary" onclick="startBacktest()">
+                                    시작
+                                </button>
+                            </div>
                         </div>
                     </div>
+                </form>
+
+
+                <div id="chart" style="height: 600px;">
+
                 </div>
-            </form>
-
-
-            <div id="chart" style="height: 600px;">
-
             </div>
-        </div>
 
-    </section>
+        </section>
+    </div>
+
 
     <script src="https://unpkg.com/lightweight-charts@3.8.0/dist/lightweight-charts.standalone.production.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"

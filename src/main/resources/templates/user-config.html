@@ -23,168 +23,171 @@
     }
 
   </script>
-<section class="section is-main-section">
-  <div class="card">
-    <header class="card-header">
-      <p class="card-header-title">
-        <span class="icon"><i class="mdi mdi-lock default"></i></span>
-        거래 설정
-      </p>
-    </header>
-    <div class="card-content">
-      <form id="data-form" onsubmit="return false">
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">전략</label>
-          </div>
-          <div class="field-body">
-            <div class="field is-narrow">
-              <div class="control">
-                <div class="select is-fullwidth">
-                  <select name="strategyType" >
-                    <option th:each="strategy : ${strategyLst}" th:if="${strategy.equals(userInfo.strategy)}"
-                            th:text="${strategy.getDescription()}" th:value="${strategy.toString()}"
-                            selected></option>
+  <div class="container is-max-desktop">
+    <section class="section is-main-section">
+      <div class="card">
+        <header class="card-header">
+          <p class="card-header-title">
+            <span class="icon"><i class="mdi mdi-lock default"></i></span>
+            거래 설정
+          </p>
+        </header>
+        <div class="card-content">
+          <form id="data-form" onsubmit="return false">
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">전략</label>
+              </div>
+              <div class="field-body">
+                <div class="field is-narrow">
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select name="strategyType" >
+                        <option th:each="strategy : ${strategyLst}" th:if="${strategy.equals(userInfo.strategy)}"
+                                th:text="${strategy.getDescription()}" th:value="${strategy.toString()}"
+                                selected></option>
 
-                    <option th:each="strategy : ${strategyLst}" th:unless="${strategy.equals(userInfo.strategy)}"
-                            th:text="${strategy.getDescription()}" th:value="${strategy.toString()}"></option>
-                  </select>
+                        <option th:each="strategy : ${strategyLst}" th:unless="${strategy.equals(userInfo.strategy)}"
+                                th:text="${strategy.getDescription()}" th:value="${strategy.toString()}"></option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
 
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">최대 코인 구매 갯수</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <input type="number" th:value="${#numbers.formatDecimal(userInfo.maxTradeCoinCount, 0, 0)}"
-                       class="input"
-                       name="maxTradeCoinCount">
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">최대 코인 구매 갯수</label>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">최대 분할 매매 횟수</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <input type="number" th:value="${#numbers.formatDecimal(userInfo.maxBetCount, 0, 0)}"
-                       class="input"
-                       name="maxBetCount">
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">원금 분할 횟수</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <input type="number" th:value="${#numbers.formatDecimal(userInfo.cashDividedCount, 0, 0)}"
-                       class="input"
-                       name="cashDividedCount">
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">주문 취소 시간</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <input type="number" th:value="${#numbers.formatDecimal(userInfo.orderCancelMinute, 0, 0)}"
-                       class="input"
-                       name="orderCancelMinute">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">기준 분봉</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <div class="select is-fullwidth">
-                  <select name="candleMinute" >
-                    <option th:each="candle : ${candleMinuteList}"
-                            th:if="${candle.equals(userInfo.candleMinute)}"
-                            th:text="${candle.getDescription()}"
-                            th:value="${candle.toString()}" selected></option>
-
-                    <option th:each="candle : ${candleMinuteList}"
-                            th:unless="${candle.equals(userInfo.candleMinute)}"
-                            th:text="${candle.getDescription()}"
-                            th:value="${candle.toString()}"></option>
-                  </select>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <input type="number" th:value="${#numbers.formatDecimal(userInfo.maxTradeCoinCount, 0, 0)}"
+                           class="input"
+                           name="maxTradeCoinCount">
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
-
-        <div class="field is-horizontal">
-          <div class="field-label is-normal">
-            <label class="label">손절 허용</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <div class="select is-fullwidth">
-                  <select name="allowSellWithLoss" th:if="${userInfo.allowSellWithLoss == true}">
-                    <option th:text="${'허용'}" th:value="true" selected></option>
-
-                    <option th:text="${'허용 안함'}" th:value="false"></option>
-                  </select>
-
-                  <select name="allowSellWithLoss" th:unless="${userInfo.allowSellWithLoss == true}">
-                    <option th:text="${'허용'}" th:value="true"></option>
-
-                    <option th:text="${'허용 안함'}" th:value="false" selected></option>
-                  </select>
-
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">최대 분할 매매 횟수</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <input type="number" th:value="${#numbers.formatDecimal(userInfo.maxBetCount, 0, 0)}"
+                           class="input"
+                           name="maxBetCount">
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div class="field is-horizontal">
-          <div class="field-label is-normal"></div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <button onclick="sendData()" class="button is-primary">
-                  저장
-                </button>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">원금 분할 횟수</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <input type="number" th:value="${#numbers.formatDecimal(userInfo.cashDividedCount, 0, 0)}"
+                           class="input"
+                           name="cashDividedCount">
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">주문 취소 시간</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <input type="number" th:value="${#numbers.formatDecimal(userInfo.orderCancelMinute, 0, 0)}"
+                           class="input"
+                           name="orderCancelMinute">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">기준 분봉</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select name="candleMinute" >
+                        <option th:each="candle : ${candleMinuteList}"
+                                th:if="${candle.equals(userInfo.candleMinute)}"
+                                th:text="${candle.getDescription()}"
+                                th:value="${candle.toString()}" selected></option>
+
+                        <option th:each="candle : ${candleMinuteList}"
+                                th:unless="${candle.equals(userInfo.candleMinute)}"
+                                th:text="${candle.getDescription()}"
+                                th:value="${candle.toString()}"></option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">손절 허용</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select name="allowSellWithLoss" th:if="${userInfo.allowSellWithLoss == true}">
+                        <option th:text="${'허용'}" th:value="true" selected></option>
+
+                        <option th:text="${'허용 안함'}" th:value="false"></option>
+                      </select>
+
+                      <select name="allowSellWithLoss" th:unless="${userInfo.allowSellWithLoss == true}">
+                        <option th:text="${'허용'}" th:value="true"></option>
+
+                        <option th:text="${'허용 안함'}" th:value="false" selected></option>
+                      </select>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal"></div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <button onclick="sendData()" class="button is-primary">
+                      저장
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
+      </div>
+    </section>
+
   </div>
-</section>
 
 </th:block>
