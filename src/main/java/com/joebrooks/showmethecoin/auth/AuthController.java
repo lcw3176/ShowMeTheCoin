@@ -30,14 +30,14 @@ public class AuthController {
         userService.login(id, pw);
         session.setAttribute("userId", id);
 
-        return "redirect:/dashboard";
+        return "redirect:/home";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session){
         session.removeAttribute("userId");
 
-        return "redirect:/login";
+        return "redirect:/home";
     }
 
 }

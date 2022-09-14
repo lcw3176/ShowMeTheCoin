@@ -18,7 +18,7 @@ import java.util.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class FilteredCoinList {
+public class CoinFilterScheduler {
 
     private final TickerService tickerService;
     private final UserConfigService userConfigService;

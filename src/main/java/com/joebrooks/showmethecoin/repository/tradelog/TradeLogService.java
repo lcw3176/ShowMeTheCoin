@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,5 +37,12 @@ public class TradeLogService {
 
     public List<TradeLogEntity> getLogsByTimeDesc(UserEntity user){
         return tradeLogRepository.findByUser(user, Sort.by(Sort.Direction.DESC, "orderEndDate"));
+    }
+
+    public List<TradeLogEntity> getRecentLogs(){
+        return tradeLogRepository.findAll(Sort.by(Sort.Direction.DESC, "orderEndDate"))
+                .stream()
+                .limit(5)
+                .collect(Collectors.toList());
     }
 }

@@ -21,7 +21,7 @@ import java.util.Map;
 
 @Slf4j
 public class AuthFilter implements Filter {
-    private static final String[] whitelist = {"/login", "/favicon.ico", "/css/*", "/js/*"};
+    private static final String[] whitelist = {"/login", "/", "/home", "/favicon.ico", "/css/*", "/js/*", "/img/*"};
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
@@ -32,46 +32,30 @@ public class AuthFilter implements Filter {
         try {
             if (isLoginCheckPath(requestURI)) {
                 HttpSession session = httpRequest.getSession(false);
-                ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper((HttpServletRequest) request);
-                ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) response);
+//                ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper((HttpServletRequest) request);
+//                ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) response);
 
 
                 if (session == null || session.getAttribute("userId") == null) {
 
-                    log.info("\n미인증 사용자 요청" +
-                                    "\n[REQUEST] {} " +
-                                    "\n[PATH] {} " +
-                                    "\n[IP] {}" +
-                                    "\n[STATUS] {}" +
-                                    "\nHeaders : {}" +
-                                    "\nRequest : {}" +
-                                    "\nResponse : {}\n",
-                            ((HttpServletRequest) request).getMethod(),
-                            ((HttpServletRequest) request).getRequestURI(),
-                            httpRequest.getRemoteAddr(),
-                            responseWrapper.getStatus(),
-                            getHeaders((HttpServletRequest) request),
-                            getRequestBody(requestWrapper),
-                            getResponseBody(responseWrapper));
+//                    log.info("\n미인증 사용자 요청" +
+//                                    "\n[REQUEST] {} " +
+//                                    "\n[PATH] {} " +
+//                                    "\n[IP] {}" +
+//                                    "\n[STATUS] {}" +
+//                                    "\nHeaders : {}" +
+//                                    "\nRequest : {}" +
+//                                    "\nResponse : {}\n",
+//                            ((HttpServletRequest) request).getMethod(),
+//                            ((HttpServletRequest) request).getRequestURI(),
+//                            httpRequest.getRemoteAddr(),
+//                            responseWrapper.getStatus(),
+//                            getHeaders((HttpServletRequest) request),
+//                            getRequestBody(requestWrapper),
+//                            getResponseBody(responseWrapper));
 
                     httpResponse.sendRedirect("/login");
                     return;
-                } else {
-                    String ipAddress = httpRequest.getHeader("X-FORWARDED-FOR");
-
-                    if (ipAddress == null) {
-                        ipAddress = request.getRemoteAddr();
-                    }
-
-                    log.info("\n{} 로그" +
-                                    "\n[REQUEST] {} " +
-                                    "\n[PATH] {} " +
-                                    "\n[IP] {}" +
-                                    "\n",
-                            session.getAttribute("userId"),
-                            ((HttpServletRequest) request).getMethod(),
-                            ((HttpServletRequest) request).getRequestURI(),
-                            ipAddress);
                 }
             }
 
@@ -82,7 +66,7 @@ public class AuthFilter implements Filter {
             chain.doFilter(request, response);
 
         } catch (Exception e) {
-            throw new AuthException(e.getMessage());
+            throw new AuthException(e.getMessage(), e);
         }
     }
 

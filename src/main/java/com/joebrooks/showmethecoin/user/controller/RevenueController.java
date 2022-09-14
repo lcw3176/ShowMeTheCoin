@@ -15,19 +15,14 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class DashboardController {
+public class RevenueController {
 
     private final UserService userService;
     private final DailyScoreService dailyScoreService;
     private final UserAccountService userAccountService;
 
-    @GetMapping("/")
-    public String redirectDashboard(){
 
-        return "redirect:/dashboard";
-    }
-
-    @GetMapping("/dashboard")
+    @GetMapping("/revenue")
     public String showDashboard(Model model, @SessionAttribute String userId){
         UserEntity user = userService.getUser(userId);
         List<DailyScoreEntity> dailyScoreList = dailyScoreService.getScore(user);
@@ -39,7 +34,7 @@ public class DashboardController {
         model.addAttribute("daily", dailyScoreList);
 
 
-        return "dashboard";
+        return "revenue";
     }
 
 }
