@@ -42,10 +42,17 @@ public class TradeLogRefreshScheduler {
             } else {
                 lastRecordedOrderDate = logList.get(0).getOrderEndDate();
             }
+            List<CheckOrderResponse> responses = new LinkedList<>();
 
-            List<CheckOrderResponse> responses = orderService.checkOrder(CheckOrderRequest.builder()
+            responses.addAll(orderService.checkOrder(CheckOrderRequest.builder()
                     .state(OrderStatus.done)
-                    .build(), userKeyService.getKeySet(userConfig.getUser(), CompanyType.UPBIT));
+                    .build(), userKeyService.getKeySet(userConfig.getUser(), CompanyType.UPBIT)));
+
+
+            responses.addAll(orderService.checkOrder(CheckOrderRequest.builder()
+                            .state(OrderStatus.cancel)
+                            .build(), userKeyService.getKeySet(userConfig.getUser(), CompanyType.UPBIT)));
+
 
             Map<CoinType, TradeLogReprocessor> map = new HashMap<>();
 
@@ -55,6 +62,7 @@ public class TradeLogRefreshScheduler {
                         .noneMatch(i -> i.toString().equals(targetResponse.getMarket().split("-")[1]))) {
                     continue;
                 }
+
 
                 if (targetResponse.getPrice() == null) {
                     targetResponse.setPriceByPaidFee();
