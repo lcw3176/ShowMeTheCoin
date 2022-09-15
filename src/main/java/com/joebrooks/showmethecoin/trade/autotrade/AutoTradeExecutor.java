@@ -20,7 +20,6 @@ public class AutoTradeExecutor {
 
     private final AutoTradeCore autoTradeCore;
     private final CandleService candleService;
-    private final CoinFilterScheduler coinFilterScheduler;
     private final UserConfigService userConfigService;
 
     @Scheduled(fixedDelay = 1000)
@@ -33,7 +32,7 @@ public class AutoTradeExecutor {
 
         strategyTypeList.forEach(strategyType -> {
 
-            for (CoinType coinType : coinFilterScheduler.getTradingAllowedList()) {
+            for (CoinType coinType : TradingCoinList.WHITELIST) {
 
                 List<CandleStoreEntity> candles = candleService.getCandles(coinType, strategyType.getCandleMinute(), candleLoadCount);
                 autoTradeCore.execute(candles, strategyType);

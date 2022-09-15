@@ -24,8 +24,6 @@ public class CoinFilterScheduler {
     private final UserConfigService userConfigService;
     private final TradeInfoService tradeInfoService;
     private final CandleStoreService candleStoreService;
-    private static final List<CoinType> whiteList = Collections.synchronizedList(new LinkedList<>());
-    private static final List<CoinType> blackList = new LinkedList<>();
 
     @PostConstruct
     private void init(){
@@ -35,14 +33,16 @@ public class CoinFilterScheduler {
 
 
     private void setBlackList(){
-        blackList.add(CoinType.XRP);
-        blackList.add(CoinType.SAND);
+        TradingCoinList.BLACKLIST.add(CoinType.XRP);
+        TradingCoinList.BLACKLIST.add(CoinType.SAND);
+        TradingCoinList.BLACKLIST.add(CoinType.BTC);
+        TradingCoinList.BLACKLIST.add(CoinType.ETH);
     }
 
     private void setWhiteList(){
         int delayMillis = 100;
 
-        whiteList.clear();
+        TradingCoinList.WHITELIST.clear();
 
         Map<Double, CoinType> tempMap = new TreeMap<>(Comparator.reverseOrder());
 
@@ -54,8 +54,9 @@ public class CoinFilterScheduler {
         }
 
         for(Map.Entry<Double, CoinType> coinTypeEntry : tempMap.entrySet()){
-            if(!blackList.contains(coinTypeEntry.getValue()) && coinTypeEntry.getKey() / 1000000 >= 10000){
-                whiteList.add(coinTypeEntry.getValue());
+            // 거래대금 10,000백만 이상만 추가
+            if(!TradingCoinList.BLACKLIST.contains(coinTypeEntry.getValue()) && coinTypeEntry.getKey() / 1000000 >= 10000){
+                TradingCoinList.WHITELIST.add(coinTypeEntry.getValue());
             }
 
         }
@@ -64,8 +65,8 @@ public class CoinFilterScheduler {
         // fixme 거래 했었던 코인 중 화이트리스트 제외되었을대 대책 세우기
         userConfigService.getAllUserConfig().forEach(user -> {
             tradeInfoService.getAllTradeCoins(user.getUser()).forEach(coin -> {
-                if(!whiteList.contains(coin)){
-                    whiteList.add(coin);
+                if(!TradingCoinList.WHITELIST.contains(coin)){
+                    TradingCoinList.WHITELIST.add(coin);
                 }
             });
         });
@@ -74,7 +75,7 @@ public class CoinFilterScheduler {
         log.info("\n" +
                 "\n거래 대상 코인 초기화" +
                 "\n{}" +
-                "\n", whiteList.toString());
+                "\n", TradingCoinList.WHITELIST.toString());
     }
 
     @Scheduled(cron = "0 0 0/3 * * *", zone = "Asia/Seoul")
@@ -95,7 +96,4 @@ public class CoinFilterScheduler {
         });
     }
 
-    public List<CoinType> getTradingAllowedList(){
-        return whiteList;
-    }
 }
