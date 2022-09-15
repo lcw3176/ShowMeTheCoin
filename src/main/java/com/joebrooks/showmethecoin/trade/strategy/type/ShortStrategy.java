@@ -1,13 +1,13 @@
 package com.joebrooks.showmethecoin.trade.strategy.type;
 
 
-import com.joebrooks.showmethecoin.trade.candle.CandleStoreEntity;
+import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreEntity;
 import com.joebrooks.showmethecoin.trade.strategy.IStrategy;
 import com.joebrooks.showmethecoin.trade.strategy.policy.PolicyService;
-import com.joebrooks.showmethecoin.trade.strategy.policy.shorts.buy.ShortUsingMacd;
-import com.joebrooks.showmethecoin.trade.strategy.policy.shorts.buy.ShortUsingRmi;
-import com.joebrooks.showmethecoin.trade.strategy.policy.shorts.sell.ShortUsingRsi;
-import com.joebrooks.showmethecoin.trade.tradeinfo.TradeInfoEntity;
+import com.joebrooks.showmethecoin.trade.strategy.policy.shorts.buy.ShortBuyUsingMacd;
+import com.joebrooks.showmethecoin.trade.strategy.policy.shorts.buy.ShortBuyUsingRsi;
+import com.joebrooks.showmethecoin.trade.strategy.policy.shorts.sell.ShortSellUsingRsi;
+import com.joebrooks.showmethecoin.repository.tradeinfo.TradeInfoEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ public class ShortStrategy implements IStrategy {
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
 
         return policyService
-                .getBuyPolicy(ShortUsingMacd.class, ShortUsingRmi.class)
+                .getBuyPolicy(ShortBuyUsingMacd.class, ShortBuyUsingRsi.class)
                 .stream()
                 .allMatch(i -> i.isProperToBuy(candleResponses, tradeInfo));
     }
@@ -32,7 +32,7 @@ public class ShortStrategy implements IStrategy {
     public boolean isProperToSellWithBenefit(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
 
         return policyService
-                .getSellPolicy(ShortUsingRsi.class)
+                .getSellPolicy(ShortSellUsingRsi.class)
                 .stream()
                 .allMatch(i -> i.isProperToSellWithBenefit(candleResponses, tradeInfo));
     }

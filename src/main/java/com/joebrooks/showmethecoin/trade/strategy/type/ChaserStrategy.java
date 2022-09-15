@@ -1,11 +1,11 @@
 package com.joebrooks.showmethecoin.trade.strategy.type;
 
 
-import com.joebrooks.showmethecoin.trade.candle.CandleStoreEntity;
+import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreEntity;
 import com.joebrooks.showmethecoin.trade.strategy.IStrategy;
 import com.joebrooks.showmethecoin.trade.strategy.policy.PolicyService;
 import com.joebrooks.showmethecoin.trade.strategy.policy.chaser.ChaserBuyCore;
-import com.joebrooks.showmethecoin.trade.tradeinfo.TradeInfoEntity;
+import com.joebrooks.showmethecoin.repository.tradeinfo.TradeInfoEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

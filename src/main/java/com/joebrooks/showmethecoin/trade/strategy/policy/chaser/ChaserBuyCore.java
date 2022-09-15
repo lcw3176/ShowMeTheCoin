@@ -1,9 +1,9 @@
 package com.joebrooks.showmethecoin.trade.strategy.policy.chaser;
 
 
-import com.joebrooks.showmethecoin.trade.candle.CandleStoreEntity;
+import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreEntity;
 import com.joebrooks.showmethecoin.trade.strategy.policy.IBuyPolicy;
-import com.joebrooks.showmethecoin.trade.tradeinfo.TradeInfoEntity;
+import com.joebrooks.showmethecoin.repository.tradeinfo.TradeInfoEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

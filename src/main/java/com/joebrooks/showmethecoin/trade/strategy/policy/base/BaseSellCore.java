@@ -2,9 +2,9 @@ package com.joebrooks.showmethecoin.trade.strategy.policy.base;
 
 
 import com.joebrooks.showmethecoin.global.fee.FeeCalculator;
-import com.joebrooks.showmethecoin.trade.candle.CandleStoreEntity;
+import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreEntity;
 import com.joebrooks.showmethecoin.trade.strategy.policy.ISellPolicy;
-import com.joebrooks.showmethecoin.trade.tradeinfo.TradeInfoEntity;
+import com.joebrooks.showmethecoin.repository.tradeinfo.TradeInfoEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
