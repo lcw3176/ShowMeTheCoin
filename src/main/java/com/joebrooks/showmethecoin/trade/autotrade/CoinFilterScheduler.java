@@ -24,7 +24,7 @@ public class CoinFilterScheduler {
     private final UserConfigService userConfigService;
     private final TradeInfoService tradeInfoService;
     private final CandleStoreService candleStoreService;
-    private static final List<CoinType> whiteList = new LinkedList<>();
+    private static final List<CoinType> whiteList = Collections.synchronizedList(new LinkedList<>());
     private static final List<CoinType> blackList = new LinkedList<>();
 
     @PostConstruct
