@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.global.asycn;
+package com.joebrooks.showmethecoin.global.async;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
