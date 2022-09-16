@@ -19,8 +19,6 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
     private static final int START_INDEX = 1;
     private static final int WATCH_COUNT = 3;
 
-//    private static final double FALLING_INCLINATION = 1.3;
-//    private static final double RISING_INCLINATION = 1.04;
 
     @Override
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
@@ -50,39 +48,44 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
 //
 //            signalThresholdMin = 1.02;
 //            signalThresholdMax = 1.06;
-            macdThresholdMin = 1.42;
-            macdThresholdMax = 1.5;
 
-            signalThresholdMin = 1.12;
-            signalThresholdMax = 1.2;
+//            macdThresholdMin = 1.42;
+//            macdThresholdMax = 1.5;
+//
+//            signalThresholdMin = 1.12;
+//            signalThresholdMax = 1.2;
+
+
+            macdThresholdMin = 0.80;  //
+            macdThresholdMax = 0.90;
+
+            signalThresholdMin = 0.72;
+            signalThresholdMax = 0.82;
+
+
+//            macdThresholdMin = 0.95;
+//            macdThresholdMax = 1.15;
+//
+//            signalThresholdMin = 0.61;
+//            signalThresholdMax = 0.81;
         }
 
+        boolean buySignal = false;
         for(int i = START_INDEX; i < WATCH_COUNT + START_INDEX; i++){
             double olderMacdValue = macdResponseList.get(i + 1).getMacd();
             double latestMacdValue = macdResponseList.get(i).getMacd();
 
-//            double olderSignalValue = macdResponseList.get(i + 1).getSignal();
+            double olderSignalValue = macdResponseList.get(i + 1).getSignal();
             double latestSignalValue = macdResponseList.get(i).getSignal();
 
-            double priceLine = candleStoreEntity.getTradePrice() / 100 / 4 / 2;
-
-//            if(latestMacdValue < 0
-//                    && olderMacdValue < 0
+            double priceLine = candleResponses.get(i).getTradePrice() / 100 / 4 / 2;
+//
+//            if(olderMacdValue < 0
+//                    && latestMacdValue < 0
 //                    && Math.abs(latestMacdValue) - Math.abs(olderMacdValue) < 0){
 //                risingCount++;
 //            } else {
 //                fallingCount++;
-//            }
-//            if(Math.abs(latestMacdValue) / Math.abs(olderMacdValue) >= FALLING_INCLINATION){
-//                macdBuy = true;
-//            }
-//
-//            if(Math.abs(latestSignalValue) / Math.abs(olderSignalValue) >= FALLING_INCLINATION){
-//                signalBuy = true;
-//            }
-
-//            if(latestMacdValue < -priceLine){
-//                priceBuy = true;
 //            }
 
             if(Math.abs(latestMacdValue) / Math.abs(priceLine) >= macdThresholdMin
@@ -102,12 +105,7 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
 
         return macdResponseList.get(0).getSignal() < 0
                 && macdResponseList.get(0).getMacd() < 0
-                && macdBuy
-                && signalBuy;
-//                && risingCount > fallingCount;
-//                && priceBuy;
-//                && Math.abs(macdResponseList.get(0).getMacd()) / Math.abs(macdResponseList.get(1).getMacd()) <= RISING_INCLINATION
-//                && Math.abs(macdResponseList.get(0).getSignal()) / Math.abs(macdResponseList.get(1).getSignal()) <= RISING_INCLINATION
-//                && macdResponseList.get(0).getSignal() < macdResponseList.get(0).getMacd();
+                && signalBuy
+                && macdBuy;
     }
 }

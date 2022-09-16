@@ -30,7 +30,7 @@ public class AdxIndicator {
             ZonedDateTime endTime = ZonedDateTime.parse(response.getDateKst().replace('T', ' '),
                     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("Asia/Seoul")));
 
-            BaseBar bar = BaseBar.builder(DecimalNum::valueOf, Number.class)
+            series.addBar(BaseBar.builder(DecimalNum::valueOf, Number.class)
                     .timePeriod(Duration.ofMinutes(1))
                     .endTime(endTime)
                     .openPrice(response.getOpeningPrice())
@@ -38,8 +38,7 @@ public class AdxIndicator {
                     .lowPrice(response.getLowPrice())
                     .closePrice(response.getTradePrice())
                     .volume(response.getAccTradeVolume())
-                    .build();
-            series.addBar(bar);
+                    .build());
         }
 
         ADXIndicator adxIndicator = new ADXIndicator(series, 14, 14);
