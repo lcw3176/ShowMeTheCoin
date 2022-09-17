@@ -106,6 +106,7 @@ public class CandleService {
                                 .accTradePrice(i.getAccTradePrice())
                                 .accTradeVolume(i.getAccTradeVolume())
                                 .unit(i.getUnit())
+                                .companyType(CompanyType.UPBIT)
                                 .candleMinute(minute)
                                 .build())
                 .sorted(Comparator.comparing(CandleStoreEntity::getDateKst).reversed())
