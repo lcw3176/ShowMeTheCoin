@@ -26,6 +26,10 @@ public class CandleStoreService {
         return candleStoreRepository.countAllByMarketAndCandleMinute(coinType.getName(), candleMinute);
     }
 
+    public boolean isExist(String dateKst, String market){
+        return candleStoreRepository.findByDateKstAndMarket(dateKst, market).isPresent();
+    }
+
     public void save(CandleStoreEntity candleStoreEntity){
         candleStoreRepository.save(candleStoreEntity);
     }
@@ -61,6 +65,13 @@ public class CandleStoreService {
         return candleStoreRepository.findAllByMarketAndCandleMinute(
                 coinType.getName(), minute, Sort.by(Sort.Direction.DESC, "dateKst"));
     }
+
+
+    public List<CandleStoreEntity> getCandles(CoinType coinType, CandleMinute minute, String start, String end){
+        return candleStoreRepository.findAllByMarketAndCandleMinuteAndDateKstBetween(
+                coinType.getName(), minute, start, end, Sort.by(Sort.Direction.DESC, "dateKst"));
+    }
+
 
     public void deleteAll(){
         candleStoreRepository.deleteAll();
