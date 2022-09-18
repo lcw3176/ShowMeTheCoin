@@ -54,6 +54,7 @@ public class BackTestService {
             Calendar startDate = Calendar.getInstance();
             startDate.setTime(request.getStartDate().getTime());
 
+            int per = 0;
             while(true){
                 List<CandleStoreEntity> candles = candleService.getCandles(coinType, format.format(startDate.getTime()), minute);
                 candles.forEach(i ->{
@@ -63,6 +64,11 @@ public class BackTestService {
 
                 });
                 startDate.add(Calendar.MINUTE, minute.getValue() * 200);
+
+                session.sendMessage(new TextMessage(mapper.writeValueAsString(BackTestResponse.builder()
+                                .load(true)
+                                .percentage(per++)
+                                .build())));
 
                 if(startDate.getTime().after(request.getEndDate().getTime())){
                     startDate.setTime(request.getStartDate().getTime());
@@ -101,7 +107,6 @@ public class BackTestService {
                         .time(format.parse(nowCandle.getDateKst().replace('T', ' ')))
                         .traded(false)
                         .build();
-
 
                 // 구매
                 if (strategy.stream().allMatch(st -> st.isProperToBuy(tempCandles, tradeInfoList))
@@ -216,7 +221,10 @@ public class BackTestService {
 //                        }
 //                    }
 
-                session.sendMessage(new TextMessage(mapper.writeValueAsString(response)));
+                if(session.isOpen()){
+                    session.sendMessage(new TextMessage(mapper.writeValueAsString(response)));
+                }
+
             }
 
 

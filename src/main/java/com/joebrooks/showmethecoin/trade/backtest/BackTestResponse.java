@@ -20,6 +20,9 @@ public class BackTestResponse {
     private boolean traded;
     private boolean buy;
     private boolean finish;
+    private boolean load;
+
+    private int percentage;
     private double gain;
 
 

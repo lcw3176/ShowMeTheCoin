@@ -184,6 +184,7 @@
             update(JSON.parse(e.data));
         }
 
+
         function startBacktest(){
             if(!isRun){
                 isRun = true;
@@ -211,6 +212,10 @@
         let markers = [];
 
         function update(value){
+            if(value.load){
+                console.log(value.percentage);
+            }
+
             if(value.finish){
                 isRun = false;
                 document.getElementById('backtest-result').value = value.gain;
