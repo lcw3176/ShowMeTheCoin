@@ -117,6 +117,14 @@ public class TradeLogRefreshScheduler {
                         continue;
                     }
 
+                    if (map.get(key).getBuyPrice().stream().mapToDouble(Double::doubleValue).sum() == 0
+                            || map.get(key).getSellPrice().stream().mapToDouble(Double::doubleValue).sum() == 0D) {
+
+                        map.remove(key);
+                        continue;
+                    }
+
+
 
                     double sellPrice = map.get(key).getSellPrice().stream().mapToDouble(Double::doubleValue).sum();
                     double buyPrice = map.get(key).getBuyPrice().stream().mapToDouble(Double::doubleValue).sum();
