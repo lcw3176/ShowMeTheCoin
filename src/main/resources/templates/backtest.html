@@ -191,8 +191,14 @@
                 markers = [];
                 document.getElementById("chart").innerHTML = "";
                 chart = LightweightCharts.createChart(document.getElementById("chart"), {
-                    crosshair: {
-                        mode: LightweightCharts.CrosshairMode.Normal,
+                    localization: {
+                        dateFormat: 'yyyy-MM-dd',
+                        locale: 'ko-KR'
+                    },
+
+                    timeScale: {
+                        timeVisible: true,
+                        secondsVisible: true,
                     },
                 });
 
@@ -203,8 +209,14 @@
         }
 
         let chart = LightweightCharts.createChart(document.getElementById("chart"), {
-            crosshair: {
-                mode: LightweightCharts.CrosshairMode.Normal,
+            localization: {
+                dateFormat: 'yyyy-MM-dd',
+                    locale: 'ko-KR'
+            },
+
+            timeScale: {
+                timeVisible: true,
+                secondsVisible: true,
             },
         });
 
@@ -212,15 +224,30 @@
         let markers = [];
 
         function update(value){
-            if(value.load){
-                console.log(value.percentage);
-            }
 
             if(value.finish){
                 isRun = false;
                 document.getElementById('backtest-result').value = value.gain;
                 return;
             }
+
+
+
+            if(value.load){
+                console.log(value.percentage);
+            } else {
+                let currentBar = {
+                    open: value.open,
+                    high: value.high,
+                    low: value.low,
+                    close: value.close,
+                    time: Date.parse(value.time) / 1000,
+                };
+
+
+                candleSeries.update(currentBar)
+            }
+
 
             if(value.traded){
 
@@ -236,16 +263,7 @@
             }
 
 
-            let currentBar = {
-                open: value.open,
-                high: value.high,
-                low: value.low,
-                close: value.close,
-                time: Date.parse(value.time) / 1000,
-            };
 
-
-            candleSeries.update(currentBar)
         }
 
 

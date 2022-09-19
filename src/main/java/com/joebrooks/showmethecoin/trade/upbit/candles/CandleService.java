@@ -83,16 +83,16 @@ public class CandleService {
                                 .companyType(CompanyType.UPBIT)
                                 .build());
 
-                CandleStoreEntity beforeCandle = candleStoreEntityList.get(1);
+                CandleStoreEntity beforeCandle = candleStoreEntityList.get(0);
 
-                beforeCandle.changeAccTradePrice(response.getAccTradePrice());
-                beforeCandle.changeAccTradeVolume(response.getAccTradeVolume());
+                beforeCandle.changeAccTradePrice(candleResponseList.get(1).getAccTradePrice());
+                beforeCandle.changeAccTradeVolume(candleResponseList.get(1).getAccTradeVolume());
 
-                beforeCandle.changeTimeStamp(response.getTimeStamp());
+                beforeCandle.changeTimeStamp(candleResponseList.get(1).getTimeStamp());
 
-                beforeCandle.changeHighPrice(response.getHighPrice());
-                beforeCandle.changeLowPrice(response.getLowPrice());
-                beforeCandle.changeTradePrice(response.getTradePrice());
+                beforeCandle.changeHighPrice(candleResponseList.get(1).getHighPrice());
+                beforeCandle.changeLowPrice(candleResponseList.get(1).getLowPrice());
+                beforeCandle.changeTradePrice(candleResponseList.get(1).getTradePrice());
 
                 candleStoreService.save(beforeCandle);
                 candleStoreService.removeMostOlderCandle(response.getMarket(), minute);
