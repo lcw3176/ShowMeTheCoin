@@ -63,4 +63,28 @@ public class CandleStoreEntity {
     @Column(name = "unit")
     private Integer unit;
 
+    public void changeHighPrice(double highPrice){
+        this.highPrice = highPrice;
+    }
+
+    public void changeLowPrice(double lowPrice){
+        this.lowPrice = lowPrice;
+    }
+
+    public void changeTradePrice(double tradePrice){
+        this.tradePrice = tradePrice;
+    }
+
+    public void changeAccTradePrice(double accTradePrice){
+        this.accTradePrice = accTradePrice;
+    }
+
+    public void changeAccTradeVolume(double accTradeVolume){
+        this.accTradeVolume = accTradeVolume;
+    }
+
+    public void changeTimeStamp(long timeStamp){
+        this.timeStamp = timeStamp;
+    }
+
 }

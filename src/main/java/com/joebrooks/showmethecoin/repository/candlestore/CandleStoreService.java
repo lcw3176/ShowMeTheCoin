@@ -39,17 +39,6 @@ public class CandleStoreService {
                 coinType.getName(), minute, Sort.by(Sort.Direction.DESC, "dateKst"));
     }
 
-    public void changeRecentCandle(CandleStoreEntity candleStoreEntity){
-        List<CandleStoreEntity> lst = candleStoreRepository.findAllByMarketAndCandleMinute(
-                candleStoreEntity.getMarket(), candleStoreEntity.getCandleMinute(), Sort.by(Sort.Direction.DESC, "dateKst"));
-
-        if(!lst.isEmpty()){
-            CandleStoreEntity temp = lst.get(0);
-            candleStoreRepository.delete(temp);
-            candleStoreRepository.save(candleStoreEntity);
-        }
-
-    }
 
     public void removeMostOlderCandle(String market, CandleMinute candleMinute){
         List<CandleStoreEntity> lst = candleStoreRepository.findAllByMarketAndCandleMinute(
