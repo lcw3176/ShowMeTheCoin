@@ -58,7 +58,7 @@ public class BackTestService {
             while(true){
                 List<CandleStoreEntity> candles = candleService.getCandles(coinType, format.format(startDate.getTime()), minute);
                 candles.forEach(i ->{
-                    if(!candleStoreService.isExist(i.getDateKst(), i.getMarket())){
+                    if(!candleStoreService.isExist(i.getDateKst(), coinType)){
                         candleStoreService.save(i);
                     }
 

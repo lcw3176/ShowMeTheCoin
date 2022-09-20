@@ -53,18 +53,11 @@ public class CandleService {
 
             if(candleStoreEntityList.get(0)
                     .getDateKst().equals(response.getDateKst())){
-                CandleStoreEntity candleStore = candleStoreEntityList.get(0);
 
-                candleStore.changeAccTradePrice(response.getAccTradePrice());
-                candleStore.changeAccTradeVolume(response.getAccTradeVolume());
-
-                candleStore.changeTimeStamp(response.getTimeStamp());
-
-                candleStore.changeHighPrice(response.getHighPrice());
-                candleStore.changeLowPrice(response.getLowPrice());
-                candleStore.changeTradePrice(response.getTradePrice());
-                candleStoreService.save(candleStore);
+                candleStoreService.changeValue(0, coinType, minute, response);
             } else {
+                CandleResponse beforeCandleResponse = candleResponseList.get(1);
+                candleStoreService.changeValue(0, coinType, minute, beforeCandleResponse);
 
                 candleStoreService.save(
                         CandleStoreEntity.builder()
@@ -83,19 +76,7 @@ public class CandleService {
                                 .companyType(CompanyType.UPBIT)
                                 .build());
 
-                CandleStoreEntity beforeCandle = candleStoreEntityList.get(0);
-
-                beforeCandle.changeAccTradePrice(candleResponseList.get(1).getAccTradePrice());
-                beforeCandle.changeAccTradeVolume(candleResponseList.get(1).getAccTradeVolume());
-
-                beforeCandle.changeTimeStamp(candleResponseList.get(1).getTimeStamp());
-
-                beforeCandle.changeHighPrice(candleResponseList.get(1).getHighPrice());
-                beforeCandle.changeLowPrice(candleResponseList.get(1).getLowPrice());
-                beforeCandle.changeTradePrice(candleResponseList.get(1).getTradePrice());
-
-                candleStoreService.save(beforeCandle);
-                candleStoreService.removeMostOlderCandle(response.getMarket(), minute);
+                candleStoreService.removeMostOlderCandle(coinType, minute);
             }
         }
 
