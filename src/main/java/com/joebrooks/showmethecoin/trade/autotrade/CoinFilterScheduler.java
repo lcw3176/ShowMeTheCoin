@@ -39,6 +39,7 @@ public class CoinFilterScheduler {
         TradingCoinList.BLACKLIST.add(CoinType.ETH);
     }
 
+    boolean flag = false;
     private void setWhiteList(){
         int delayMillis = 100;
 
@@ -88,7 +89,13 @@ public class CoinFilterScheduler {
 
 
         setWhiteList();
-        candleStoreService.deleteAll();
+        List<String> removeTarget = candleStoreService.getCandlesDistinctByMarket();
+
+        for(CoinType coinType: TradingCoinList.WHITELIST){
+            removeTarget.remove(coinType.getName());
+        }
+
+        removeTarget.forEach(candleStoreService::deleteAllByMarket);
 
         userConfigService.getAllUserConfig().forEach(user -> {
             user.startTrading();
