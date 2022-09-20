@@ -1,6 +1,7 @@
 package com.joebrooks.showmethecoin.trade.upbit.candles;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.joebrooks.showmethecoin.trade.ICandleResponse;
 import lombok.*;
 
 @Getter
@@ -8,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @ToString
-public class CandleResponse{
+public class CandleResponse implements ICandleResponse {
 
     @JsonProperty("market")
     private String market;
@@ -20,31 +21,31 @@ public class CandleResponse{
     private String dateKst;
 
     @JsonProperty("opening_price")
-    private Double openingPrice;
+    private double openingPrice;
 
     @JsonProperty("high_price")
-    private Double highPrice;
+    private double highPrice;
 
     @JsonProperty("low_price")
-    private Double lowPrice;
+    private double lowPrice;
 
     @JsonProperty("trade_price")
-    private Double tradePrice;
+    private double tradePrice;
 
     // 해당 캔들에서 마지막 틱이 저장된 시각
     @JsonProperty("timestamp")
-    private Long timeStamp;
+    private long timeStamp;
 
     // 누적 거래 금액
     @JsonProperty("candle_acc_trade_price")
-    private Double accTradePrice;
+    private double accTradePrice;
 
     // 누적 거래량
     @JsonProperty("candle_acc_trade_volume")
-    private Double accTradeVolume;
+    private double accTradeVolume;
 
     @JsonProperty("unit")
-    private Integer unit;
+    private int unit;
 
 
 }
