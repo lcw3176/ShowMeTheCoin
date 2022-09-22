@@ -2,6 +2,9 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layout/layout">
 <th:block layout:fragment="layout_content">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-pageloader@0.3.0/dist/css/bulma-pageloader.min.css"
+          integrity="sha256-xi0ce0gpVJ9pzkRRuhwspstPyKA0BXGRnyJcfMiYwpE=" crossorigin="anonymous">
+    <div class="pageloader" id="pageloader"><span class="title">차트 로딩중입니다</span></div>
 
     <div class="container is-max-desktop">
         <section class="section is-main-section">
@@ -208,19 +211,8 @@
 
         }
 
-        let chart = LightweightCharts.createChart(document.getElementById("chart"), {
-            localization: {
-                dateFormat: 'yyyy-MM-dd',
-                    locale: 'ko-KR'
-            },
-
-            timeScale: {
-                timeVisible: true,
-                secondsVisible: true,
-            },
-        });
-
-        let candleSeries = chart.addCandlestickSeries();
+        let chart;
+        let candleSeries;
         let markers = [];
 
         function update(value){
@@ -234,8 +226,10 @@
 
 
             if(value.load){
-                console.log(value.percentage);
+                document.getElementById("pageloader").className = "pageloader is-active";
             } else {
+                document.getElementById("pageloader").className = "pageloader";
+
                 let currentBar = {
                     open: value.open,
                     high: value.high,
