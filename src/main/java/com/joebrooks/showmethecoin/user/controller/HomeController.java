@@ -2,9 +2,7 @@ package com.joebrooks.showmethecoin.user.controller;
 
 import com.joebrooks.showmethecoin.repository.dailyscore.DailyScoreEntity;
 import com.joebrooks.showmethecoin.repository.dailyscore.DailyScoreService;
-import com.joebrooks.showmethecoin.repository.tradelog.TradeLogService;
-import lombok.Builder;
-import lombok.Getter;
+import com.joebrooks.showmethecoin.user.model.HomeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,12 +49,4 @@ public class HomeController {
         return "home";
     }
 
-
-    @Getter
-    @Builder
-    static class HomeResponse{
-        private String rank;
-        private String nickName;
-        private double money;
-    }
 }
