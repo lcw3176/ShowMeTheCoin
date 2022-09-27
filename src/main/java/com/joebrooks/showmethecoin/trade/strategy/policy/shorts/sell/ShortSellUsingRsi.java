@@ -19,7 +19,7 @@ public class ShortSellUsingRsi implements ISellPolicy {
 
     @Override
     public boolean isProperToSellWithBenefit(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
-        int sellValue = 60;
+        int sellValue = 55;
 
         List<RsiResponse> longTermRsiLst = rsiIndicator.getRsi(candleResponses, 14);
 
