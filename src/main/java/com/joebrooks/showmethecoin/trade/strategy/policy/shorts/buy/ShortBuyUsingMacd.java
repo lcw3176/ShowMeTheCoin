@@ -17,7 +17,7 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
 
     private final MacdIndicator macdIndicator;
     private static final int START_INDEX = 1;
-    private static final int WATCH_COUNT = 1;
+    private static final int WATCH_COUNT = 3;
 
     @Override
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
@@ -26,9 +26,7 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
 
         boolean macdBuy = false;
         boolean signalBuy = false;
-        int risingCount = 0;
-        int fallingCount = 0;
-//        boolean priceBuy = false;
+
         double macdThresholdMin;
         double macdThresholdMax;
 
@@ -62,11 +60,11 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
 //            signalThresholdMax = 1.2;
 
 
-//            macdThresholdMin = 0.80;  //
-//            macdThresholdMax = 0.90;
-//
-//            signalThresholdMin = 0.72;
-//            signalThresholdMax = 0.82;
+            macdThresholdMin = 0.80;  //
+            macdThresholdMax = 0.90;
+
+            signalThresholdMin = 0.72;
+            signalThresholdMax = 0.82;
 
 
 
@@ -82,16 +80,17 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
 //            signalThresholdMin = 1.232;
 //            signalThresholdMax = 1.432;
 
-            macdThresholdMin = 0.40;  //
-            macdThresholdMax = 0.60;
-
-            signalThresholdMin = 0.4;
-            signalThresholdMax = 1;
+//            macdThresholdMin = 0.40;  //
+//            macdThresholdMax = 0.60;
+//
+//            signalThresholdMin = 0.4;
+//            signalThresholdMax = 1;
 
         }
 
         for(int i = START_INDEX; i < WATCH_COUNT + START_INDEX; i++){
             double latestMacdValue = macdResponseList.get(i).getMacd();
+
             double latestSignalValue = macdResponseList.get(i).getSignal();
 
             double priceLine = candleResponses.get(i).getTradePrice() / 100 / 4 / 2;
@@ -113,5 +112,6 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
                 && macdResponseList.get(0).getSignal() < 0
                 && macdBuy
                 && signalBuy;
+
     }
 }
