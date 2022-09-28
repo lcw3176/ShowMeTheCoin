@@ -47,9 +47,7 @@ public class UpBitClient {
                     .uri(path)
                     .accept(MediaType.APPLICATION_JSON)
                     .acceptCharset(StandardCharsets.UTF_8)
-                    .headers(httpHeaders -> {
-                        httpHeaders.set(AUTH_HEADER, HeaderGenerator.getJwtHeader(userKey.getAccessKey(), userKey.getSecretKey()));
-                    })
+                    .headers(httpHeaders -> httpHeaders.set(AUTH_HEADER, HeaderGenerator.getJwtHeader(userKey.getAccessKey(), userKey.getSecretKey())))
                     .retrieve()
                     .onStatus(HttpStatus::isError, response -> Mono.error(new UpBitException("failed get")))
                     .bodyToMono(clazz)
@@ -70,10 +68,8 @@ public class UpBitClient {
                     .uri(path)
                     .accept(MediaType.APPLICATION_JSON)
                     .acceptCharset(StandardCharsets.UTF_8)
-                    .headers(httpHeaders -> {
-                        httpHeaders.set(AUTH_HEADER,
-                            HeaderGenerator.getJwtHeader(userKey.getAccessKey(), userKey.getSecretKey(), QueryGenerator.convertQueryToHash(map)));
-                    })
+                    .headers(httpHeaders -> httpHeaders.set(AUTH_HEADER,
+                        HeaderGenerator.getJwtHeader(userKey.getAccessKey(), userKey.getSecretKey(), QueryGenerator.convertQueryToHash(map))))
                     .retrieve()
                     .onStatus(HttpStatus::isError, response -> Mono.error(new UpBitException("failed get")))
                     .bodyToMono(clazz)
