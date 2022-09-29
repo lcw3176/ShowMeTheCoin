@@ -17,7 +17,7 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
 
     private final MacdIndicator macdIndicator;
     private static final int START_INDEX = 1;
-    private static final int WATCH_COUNT = 3;
+    private static final int WATCH_COUNT = 1;
 
     @Override
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
@@ -41,11 +41,11 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
 //            signalThresholdMin = 1.232;
 //            signalThresholdMax = 1.432;
 
-            macdThresholdMin = 0.40;  //
-            macdThresholdMax = 0.60;
+            macdThresholdMin = 0.97;  //
+            macdThresholdMax = 1.07;
 
-            signalThresholdMin = 0.4;
-            signalThresholdMax = 1;
+            signalThresholdMin = 1.31;
+            signalThresholdMax = 1.41;
         } else {
 //            macdThresholdMin = 1.06;
 //            macdThresholdMax = 1.10;
@@ -60,11 +60,11 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
 //            signalThresholdMax = 1.2;
 
 
-            macdThresholdMin = 0.80;  //
-            macdThresholdMax = 0.90;
-
-            signalThresholdMin = 0.72;
-            signalThresholdMax = 0.82;
+//            macdThresholdMin = 0.80;  //
+//            macdThresholdMax = 0.90;
+//
+//            signalThresholdMin = 0.72;
+//            signalThresholdMax = 0.82;
 
 
 
@@ -80,30 +80,60 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
 //            signalThresholdMin = 1.232;
 //            signalThresholdMax = 1.432;
 
-//            macdThresholdMin = 0.40;  //
-//            macdThresholdMax = 0.60;
+//            macdThresholdMin = 0.97;  // 안정적
+//            macdThresholdMax = 1.07;
 //
-//            signalThresholdMin = 0.4;
-//            signalThresholdMax = 1;
+//            signalThresholdMin = 1.31;
+//            signalThresholdMax = 1.41;
+
+
+//            macdThresholdMin = 1.64;  //
+//            macdThresholdMax = 1.84;
+//
+//            signalThresholdMin = 2.03;
+//            signalThresholdMax = 2.23;
+
+            macdThresholdMin = 9.3;  //
+            macdThresholdMax = 9.5;
+
+            signalThresholdMin = 9.8;
+            signalThresholdMax = 10;
 
         }
 
+//        int risingCount = 0;
+
         for(int i = START_INDEX; i < WATCH_COUNT + START_INDEX; i++){
-            double latestMacdValue = macdResponseList.get(i).getMacd();
+            double latestMacdValue = Math.round((macdResponseList.get(i).getMacd() * 100) / 100) ;
 
-            double latestSignalValue = macdResponseList.get(i).getSignal();
+            double latestSignalValue = Math.round((macdResponseList.get(i).getSignal() * 100) / 100);
 
-            double priceLine = candleResponses.get(i).getTradePrice() / 100 / 4 / 2;
+            double priceLine = Math.round((candleResponses.get(i).getTradePrice() / 100 / 4 / 2) * 100 / 100);
 
-            if(Math.abs(latestMacdValue) / Math.abs(priceLine) >= macdThresholdMin
-                    && Math.abs(latestMacdValue) / Math.abs(priceLine) <= macdThresholdMax){
+//            if(Math.abs(latestMacdValue) / priceLine >= macdThresholdMin
+//                    && Math.abs(latestMacdValue) / priceLine <= macdThresholdMax){
+//                macdBuy = true;
+//            }
+//
+//            if(Math.abs(latestSignalValue) / priceLine >= signalThresholdMin
+//                    && Math.abs(latestSignalValue) / priceLine <= signalThresholdMax){
+//                signalBuy = true;
+//            }
+
+
+            if((Math.abs(latestMacdValue) / priceLine) / (Math.abs(latestSignalValue) / priceLine) <= 0.9
+                && latestMacdValue < 0
+                && latestSignalValue < 0){
                 macdBuy = true;
-            }
-
-            if(Math.abs(latestSignalValue) / Math.abs(priceLine) >= signalThresholdMin
-                    && Math.abs(latestSignalValue) / Math.abs(priceLine) <= signalThresholdMax){
                 signalBuy = true;
             }
+
+
+//            if(latestMacdValue < 0
+//                    && Math.abs(latestMacdValue) < Math.abs(oldMacdValue)
+//                    && latestMacdValue > latestSignalValue){
+//                risingCount++;
+//            }
 
 
         }
