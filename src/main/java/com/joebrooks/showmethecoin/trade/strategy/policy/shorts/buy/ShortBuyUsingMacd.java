@@ -7,17 +7,19 @@ import com.joebrooks.showmethecoin.trade.indicator.macd.MacdIndicator;
 import com.joebrooks.showmethecoin.trade.indicator.macd.MacdResponse;
 import com.joebrooks.showmethecoin.trade.strategy.policy.IBuyPolicy;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ShortBuyUsingMacd implements IBuyPolicy {
 
     private final MacdIndicator macdIndicator;
     private static final int START_INDEX = 1;
-    private static final int WATCH_COUNT = 1;
+    private static final int WATCH_COUNT = 5;
 
     @Override
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
@@ -101,14 +103,37 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
 
         }
 
-//        int risingCount = 0;
+        int risingCount = 0;
+        int fallingCount = 0;
 
-        for(int i = START_INDEX; i < WATCH_COUNT + START_INDEX; i++){
-            double latestMacdValue = Math.round((macdResponseList.get(i).getMacd() * 100) / 100) ;
+        for(int i = START_INDEX; i < START_INDEX + WATCH_COUNT; i++){
 
             double latestSignalValue = Math.round((macdResponseList.get(i).getSignal() * 100) / 100);
+            double oldSignalValue = Math.round((macdResponseList.get(i + 1).getSignal() * 100) / 100);
 
-            double priceLine = Math.round((candleResponses.get(i).getTradePrice() / 100 / 4 / 2) * 100 / 100);
+            double latestMacdValue = Math.round((macdResponseList.get(i).getMacd() * 100) / 100) ;
+            double oldMacdValue = Math.round((macdResponseList.get(i + 1).getMacd() * 100) / 100) ;
+
+            if(latestSignalValue > oldSignalValue
+                    && latestSignalValue < 0
+                    && oldSignalValue < 0
+                    && latestMacdValue < 0
+                    && oldMacdValue < 0
+                    && latestMacdValue > oldMacdValue){
+                risingCount++;
+            } else {
+                fallingCount++;
+            }
+
+        }
+
+        for(int i = START_INDEX; i < START_INDEX + 1; i++){
+            double latestMacdValue = Math.round((macdResponseList.get(i).getMacd() * 100) / 100) ;
+//            double oldMacdValue = Math.round((macdResponseList.get(i + 1).getMacd() * 100) / 100) ;
+            double latestSignalValue = Math.round((macdResponseList.get(i).getSignal() * 100) / 100);
+//            double oldSignalValue = Math.round((macdResponseList.get(i + 1).getSignal() * 100) / 100);
+
+            double priceLine = Math.round((candleResponses.get(i).getTradePrice() / 100 / 4) * 100 / 100);
 
 //            if(Math.abs(latestMacdValue) / priceLine >= macdThresholdMin
 //                    && Math.abs(latestMacdValue) / priceLine <= macdThresholdMax){
@@ -119,21 +144,17 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
 //                    && Math.abs(latestSignalValue) / priceLine <= signalThresholdMax){
 //                signalBuy = true;
 //            }
+//            1.15  1.2
 
+//            log.info("time: {}, macd: {}",candleResponses.get(i).getDateKst(), (Math.abs(latestMacdValue) / priceLine) / (Math.abs(latestSignalValue) / priceLine));
 
-            if((Math.abs(latestMacdValue) / priceLine) / (Math.abs(latestSignalValue) / priceLine) <= 0.9
+           if(  (Math.abs(latestMacdValue) / priceLine) / (Math.abs(latestSignalValue) / priceLine) <= 0.7
                 && latestMacdValue < 0
                 && latestSignalValue < 0){
+
                 macdBuy = true;
                 signalBuy = true;
             }
-
-
-//            if(latestMacdValue < 0
-//                    && Math.abs(latestMacdValue) < Math.abs(oldMacdValue)
-//                    && latestMacdValue > latestSignalValue){
-//                risingCount++;
-//            }
 
 
         }
@@ -141,7 +162,10 @@ public class ShortBuyUsingMacd implements IBuyPolicy {
         return macdResponseList.get(0).getMacd() < 0
                 && macdResponseList.get(0).getSignal() < 0
                 && macdBuy
-                && signalBuy;
+                && signalBuy
+//                && risingCount > fallingCount
+                && macdResponseList.get(1).getMacd() < macdResponseList.get(0).getMacd()
+                && macdResponseList.get(1).getSignal() < macdResponseList.get(0).getSignal();
 
     }
 }
