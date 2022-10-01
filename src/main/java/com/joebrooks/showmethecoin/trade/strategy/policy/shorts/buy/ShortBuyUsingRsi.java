@@ -22,7 +22,7 @@ public class ShortBuyUsingRsi implements IBuyPolicy {
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         List<RsiResponse> rsiList = rsiIndicator.getRsi(candleResponses, 14);
 
-        return rsiList.get(0).getRsi() < 40;
+        return rsiList.get(0).getRsi() < 50;
 
     }
 }
