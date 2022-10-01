@@ -35,7 +35,6 @@ public class CoinFilterScheduler {
     private void setBlackList(){
         TradingCoinList.BLACKLIST.add(CoinType.XRP);
         TradingCoinList.BLACKLIST.add(CoinType.SAND);
-        TradingCoinList.BLACKLIST.add(CoinType.BTC);
         TradingCoinList.BLACKLIST.add(CoinType.ETH);
     }
 
