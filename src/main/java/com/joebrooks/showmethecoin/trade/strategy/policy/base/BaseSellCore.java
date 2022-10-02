@@ -42,15 +42,15 @@ public class BaseSellCore implements ISellPolicy {
             return false;
         }
 
-        double LOSS;
+        double lossRate;
         CandleStoreEntity candleStore = candleResponses.get(0);
 
         if(candleStore.getTradePrice() >= 10000000){
-            LOSS = 0.02D;
+            lossRate = 0.02D;
         } else if(candleStore.getTradePrice() >= 1000000){
-            LOSS = 0.03D;
+            lossRate = 0.03D;
         } else {
-            LOSS = 0.04D;
+            lossRate = 0.04D;
         }
 
 
@@ -59,7 +59,7 @@ public class BaseSellCore implements ISellPolicy {
         double averageSellPrice = getAverageSellPrice(candleResponses, tradeInfo);
         double payingFee = getPayingFee(candleResponses, tradeInfo);
 
-        return (averageBuyPrice + paidFee + payingFee) * (1 - LOSS) > averageSellPrice;
+        return (averageBuyPrice + paidFee + payingFee) * (1 - lossRate) > averageSellPrice;
     }
 
     private double getAverageBuyPrice(List<TradeInfoEntity> tradeInfo){
