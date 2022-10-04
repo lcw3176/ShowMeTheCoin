@@ -39,6 +39,7 @@ public class CoinFilterScheduler {
 
     private void setWhiteList(){
         TradingCoinList.WHITELIST.add(CoinType.BTC);
+        TradingCoinList.WHITELIST.add(CoinType.ETC);
 //        int delayMillis = 100;
 
 //        TradingCoinList.WHITELIST.clear();
