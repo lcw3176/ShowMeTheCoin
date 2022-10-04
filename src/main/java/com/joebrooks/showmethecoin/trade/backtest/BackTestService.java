@@ -201,26 +201,26 @@ public class BackTestService {
                 }
 
 //                    // 손절 조건
-//                else if (!tradeInfoList.isEmpty()
-//                            && strategy.stream().allMatch(st -> st.isProperToSellWithLoss(tempCandles, tradeInfoList))
-//                            && tradeInfoList.size() >= maxBetCount) {
-//
-//                        if(coinBalance > 0) {
-//                            myBalance += getGain(tempCandles, tradeInfoList);
-//                            accumulatedGain = myBalance;
-//                            coinBalance = 0D;
-//
-//                            response.setTraded(true);
-//                            response.setTradedPrice(nowCandle.getTradePrice());
-//
-//                            log.info("손절: 시각 {} 잔고 {}",
-//                                    nowCandle.getDateKst(),
-//                                    myBalance);
-//                            tradeInfoList.clear();
-//                            cashToBuy = myBalance / maxBetCount;
-//
-//                        }
-//                    }
+                else if (!tradeInfoList.isEmpty()
+                            && strategy.stream().allMatch(st -> st.isProperToSellWithLoss(tempCandles, tradeInfoList))
+                            && tradeInfoList.size() >= maxBetCount) {
+
+                        if(coinBalance > 0) {
+                            myBalance += getGain(tempCandles, tradeInfoList);
+                            accumulatedGain = myBalance;
+                            coinBalance = 0D;
+
+                            response.setTraded(true);
+                            response.setTradedPrice(nowCandle.getTradePrice());
+
+                            log.info("손절: 시각 {} 잔고 {}",
+                                    nowCandle.getDateKst(),
+                                    myBalance);
+                            tradeInfoList.clear();
+                            cashToBuy = myBalance / maxBetCount;
+
+                        }
+                    }
 
                 if(session.isOpen()){
                     session.sendMessage(new TextMessage(mapper.writeValueAsString(response)));
