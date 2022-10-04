@@ -16,21 +16,21 @@ public class ShortBuyCore implements IBuyPolicy {
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         double percentage = 0.0625;
         double minValue = Double.POSITIVE_INFINITY;
-//        double maxValue = Double.NEGATIVE_INFINITY;
         double averageValue = 0D;
-        int readCount = 100;
+        int readCount = 50;
 
         List<Double> holdList = new LinkedList<>();
 
         for (int i = 0; i < readCount; i++) {
             CandleStoreEntity temp = candleResponses.get(i);
-            minValue = Math.min(temp.getTradePrice(), minValue);
-//            maxValue = Math.max(temp.getTradePrice(), maxValue);
+            minValue = Math.min(temp.getLowPrice(), minValue);
         }
 
+        holdList.add(minValue);
+
         for(CandleStoreEntity temp : candleResponses){
-            if(Math.min(minValue, temp.getTradePrice()) / Math.max(minValue, temp.getTradePrice()) * 100 > (100 - percentage)){
-                holdList.add(temp.getTradePrice());
+            if(minValue / temp.getLowPrice() * 100 > (100 + percentage)){
+                holdList.add(temp.getLowPrice());
             }
 
         }
@@ -41,8 +41,7 @@ public class ShortBuyCore implements IBuyPolicy {
 
         averageValue /= holdList.size();
 
-        return averageValue != 0D
-                && Math.min(averageValue, candleResponses.get(0).getTradePrice()) / Math.max(averageValue, candleResponses.get(0).getTradePrice()) * 100 > (100 - percentage);
+        return averageValue / candleResponses.get(0).getLowPrice() * 100 < (100 - percentage);
     }
 
 
