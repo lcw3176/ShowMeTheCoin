@@ -235,7 +235,7 @@
                     high: value.high,
                     low: value.low,
                     close: value.close,
-                    time: Date.parse(value.time) / 1000,
+                    time: Date.parse(value.time) / 1000 + 32400,
                 };
 
 
@@ -246,10 +246,10 @@
             if(value.traded){
 
                 if(value.buy){
-                    markers.push({ time: Date.parse(value.time) / 1000, position: 'belowBar', color: '#2196F3', shape: 'arrowUp', text: 'Buy: ' + value.tradedPrice });
+                    markers.push({ time: Date.parse(value.time) / 1000 + 32400, position: 'belowBar', color: '#2196F3', shape: 'arrowUp', text: 'Buy: ' + value.tradedPrice });
 
                 } else{
-                    markers.push({ time:  Date.parse(value.time) / 1000, position: 'aboveBar', color: '#e91e63', shape: 'arrowDown', text: 'Sell: ' + value.tradedPrice });
+                    markers.push({ time:  Date.parse(value.time) / 1000 + 32400, position: 'aboveBar', color: '#e91e63', shape: 'arrowDown', text: 'Sell: ' + value.tradedPrice });
                 }
 
                 candleSeries.setMarkers(markers);
