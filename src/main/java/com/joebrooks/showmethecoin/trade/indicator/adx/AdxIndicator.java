@@ -47,7 +47,7 @@ public class AdxIndicator {
 
         List<AdxResponse> lst = new LinkedList<>();
 
-        for(int i = candleResponses.size() - 1; i >= candleResponses.size() - 5; i--){
+        for(int i = candleResponses.size() - 1; i >= candleResponses.size() - 10; i--){
             lst.add(AdxResponse.builder()
                     .adx(adxIndicator.getValue(i).doubleValue())
                     .plusDI(plusDIIndicator.getValue(i).doubleValue())
