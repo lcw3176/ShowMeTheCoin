@@ -23,8 +23,7 @@ public class ShortSellUsingAdx implements ISellPolicy {
         int sellCount = 0;
 
         for(int i = 0; i < 5; i++){
-            if(lst.get(i + 1).getPlusDI() > lst.get(i).getPlusDI()
-                    && lst.get(i + 1).getMinusDI() < lst.get(i).getMinusDI()){
+            if(lst.get(i + 1).getPlusDI() > lst.get(i).getPlusDI()){
                 sellCount++;
             }
         }
