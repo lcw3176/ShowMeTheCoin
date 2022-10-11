@@ -200,7 +200,7 @@ public class BackTestService {
                     }
                 }
 
-//                    // 손절 조건
+                // 손절 조건
                 else if (!tradeInfoList.isEmpty()
                             && strategy.stream().allMatch(st -> st.isProperToSellWithLoss(tempCandles, tradeInfoList))
                             && tradeInfoList.size() >= maxBetCount) {
