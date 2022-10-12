@@ -10,7 +10,7 @@ import lombok.Getter;
 public enum StrategyType {
     BASE("기본적인 매매 전략, 자동으로 포함됨", BaseStrategy.class, null),
     CHASER("추격 매매 전략", ChaserStrategy.class, CandleMinute.ONE_M),
-    SHORT("단타 전략", ShortStrategy.class, CandleMinute.FIVE_M);
+    SHORT("단타 전략", ShortStrategy.class, CandleMinute.FIFTH_M);
     private String description;
     private Class clazz;
     private CandleMinute candleMinute;
