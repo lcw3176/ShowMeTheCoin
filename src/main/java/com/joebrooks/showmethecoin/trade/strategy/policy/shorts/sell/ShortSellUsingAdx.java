@@ -22,12 +22,12 @@ public class ShortSellUsingAdx implements ISellPolicy {
 
         int sellCount = 0;
 
-        for(int i = 0; i < 5; i++){
+        for(int i = 1; i < 4; i++){
             if(lst.get(i + 1).getPlusDI() > lst.get(i).getPlusDI()){
                 sellCount++;
             }
         }
-        return sellCount >= 3;
+        return sellCount >= 2;
     }
 
     @Override

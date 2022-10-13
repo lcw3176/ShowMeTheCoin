@@ -42,9 +42,9 @@ public class BaseSellCore implements ISellPolicy {
             return false;
         }
 
-        double lossRate = 0.02D;
+        double lossRate = 0.03D;
 //        CandleStoreEntity candleStore = candleResponses.get(0);
-
+//
 //        if(candleStore.getTradePrice() >= 10000000){
 //            lossRate = 0.02D;
 //        } else if(candleStore.getTradePrice() >= 1000000){

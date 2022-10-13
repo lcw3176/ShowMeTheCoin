@@ -5,6 +5,7 @@ import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreEntity;
 import com.joebrooks.showmethecoin.repository.tradeinfo.TradeInfoEntity;
 import com.joebrooks.showmethecoin.trade.strategy.IStrategy;
 import com.joebrooks.showmethecoin.trade.strategy.policy.PolicyService;
+import com.joebrooks.showmethecoin.trade.strategy.policy.shorts.buy.ShortBuyUsingAdx;
 import com.joebrooks.showmethecoin.trade.strategy.policy.shorts.buy.ShortBuyUsingMacd;
 import com.joebrooks.showmethecoin.trade.strategy.policy.shorts.buy.ShortBuyUsingRsi;
 import com.joebrooks.showmethecoin.trade.strategy.policy.shorts.sell.ShortSellUsingAdx;
@@ -23,7 +24,7 @@ public class ShortStrategy implements IStrategy {
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
 
         return policyService
-                .getBuyPolicy(ShortBuyUsingMacd.class, ShortBuyUsingRsi.class)
+                .getBuyPolicy(ShortBuyUsingMacd.class, ShortBuyUsingRsi.class, ShortBuyUsingAdx.class)
                 .stream()
                 .allMatch(i -> i.isProperToBuy(candleResponses, tradeInfo));
     }
