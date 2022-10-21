@@ -20,7 +20,7 @@ public class ShortBuyUsingRmi implements IBuyPolicy {
 
     @Override
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
-        List<RmiResponse> rmiList = rmiIndicator.getRmi(candleResponses, 14, 5);
+        List<RmiResponse> rmiList = rmiIndicator.getRmi(candleResponses, 60, 5);
         int risingCount = 0;
         int fallingCount = 0;
 
@@ -32,7 +32,7 @@ public class ShortBuyUsingRmi implements IBuyPolicy {
             }
         }
 
-        return risingCount > fallingCount;
+        return rmiList.get(0).getRmi() > 40;
 
     }
 }

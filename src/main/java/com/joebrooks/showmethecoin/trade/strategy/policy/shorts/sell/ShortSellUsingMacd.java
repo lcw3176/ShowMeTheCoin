@@ -25,7 +25,7 @@ public class ShortSellUsingMacd implements ISellPolicy {
     public boolean isProperToSellWithLoss(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         List<MacdResponse> macdResponseList = macdIndicator.getMacd(candleResponses);
 
-        return macdResponseList.get(0).getMacd() < 0
-                && macdResponseList.get(0).getSignal() < 0;
+        return macdResponseList.get(1).getMacd() > 0
+                && macdResponseList.get(0).getMacd() < 0;
     }
 }
