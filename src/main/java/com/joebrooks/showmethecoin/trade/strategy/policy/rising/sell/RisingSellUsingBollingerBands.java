@@ -17,7 +17,7 @@ public class RisingSellUsingBollingerBands implements ISellPolicy {
 
     @Override
     public boolean isProperToSellWithBenefit(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
-        return bollingerBandsIndicator.getBollingerBands(candleResponses).get(0).getMiddle() <= candleResponses.get(0).getTradePrice();
+        return bollingerBandsIndicator.getBollingerBands(candleResponses).get(0).getUpper() <= candleResponses.get(0).getTradePrice();
     }
 
     @Override
