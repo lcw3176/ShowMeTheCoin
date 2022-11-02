@@ -16,35 +16,29 @@ public class RisingBuyUsingMacd implements IBuyPolicy {
 
     private final MacdIndicator macdIndicator;
     private final int START_INDEX = 1;
-    private final int WATCH_COUNT = 3;
+    private final int WATCH_COUNT = 5;
 
     @Override
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         List<MacdResponse> macdResponseList = macdIndicator.getMacd(candleResponses);
-        int risingCount = 0;
-        int fallingCount = 0;
+        boolean buySignal = false;
+        double priceLine = candleResponses.get(0).getTradePrice() / 100 / 4;
 
         for(int i = START_INDEX; i < WATCH_COUNT + START_INDEX; i++){
-            if(macdResponseList.get(i).getMacd() < 0){
-
-                if(Math.abs(macdResponseList.get(i + 1).getMacd()) - Math.abs(macdResponseList.get(i).getMacd()) > 0){
-                    risingCount++;
-                } else {
-                    fallingCount++;
-                }
-
-            } else {
-
-                if(Math.abs(macdResponseList.get(i).getMacd()) - Math.abs(macdResponseList.get(i + 1).getMacd()) > 0){
-                    risingCount++;
-                } else {
-                    fallingCount++;
-                }
+            if (macdResponseList.get(i).getMacd() < 0
+                    && macdResponseList.get(i + 2).getMacd() > macdResponseList.get(i + 1).getMacd()
+                    && macdResponseList.get(i + 1).getMacd() < macdResponseList.get(i).getMacd()
+                    && Math.abs(macdResponseList.get(i + 1).getMacd() / Math.abs(macdResponseList.get(i).getMacd())) >= 1.05) {
+                buySignal = true;
+                break;
             }
 
         }
 
 
-        return risingCount > fallingCount;
+        return macdResponseList.get(0).getMacd() < 0
+                && macdResponseList.get(0).getSignal() < 0
+                && buySignal
+                && Math.abs(macdResponseList.get(0).getMacd()) < priceLine;
     }
 }
