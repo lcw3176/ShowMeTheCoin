@@ -206,6 +206,31 @@
                 });
 
                 candleSeries = chart.addCandlestickSeries();
+                // upperLineSeries = chart.addLineSeries({
+                //     color: '#000000',
+                //     priceFormat: {
+                //         type: 'volume',
+                //     },
+                //     priceScaleId: '',
+                //     lineWidth: 1,
+                // });
+                // middleLineSeries = chart.addLineSeries({
+                //     color: '#eb1010',
+                //     priceFormat: {
+                //         type: 'volume',
+                //     },
+                //     priceScaleId: '',
+                //     lineWidth: 1,
+                // });
+                // lowerLineSeries = chart.addLineSeries({
+                //     color: '#000000',
+                //     priceFormat: {
+                //         type: 'volume',
+                //     },
+                //     priceScaleId: '',
+                //     lineWidth: 1,
+                // });
+
                 socket.send(JSON.stringify(Object.fromEntries(new FormData(document.getElementById("data-form")))));
             }
 
@@ -214,6 +239,9 @@
         let chart;
         let candleSeries;
         let markers = [];
+        let upperLineSeries;
+        let middleLineSeries;
+        let lowerLineSeries;
 
         function update(value){
 
@@ -238,8 +266,26 @@
                     time: Date.parse(value.time) / 1000 + 32400,
                 };
 
+                // let upperLine = {
+                //     value: value.upperBollingers,
+                //     time: Date.parse(value.time) / 1000 + 32400,
+                // }
+                //
+                // let middleLine = {
+                //     value: value.middleBollingers,
+                //     time: Date.parse(value.time) / 1000 + 32400,
+                // }
+                //
+                // let lowerLine = {
+                //     value: value.lowerBollingers,
+                //     time: Date.parse(value.time) / 1000 + 32400,
+                // }
+
 
                 candleSeries.update(currentBar)
+                // upperLineSeries.update(upperLine);
+                // middleLineSeries.update(middleLine);
+                // lowerLineSeries.update(lowerLine);
             }
 
 

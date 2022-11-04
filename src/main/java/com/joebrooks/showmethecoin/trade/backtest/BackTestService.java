@@ -7,6 +7,7 @@ import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreEntity;
 import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreService;
 import com.joebrooks.showmethecoin.repository.tradeinfo.TradeInfoEntity;
 import com.joebrooks.showmethecoin.trade.CompanyType;
+import com.joebrooks.showmethecoin.trade.indicator.bollingerbands.BollingerBandsIndicator;
 import com.joebrooks.showmethecoin.trade.strategy.IStrategy;
 import com.joebrooks.showmethecoin.trade.strategy.StrategyService;
 import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
@@ -35,6 +36,7 @@ public class BackTestService {
     private final CandleStoreService candleStoreService;
     private final StrategyService strategyService;
     private final ObjectMapper mapper;
+    private final BollingerBandsIndicator bollingerBandsIndicator;
 
 
     public void start(BackTestRequest request, WebSocketSession session){
@@ -99,6 +101,7 @@ public class BackTestService {
                     break;
                 }
 
+//                List<BollingerBandsResponse> bollingerBandsResponseList = bollingerBandsIndicator.getBollingerBands(tempCandles);
                 CandleStoreEntity nowCandle = tempCandles.get(0);
                 BackTestResponse response = BackTestResponse.builder()
                         .open(nowCandle.getOpeningPrice())
@@ -107,12 +110,15 @@ public class BackTestService {
                         .high(nowCandle.getHighPrice())
                         .time(format.parse(nowCandle.getDateKst().replace('T', ' ')))
                         .traded(false)
+//                        .upperBollingers(bollingerBandsResponseList.get(0).getUpper())
+//                        .middleBollingers(bollingerBandsResponseList.get(0).getMiddle())
+//                        .lowerBollingers(bollingerBandsResponseList.get(0).getLower())
                         .build();
 
                 // 구매
                 if (strategy.stream().allMatch(st -> st.isProperToBuy(tempCandles, tradeInfoList))
                         && tradeInfoList.isEmpty()){
-
+//
                     // 잔고 체크
                     if (myBalance >= minCash) {
                         double coinVolume = cashToBuy / nowCandle.getTradePrice();

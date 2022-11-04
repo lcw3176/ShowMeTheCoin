@@ -17,6 +17,10 @@ public class BackTestResponse {
 
     private double tradedPrice;
 
+    private double upperBollingers;
+    private double middleBollingers;
+    private double lowerBollingers;
+
     private boolean traded;
     private boolean buy;
     private boolean finish;
