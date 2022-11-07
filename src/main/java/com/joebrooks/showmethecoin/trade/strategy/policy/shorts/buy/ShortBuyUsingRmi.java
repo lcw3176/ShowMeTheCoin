@@ -25,14 +25,15 @@ public class ShortBuyUsingRmi implements IBuyPolicy {
         int fallingCount = 0;
 
         for(int i = START_INDEX; i < WATCH_COUNT + START_INDEX; i++){
-            if(rmiList.get(i).getRmi() - rmiList.get(i + 1).getRmi() > 0){
+            if(rmiList.get(i).getRmi() > 40
+                    && rmiList.get(i).getRmi() > rmiList.get(i + 1).getRmi()){
                 risingCount++;
             } else {
                 fallingCount++;
             }
         }
 
-        return rmiList.get(0).getRmi() > 40;
+        return rmiList.get(0).getRmi() < 20;
 
     }
 }

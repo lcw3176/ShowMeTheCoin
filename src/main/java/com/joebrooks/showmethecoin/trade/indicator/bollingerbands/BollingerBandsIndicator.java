@@ -34,7 +34,7 @@ public class BollingerBandsIndicator {
                     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("Asia/Seoul")));
 
             series.addBar(BaseBar.builder(DecimalNum::valueOf, Number.class)
-                    .timePeriod(Duration.ofMinutes(1))
+                    .timePeriod(Duration.ofMinutes(15))
                     .endTime(endTime)
                     .openPrice(response.getOpeningPrice())
                     .highPrice(response.getHighPrice())
@@ -45,13 +45,13 @@ public class BollingerBandsIndicator {
         }
 
         ClosePriceIndicator closePrice = new ClosePriceIndicator(series);
-        EMAIndicator avg14 = new EMAIndicator(closePrice, 14);
-        StandardDeviationIndicator sd14 = new StandardDeviationIndicator(closePrice, 14);
+        EMAIndicator avg20 = new EMAIndicator(closePrice, 20);
+        StandardDeviationIndicator sd20 = new StandardDeviationIndicator(closePrice, 20);
 
         // Bollinger bands
-        BollingerBandsMiddleIndicator middleBBand = new BollingerBandsMiddleIndicator(avg14);
-        BollingerBandsLowerIndicator lowBBand = new BollingerBandsLowerIndicator(middleBBand, sd14);
-        BollingerBandsUpperIndicator upBBand = new BollingerBandsUpperIndicator(middleBBand, sd14);
+        BollingerBandsMiddleIndicator middleBBand = new BollingerBandsMiddleIndicator(avg20);
+        BollingerBandsLowerIndicator lowBBand = new BollingerBandsLowerIndicator(middleBBand, sd20);
+        BollingerBandsUpperIndicator upBBand = new BollingerBandsUpperIndicator(middleBBand, sd20);
 
 
         List<BollingerBandsResponse> lst = new LinkedList<>();

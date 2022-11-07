@@ -42,16 +42,16 @@ public class BaseSellCore implements ISellPolicy {
             return false;
         }
 
-        double lossRate = 0.03D;
-//        CandleStoreEntity candleStore = candleResponses.get(0);
-//
-//        if(candleStore.getTradePrice() >= 10000000){
-//            lossRate = 0.02D;
-//        } else if(candleStore.getTradePrice() >= 1000000){
-//            lossRate = 0.03D;
-//        } else {
-//            lossRate = 0.04D;
-//        }
+        double lossRate;
+        CandleStoreEntity candleStore = candleResponses.get(0);
+
+        if(candleStore.getTradePrice() >= 10000000){
+            lossRate = 0.03D;
+        } else if(candleStore.getTradePrice() >= 1000000){
+            lossRate = 0.04D;
+        } else {
+            lossRate = 0.05D;
+        }
 
 
         double averageBuyPrice = getAverageBuyPrice(tradeInfo);

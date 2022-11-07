@@ -21,24 +21,22 @@ public class RisingBuyUsingMacd implements IBuyPolicy {
     @Override
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         List<MacdResponse> macdResponseList = macdIndicator.getMacd(candleResponses);
-        boolean buySignal = false;
-        double priceLine = candleResponses.get(0).getTradePrice() / 100 / 4;
+
+        int risingCount = 0;
+        int fallingCount = 0;
 
         for(int i = START_INDEX; i < WATCH_COUNT + START_INDEX; i++){
-            if (macdResponseList.get(i).getMacd() < 0
-                    && macdResponseList.get(i + 2).getMacd() > macdResponseList.get(i + 1).getMacd()
-                    && macdResponseList.get(i + 1).getMacd() < macdResponseList.get(i).getMacd()
-                    && Math.abs(macdResponseList.get(i + 1).getMacd() / Math.abs(macdResponseList.get(i).getMacd())) >= 1.05) {
-                buySignal = true;
-                break;
+            if (macdResponseList.get(i).getMacd() > macdResponseList.get(i + 1).getMacd()
+                    && macdResponseList.get(i).getSignal() > macdResponseList.get(i + 1).getSignal()){
+                risingCount++;
+            } else {
+                fallingCount++;
             }
-
         }
 
 
-        return macdResponseList.get(0).getMacd() < 0
-                && macdResponseList.get(0).getSignal() < 0
-                && buySignal
-                && Math.abs(macdResponseList.get(0).getMacd()) < priceLine;
+        return macdResponseList.get(0).getMacd() > macdResponseList.get(1).getMacd()
+                && macdResponseList.get(0).getSignal() > macdResponseList.get(1).getSignal()
+                && risingCount > fallingCount;
     }
 }

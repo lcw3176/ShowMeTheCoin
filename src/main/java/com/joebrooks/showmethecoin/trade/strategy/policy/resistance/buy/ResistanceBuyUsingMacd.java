@@ -16,24 +16,13 @@ public class ResistanceBuyUsingMacd implements IBuyPolicy {
 
     private final MacdIndicator macdIndicator;
     private final int START_INDEX = 1;
-    private final int WATCH_COUNT = 5;
+    private final int WATCH_COUNT = 3;
 
     @Override
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
 
         List<MacdResponse> macdResponseList = macdIndicator.getMacd(candleResponses);
-        double priceLine;
-
-        if(candleResponses.get(0).getTradePrice() >= 1000000){
-            priceLine = candleResponses.get(0).getTradePrice() / 100 / 2;
-        } else if(candleResponses.get(0).getTradePrice() >= 10000){
-            priceLine = candleResponses.get(0).getTradePrice() / 100 * 1.6;
-        } else if(candleResponses.get(0).getTradePrice() >= 5000){
-            priceLine = candleResponses.get(0).getTradePrice() / 100 * 1.3;
-        } else {
-            priceLine = candleResponses.get(0).getTradePrice() / 100 * 2;
-        }
-
+        double priceLine = candleResponses.get(0).getTradePrice() / 100 / 4;
         boolean buySignal = false;
 
         int risingCount = 0;
@@ -63,6 +52,7 @@ public class ResistanceBuyUsingMacd implements IBuyPolicy {
         return macdResponseList.get(0).getMacd() < 0
                 && macdResponseList.get(0).getSignal() < 0
                 && Math.abs(macdResponseList.get(0).getSignal()) > priceLine
+                && buySignal
                 && risingCount > fallingCount;
     }
 

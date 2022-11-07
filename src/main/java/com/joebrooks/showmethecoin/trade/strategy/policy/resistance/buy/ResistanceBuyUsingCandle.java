@@ -16,7 +16,7 @@ public class ResistanceBuyUsingCandle implements IBuyPolicy {
         int risingCount = 0;
         int fallingCount = 0;
 
-        for(int i = 0; i < 2; i++){
+        for(int i = 0; i < 3; i++){
             if(candleResponses.get(i).getTradePrice() < candleResponses.get(i + 1).getTradePrice()){
                 fallingCount++;
             } else {
@@ -24,6 +24,6 @@ public class ResistanceBuyUsingCandle implements IBuyPolicy {
             }
         }
 
-        return risingCount >= fallingCount;
+        return risingCount > fallingCount;
     }
 }
