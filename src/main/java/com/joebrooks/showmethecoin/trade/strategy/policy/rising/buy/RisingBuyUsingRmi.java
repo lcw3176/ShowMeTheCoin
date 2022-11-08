@@ -15,8 +15,10 @@ import java.util.List;
 public class RisingBuyUsingRmi implements IBuyPolicy {
 
     private final RmiIndicator rmiIndicator;
-    private final int START_INDEX = 1;
+    private final int START_INDEX = 2;
     private final int END_COUNT = 5;
+    private final int HEAD_INDEX = 1;
+
     @Override
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         List<RmiResponse> rmiList = rmiIndicator.getRmi(candleResponses, 14, 5);
@@ -31,7 +33,7 @@ public class RisingBuyUsingRmi implements IBuyPolicy {
             }
         }
         return risingCount > fallingCount
-                && rmiList.get(0).getRmi() > rmiList.get(1).getRmi();
+                && rmiList.get(HEAD_INDEX).getRmi() > rmiList.get(HEAD_INDEX + 1).getRmi();
 
     }
 }

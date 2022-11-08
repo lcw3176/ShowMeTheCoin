@@ -15,12 +15,13 @@ import java.util.List;
 public class RisingBuyUsingBollingerBands implements IBuyPolicy {
 
     private final BollingerBandsIndicator bollingerBandsIndicator;
+    private final int HEAD_INDEX = 1;
 
     @Override
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         List<BollingerBandsResponse> lst = bollingerBandsIndicator.getBollingerBands(candleResponses);
 
-        return lst.get(0).getLower() <= candleResponses.get(0).getTradePrice()
-                && lst.get(0).getMiddle() >= candleResponses.get(0).getTradePrice();
+        return lst.get(INDEX).getLower() <= candleResponses.get(INDEX).getTradePrice()
+                && lst.get(INDEX).getMiddle() >= candleResponses.get(INDEX).getTradePrice();
     }
 }

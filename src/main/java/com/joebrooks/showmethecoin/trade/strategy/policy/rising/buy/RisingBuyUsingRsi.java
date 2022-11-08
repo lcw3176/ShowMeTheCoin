@@ -14,12 +14,13 @@ import org.springframework.stereotype.Component;
 public class RisingBuyUsingRsi implements IBuyPolicy {
 
     private final RsiIndicator rsiIndicator;
+    private final int HEAD_INDEX = 1;
 
     @Override
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         List<RsiResponse> rsiList = rsiIndicator.getRsi(candleResponses, 14);
 
-        return rsiList.get(0).getRsi() > 45
-                && rsiList.get(0).getRsi() < 55;
+        return rsiList.get(HEAD_INDEX).getRsi() > 45
+                && rsiList.get(HEAD_INDEX).getRsi() < 55;
     }
 }
