@@ -9,6 +9,7 @@ import com.joebrooks.showmethecoin.trade.strategy.policy.rising.buy.RisingBuyUsi
 import com.joebrooks.showmethecoin.trade.strategy.policy.rising.buy.RisingBuyUsingRmi;
 import com.joebrooks.showmethecoin.trade.strategy.policy.rising.buy.RisingBuyUsingRsi;
 import com.joebrooks.showmethecoin.trade.strategy.policy.rising.sell.RisingSellUsingBollingerBands;
+import com.joebrooks.showmethecoin.trade.strategy.policy.rising.sell.RisingSellUsingMacd;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -41,7 +42,7 @@ public class RisingStrategy implements IStrategy {
     public boolean isProperToSellWithLoss(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
 
         return policyService
-                .getSellPolicy(RisingSellUsingBollingerBands.class)
+                .getSellPolicy(RisingSellUsingMacd.class, RisingSellUsingBollingerBands.class)
                 .stream()
                 .allMatch(i -> i.isProperToSellWithLoss(candleResponses, tradeInfo));
     }

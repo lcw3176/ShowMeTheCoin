@@ -34,7 +34,7 @@ public class BollingerBandsIndicator {
                     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("Asia/Seoul")));
 
             series.addBar(BaseBar.builder(DecimalNum::valueOf, Number.class)
-                    .timePeriod(Duration.ofMinutes(15))
+                    .timePeriod(Duration.ofMinutes(5))
                     .endTime(endTime)
                     .openPrice(response.getOpeningPrice())
                     .highPrice(response.getHighPrice())

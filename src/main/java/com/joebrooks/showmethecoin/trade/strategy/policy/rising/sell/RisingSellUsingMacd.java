@@ -15,6 +15,8 @@ import java.util.List;
 public class RisingSellUsingMacd implements ISellPolicy {
 
     private final MacdIndicator macdIndicator;
+    private final int START_INDEX = 1;
+    private final int WATCH_COUNT = 5;
 
     @Override
     public boolean isProperToSellWithBenefit(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
@@ -24,18 +26,23 @@ public class RisingSellUsingMacd implements ISellPolicy {
     @Override
     public boolean isProperToSellWithLoss(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         List<MacdResponse> macdResponseList = macdIndicator.getMacd(candleResponses);
+
         int risingCount = 0;
         int fallingCount = 0;
 
-        for(int i = 1; i < 6; i++){
-            if(macdResponseList.get(i).getMacd() < 0
-                    && macdResponseList.get(i).getSignal() < 0){
-                fallingCount++;
-            } else {
+        for(int i = START_INDEX; i < WATCH_COUNT + START_INDEX; i++){
+            if (macdResponseList.get(i).getMacd() > macdResponseList.get(i + 1).getMacd()
+                    && macdResponseList.get(i).getSignal() > macdResponseList.get(i + 1).getSignal()){
                 risingCount++;
+            } else {
+                fallingCount++;
             }
         }
 
-        return fallingCount > risingCount;
+
+
+        return macdResponseList.get(0).getMacd() < 0
+                && macdResponseList.get(0).getSignal() < 0
+                && fallingCount == WATCH_COUNT;
     }
 }

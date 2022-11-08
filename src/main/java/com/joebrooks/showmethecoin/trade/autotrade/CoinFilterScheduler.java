@@ -45,6 +45,10 @@ public class CoinFilterScheduler {
         TradingCoinList.WHITELIST.add(CoinType.DOGE);
         TradingCoinList.WHITELIST.add(CoinType.CHZ);
         TradingCoinList.WHITELIST.add(CoinType.ALGO);
+        TradingCoinList.WHITELIST.add(CoinType.VET);
+        TradingCoinList.WHITELIST.add(CoinType.SAND);
+        TradingCoinList.WHITELIST.add(CoinType.CRO);
+        TradingCoinList.WHITELIST.add(CoinType.MATIC);
 
 //        Map<Double, CoinType> tempMap = new TreeMap<>(Comparator.reverseOrder());
 //
