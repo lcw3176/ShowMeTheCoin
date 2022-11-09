@@ -49,6 +49,7 @@ public class CoinFilterScheduler {
         TradingCoinList.WHITELIST.add(CoinType.SAND);
         TradingCoinList.WHITELIST.add(CoinType.CRO);
         TradingCoinList.WHITELIST.add(CoinType.MATIC);
+        TradingCoinList.WHITELIST.add(CoinType.ETC);
 
 //        Map<Double, CoinType> tempMap = new TreeMap<>(Comparator.reverseOrder());
 //
