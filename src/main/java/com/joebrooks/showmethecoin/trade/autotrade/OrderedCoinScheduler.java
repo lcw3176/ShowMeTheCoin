@@ -8,18 +8,20 @@ import com.joebrooks.showmethecoin.repository.userconfig.UserConfigService;
 import com.joebrooks.showmethecoin.repository.userkey.UserKeyService;
 import com.joebrooks.showmethecoin.trade.CompanyType;
 import com.joebrooks.showmethecoin.trade.upbit.CoinType;
-import com.joebrooks.showmethecoin.trade.upbit.UpbitUtil;
 import com.joebrooks.showmethecoin.trade.upbit.account.AccountResponse;
 import com.joebrooks.showmethecoin.trade.upbit.account.AccountService;
 import com.joebrooks.showmethecoin.trade.upbit.client.Side;
-import com.joebrooks.showmethecoin.trade.upbit.order.*;
+import com.joebrooks.showmethecoin.trade.upbit.order.CancelOrderRequest;
+import com.joebrooks.showmethecoin.trade.upbit.order.CheckOrderRequest;
+import com.joebrooks.showmethecoin.trade.upbit.order.CheckOrderResponse;
+import com.joebrooks.showmethecoin.trade.upbit.order.OrderService;
+import com.joebrooks.showmethecoin.trade.upbit.order.OrderStatus;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -33,9 +35,9 @@ public class OrderedCoinScheduler {
     private final AccountService accountService;
     private final UserAccountService userAccountService;
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 3000)
     public void checkOrderedCoin(){
-        int orderDelayMillis = 150;
+
 
         try{
             userConfigService.getAllUserConfig().forEach(user -> {
@@ -83,6 +85,10 @@ public class OrderedCoinScheduler {
                                 .state(OrderStatus.wait)
                                 .build(), userKeyService.getKeySet(user.getUser(), tradeInfo.getCompanyType()));
 
+                        checkOrderResponseList.addAll(orderService.checkOrder(CheckOrderRequest.builder()
+                                .state(OrderStatus.watch)
+                                .build(), userKeyService.getKeySet(user.getUser(), tradeInfo.getCompanyType())));
+
                         for(CheckOrderResponse order : checkOrderResponseList){
                             if(order.getMarket().equals(tradeInfo.getCoinType().getName())){
 
@@ -118,7 +124,6 @@ public class OrderedCoinScheduler {
                         }
                     }
 
-                    UpbitUtil.delay(orderDelayMillis);
                 }
             });
         } catch (Exception e){

@@ -44,9 +44,15 @@ public class OrderService {
     }
 
     public boolean isEveryOrderDone(UserKeyEntity userKey){
-        return checkOrder(CheckOrderRequest.builder()
+        boolean waitDone = checkOrder(CheckOrderRequest.builder()
                 .state(OrderStatus.wait)
                 .build(), userKey).isEmpty();
+
+        boolean watchDone = checkOrder(CheckOrderRequest.builder()
+                .state(OrderStatus.watch)
+                .build(), userKey).isEmpty();
+
+        return waitDone && watchDone;
     }
 
 }
