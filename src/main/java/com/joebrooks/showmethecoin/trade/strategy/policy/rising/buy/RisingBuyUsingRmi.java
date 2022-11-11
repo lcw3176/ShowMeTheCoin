@@ -16,7 +16,7 @@ public class RisingBuyUsingRmi implements IBuyPolicy {
 
     private final RmiIndicator rmiIndicator;
     private final int START_INDEX = 2;
-    private final int END_COUNT = 10;
+    private final int END_COUNT = 5;
     private final int HEAD_INDEX = 1;
 
     @Override

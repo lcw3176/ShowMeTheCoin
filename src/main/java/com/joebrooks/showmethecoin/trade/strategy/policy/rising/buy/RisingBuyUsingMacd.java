@@ -16,7 +16,7 @@ public class RisingBuyUsingMacd implements IBuyPolicy {
 
     private final MacdIndicator macdIndicator;
     private final int START_INDEX = 2;
-    private final int WATCH_COUNT = 10;
+    private final int WATCH_COUNT = 5;
     private final int HEAD_INDEX = 1;
 
     @Override
