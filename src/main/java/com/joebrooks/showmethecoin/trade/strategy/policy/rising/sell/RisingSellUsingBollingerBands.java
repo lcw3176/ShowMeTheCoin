@@ -22,6 +22,6 @@ public class RisingSellUsingBollingerBands implements ISellPolicy {
 
     @Override
     public boolean isProperToSellWithLoss(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
-        return bollingerBandsIndicator.getBollingerBands(candleResponses).get(1).getLower() >= candleResponses.get(0).getTradePrice();
+        return true;
     }
 }

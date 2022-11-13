@@ -42,7 +42,7 @@ public class RisingStrategy implements IStrategy {
     public boolean isProperToSellWithLoss(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
 
         return policyService
-                .getSellPolicy(RisingSellUsingMacd.class, RisingSellUsingBollingerBands.class)
+                .getSellPolicy(RisingSellUsingMacd.class)
                 .stream()
                 .allMatch(i -> i.isProperToSellWithLoss(candleResponses, tradeInfo));
     }

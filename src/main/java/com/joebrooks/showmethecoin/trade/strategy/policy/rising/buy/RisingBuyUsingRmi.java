@@ -27,9 +27,9 @@ public class RisingBuyUsingRmi implements IBuyPolicy {
 
         for(int i = START_INDEX; i < START_INDEX + END_COUNT; i++){
             if(rmiList.get(i).getRmi() > rmiList.get(i + 1).getRmi()){
-                risingCount++;
+                risingCount += END_COUNT + START_INDEX - i;
             } else {
-                fallingCount++;
+                fallingCount += END_COUNT + START_INDEX - i;
             }
         }
         return risingCount > fallingCount

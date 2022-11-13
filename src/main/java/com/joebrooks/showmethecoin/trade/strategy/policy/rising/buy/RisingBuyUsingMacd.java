@@ -27,17 +27,19 @@ public class RisingBuyUsingMacd implements IBuyPolicy {
         int fallingCount = 0;
 
         for(int i = START_INDEX; i < WATCH_COUNT + START_INDEX; i++){
-            if (macdResponseList.get(i).getMacd() > macdResponseList.get(i + 1).getMacd()
-                    && macdResponseList.get(i).getSignal() > macdResponseList.get(i + 1).getSignal()){
-                risingCount++;
+            if (macdResponseList.get(i).getMacd() < 0
+                    && macdResponseList.get(i).getSignal() < 0
+                    && macdResponseList.get(i).getMacd() > macdResponseList.get(i + 1).getMacd()
+                    && macdResponseList.get(i).getSignal() < macdResponseList.get(i + 1).getSignal()){
+                risingCount += WATCH_COUNT + START_INDEX - i;
             } else {
-                fallingCount++;
+                fallingCount  += WATCH_COUNT + START_INDEX - i;
             }
+
         }
 
 
         return macdResponseList.get(HEAD_INDEX).getMacd() > macdResponseList.get(HEAD_INDEX + 1).getMacd()
-                && macdResponseList.get(HEAD_INDEX).getSignal() > macdResponseList.get(HEAD_INDEX + 1).getSignal()
                 && risingCount > fallingCount;
     }
 }
