@@ -3,13 +3,12 @@ package com.joebrooks.showmethecoin.repository.candlestore;
 import com.joebrooks.showmethecoin.trade.ICandleResponse;
 import com.joebrooks.showmethecoin.trade.autotrade.TradingCoinList;
 import com.joebrooks.showmethecoin.trade.upbit.CoinType;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.PostConstruct;
-import java.util.List;
 
 @Service
 @Transactional
@@ -28,8 +27,8 @@ public class CandleStoreService {
         return candleStoreRepository.countAllByMarketAndCandleMinute(coinType.getName(), candleMinute);
     }
 
-    public boolean isExist(String dateKst, CoinType coinType){
-        return candleStoreRepository.findByDateKstAndMarket(dateKst, coinType.getName()).isPresent();
+    public boolean isExist(String dateKst, CoinType coinType, CandleMinute candleMinute){
+        return candleStoreRepository.findByDateKstAndMarketAndCandleMinute(dateKst, coinType.getName(), candleMinute).isPresent();
     }
 
     public void save(CandleStoreEntity candleStoreEntity){

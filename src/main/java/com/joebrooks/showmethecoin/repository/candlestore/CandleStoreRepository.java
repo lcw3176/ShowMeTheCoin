@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface CandleStoreRepository extends JpaRepository<CandleStoreEntity, Long> {
 
 
-    Optional<CandleStoreEntity> findByDateKstAndMarket(String dateKst, String market);
+    Optional<CandleStoreEntity> findByDateKstAndMarketAndCandleMinute(String dateKst, String market, CandleMinute candleMinute);
 
     long countAllByMarketAndCandleMinute(String market, CandleMinute candleMinute);
 

@@ -6,15 +6,12 @@ import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreService;
 import com.joebrooks.showmethecoin.trade.CompanyType;
 import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import com.joebrooks.showmethecoin.trade.upbit.client.UpBitClient;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 @RequiredArgsConstructor
@@ -83,9 +80,11 @@ public class CandleService {
         return candleStoreService.getCandles(coinType, minute);
     }
 
-    public List<CandleStoreEntity> getCandles(CoinType coinType, String to, CandleMinute minute) {
+    public void getCandles(CoinType coinType, String to, CandleMinute minute) {
 
-        return request(coinType, to, minute).stream().map(i ->
+        request(coinType, to, minute).forEach(i -> {
+            if(!candleStoreService.isExist(i.getDateKst(), coinType, minute)){
+                candleStoreService.save(
                         CandleStoreEntity.builder()
                                 .market(i.getMarket())
                                 .dateUtc(i.getDateUtc())
@@ -100,9 +99,27 @@ public class CandleService {
                                 .unit(i.getUnit())
                                 .companyType(CompanyType.UPBIT)
                                 .candleMinute(minute)
-                                .build())
-                .sorted(Comparator.comparing(CandleStoreEntity::getDateKst).reversed())
-                .collect(Collectors.toList());
+                                .build());
+            }
+        });
+//        return request(coinType, to, minute).stream().map(i ->
+//                        CandleStoreEntity.builder()
+//                                .market(i.getMarket())
+//                                .dateUtc(i.getDateUtc())
+//                                .dateKst(i.getDateKst())
+//                                .openingPrice(i.getOpeningPrice())
+//                                .highPrice(i.getHighPrice())
+//                                .lowPrice(i.getLowPrice())
+//                                .tradePrice(i.getTradePrice())
+//                                .timeStamp(i.getTimeStamp())
+//                                .accTradePrice(i.getAccTradePrice())
+//                                .accTradeVolume(i.getAccTradeVolume())
+//                                .unit(i.getUnit())
+//                                .companyType(CompanyType.UPBIT)
+//                                .candleMinute(minute)
+//                                .build())
+//                .sorted(Comparator.comparing(CandleStoreEntity::getDateKst).reversed())
+//                .collect(Collectors.toList());
     }
 
     private List<CandleResponse> request(CoinType coinType, CandleMinute minute, int count){

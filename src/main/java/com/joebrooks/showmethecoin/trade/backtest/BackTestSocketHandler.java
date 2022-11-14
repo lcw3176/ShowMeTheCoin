@@ -12,12 +12,14 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @RequiredArgsConstructor
 public class BackTestSocketHandler extends TextWebSocketHandler {
 
-    private final BackTestService backTestService;
+    private final BackTestExecutor backTestExecutor;
     private final ObjectMapper mapper;
+    private final BackTestService backTestService;
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws JsonProcessingException {
         BackTestRequest backTestRequest = mapper.readValue(message.getPayload(), BackTestRequest.class);
+//        backTestExecutor.execute(backTestRequest, session);
         backTestService.start(backTestRequest, session);
     }
 

@@ -1,9 +1,8 @@
 package com.joebrooks.showmethecoin.trade.backtest;
 
+import java.util.Date;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.Date;
 
 @Data
 @Builder
@@ -17,10 +16,6 @@ public class BackTestResponse {
 
     private double tradedPrice;
 
-    private double upperBollingers;
-    private double middleBollingers;
-    private double lowerBollingers;
-
     private boolean traded;
     private boolean buy;
     private boolean finish;
@@ -28,6 +23,5 @@ public class BackTestResponse {
 
     private int percentage;
     private double gain;
-
 
 }

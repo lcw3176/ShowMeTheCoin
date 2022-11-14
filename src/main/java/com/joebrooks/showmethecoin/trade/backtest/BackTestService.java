@@ -59,19 +59,13 @@ public class BackTestService {
             int per = 0;
 
             while(true){  // fixme 날짜 관련 에러 수정할 것 (시작 시간 정각부터 불러와야함)
-                List<CandleStoreEntity> candles = candleService.getCandles(coinType, format.format(startDate.getTime()), minute);
-                candles.forEach(i ->{
-                    if(!candleStoreService.isExist(i.getDateKst(), coinType)){
-                        candleStoreService.save(i);
-                    }
-
-                });
+                candleService.getCandles(coinType, format.format(startDate.getTime()), minute);
                 startDate.add(Calendar.MINUTE, minute.getValue() * 200);
 
                 session.sendMessage(new TextMessage(mapper.writeValueAsString(BackTestResponse.builder()
-                                .load(true)
-                                .percentage(per++)
-                                .build())));
+                        .load(true)
+                        .percentage(per++)
+                        .build())));
 
                 if(startDate.getTime().after(request.getEndDate().getTime())){
                     startDate.setTime(request.getStartDate().getTime());
@@ -208,25 +202,25 @@ public class BackTestService {
 
                 // 손절 조건
                 else if (!tradeInfoList.isEmpty()
-                            && strategy.stream().allMatch(st -> st.isProperToSellWithLoss(tempCandles, tradeInfoList))
-                            && tradeInfoList.size() >= maxBetCount) {
+                        && strategy.stream().allMatch(st -> st.isProperToSellWithLoss(tempCandles, tradeInfoList))
+                        && tradeInfoList.size() >= maxBetCount) {
 
-                        if(coinBalance > 0) {
-                            myBalance += getGain(tempCandles, tradeInfoList);
-                            accumulatedGain = myBalance;
-                            coinBalance = 0D;
+                    if(coinBalance > 0) {
+                        myBalance += getGain(tempCandles, tradeInfoList);
+                        accumulatedGain = myBalance;
+                        coinBalance = 0D;
 
-                            response.setTraded(true);
-                            response.setTradedPrice(nowCandle.getTradePrice());
+                        response.setTraded(true);
+                        response.setTradedPrice(nowCandle.getTradePrice());
 
-                            log.info("손절: 시각 {} 잔고 {}",
-                                    nowCandle.getDateKst(),
-                                    myBalance);
-                            tradeInfoList.clear();
-                            cashToBuy = myBalance / maxBetCount;
+                        log.info("손절: 시각 {} 잔고 {}",
+                                nowCandle.getDateKst(),
+                                myBalance);
+                        tradeInfoList.clear();
+                        cashToBuy = myBalance / maxBetCount;
 
-                        }
                     }
+                }
 
                 if(session.isOpen()){
                     session.sendMessage(new TextMessage(mapper.writeValueAsString(response)));

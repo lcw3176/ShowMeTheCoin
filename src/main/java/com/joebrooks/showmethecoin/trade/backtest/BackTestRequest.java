@@ -2,14 +2,17 @@ package com.joebrooks.showmethecoin.trade.backtest;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
-import com.joebrooks.showmethecoin.trade.upbit.CoinType;
-import com.joebrooks.showmethecoin.repository.candlestore.CandleMinute;
 import com.joebrooks.showmethecoin.global.serializer.CalendarDeserializer;
 import com.joebrooks.showmethecoin.global.serializer.CalendarSerializer;
-import lombok.*;
-
+import com.joebrooks.showmethecoin.repository.candlestore.CandleMinute;
+import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
+import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import java.util.Calendar;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
