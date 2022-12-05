@@ -20,7 +20,6 @@ public class ShortBuyUsingAdx  implements IBuyPolicy {
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         List<AdxResponse> adxResponseList = adxIndicator.getAdx(candleResponses);
 
-        return adxResponseList.get(2).getPlusDI() < adxResponseList.get(1).getPlusDI()
-                && adxResponseList.get(2).getMinusDI() > adxResponseList.get(1).getMinusDI();
+        return  adxResponseList.get(1).getPlusDI() > adxResponseList.get(1).getMinusDI();
     }
 }
