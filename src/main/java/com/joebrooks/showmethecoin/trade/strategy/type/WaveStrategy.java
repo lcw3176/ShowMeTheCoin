@@ -5,6 +5,7 @@ import com.joebrooks.showmethecoin.repository.tradeinfo.TradeInfoEntity;
 import com.joebrooks.showmethecoin.trade.strategy.IStrategy;
 import com.joebrooks.showmethecoin.trade.strategy.policy.PolicyService;
 import com.joebrooks.showmethecoin.trade.strategy.policy.wave.WaveBuyCore;
+import com.joebrooks.showmethecoin.trade.strategy.policy.wave.WaveBuyUsingMacd;
 import com.joebrooks.showmethecoin.trade.strategy.policy.wave.WaveSellCore;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class WaveStrategy implements IStrategy {
     @Override
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         return policyService
-                .getBuyPolicy(WaveBuyCore.class)
+                .getBuyPolicy(WaveBuyCore.class, WaveBuyUsingMacd.class)
                 .stream()
                 .allMatch(i -> i.isProperToBuy(candleResponses, tradeInfo));
     }
