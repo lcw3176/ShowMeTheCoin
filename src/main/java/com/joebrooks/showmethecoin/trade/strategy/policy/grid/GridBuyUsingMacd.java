@@ -22,6 +22,7 @@ public class GridBuyUsingMacd implements IBuyPolicy {
 
         return  macdResponseList.get(0).getMacd() < 0
                 && macdResponseList.get(0).getSignal() < 0
+                && macdResponseList.get(1).getMacd() > macdResponseList.get(1).getSignal()
                 && macdResponseList.get(0).getMacd() < macdResponseList.get(0).getSignal();
     }
 

@@ -13,8 +13,8 @@ import java.util.List;
 @Component
 public class BaseSellCore implements ISellPolicy {
 
-//    private static final double LOSS = 0.032;
-    private static final double GAIN = 0.001;
+    private static final double LOSS = 0.005;
+    private static final double GAIN = 0.0001;
 //    int THROW_MINUTE = 60;
 
 
@@ -42,24 +42,10 @@ public class BaseSellCore implements ISellPolicy {
             return false;
         }
 
-        double lossRate = 0.01D;
-//        CandleStoreEntity candleStore = candleResponses.get(0);
-//
-//        if(candleStore.getTradePrice() >= 10000000){
-//            lossRate = 0.03D;
-//        } else if(candleStore.getTradePrice() >= 1000000){
-//            lossRate = 0.04D;
-//        } else {
-//            lossRate = 0.05D;
-//        }
+        double lastBuyPrice = tradeInfo.get(tradeInfo.size() - 1).getTradePrice();
+        double nowPrice = candleResponses.get(0).getTradePrice();
 
-
-        double averageBuyPrice = getAverageBuyPrice(tradeInfo);
-        double paidFee = getPaidFee(tradeInfo);
-        double averageSellPrice = getAverageSellPrice(candleResponses, tradeInfo);
-        double payingFee = getPayingFee(candleResponses, tradeInfo);
-
-        return (averageBuyPrice + paidFee + payingFee) * (1 - lossRate) > averageSellPrice;
+        return lastBuyPrice * (1 - LOSS) > nowPrice;
     }
 
     private double getAverageBuyPrice(List<TradeInfoEntity> tradeInfo){

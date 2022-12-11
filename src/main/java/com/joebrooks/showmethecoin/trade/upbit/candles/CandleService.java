@@ -80,7 +80,7 @@ public class CandleService {
         return candleStoreService.getCandles(coinType, minute);
     }
 
-    public void getCandles(CoinType coinType, String to, CandleMinute minute) {
+    public void saveCandles(CoinType coinType, String to, CandleMinute minute) {
 
         request(coinType, to, minute).forEach(i -> {
             if(!candleStoreService.isExist(i.getDateKst(), coinType, minute)){
@@ -102,24 +102,6 @@ public class CandleService {
                                 .build());
             }
         });
-//        return request(coinType, to, minute).stream().map(i ->
-//                        CandleStoreEntity.builder()
-//                                .market(i.getMarket())
-//                                .dateUtc(i.getDateUtc())
-//                                .dateKst(i.getDateKst())
-//                                .openingPrice(i.getOpeningPrice())
-//                                .highPrice(i.getHighPrice())
-//                                .lowPrice(i.getLowPrice())
-//                                .tradePrice(i.getTradePrice())
-//                                .timeStamp(i.getTimeStamp())
-//                                .accTradePrice(i.getAccTradePrice())
-//                                .accTradeVolume(i.getAccTradeVolume())
-//                                .unit(i.getUnit())
-//                                .companyType(CompanyType.UPBIT)
-//                                .candleMinute(minute)
-//                                .build())
-//                .sorted(Comparator.comparing(CandleStoreEntity::getDateKst).reversed())
-//                .collect(Collectors.toList());
     }
 
     private List<CandleResponse> request(CoinType coinType, CandleMinute minute, int count){

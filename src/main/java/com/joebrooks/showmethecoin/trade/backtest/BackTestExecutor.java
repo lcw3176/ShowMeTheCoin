@@ -57,7 +57,7 @@ public class BackTestExecutor {
                     candleLoadDate.setTime(request.getEndDate().getTime());
                 }
 
-                candleService.getCandles(request.getTradeCoin(), TimeFormatter.convert(candleLoadDate.getTime()), request.getStrategyType().getCandleMinute());
+                candleService.saveCandles(request.getTradeCoin(), TimeFormatter.convert(candleLoadDate.getTime()), request.getStrategyType().getCandleMinute());
 
                 UpbitUtil.delay(1000);
 

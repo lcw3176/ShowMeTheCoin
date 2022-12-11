@@ -52,13 +52,16 @@ public class WaveBuyCore implements IBuyPolicy {
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
 
         CandleStoreEntity mostHighPrice = candleResponses.stream()
-                .max(Comparator.comparing(CandleStoreEntity::getHighPrice)).get();
+                .max(Comparator.comparing(CandleStoreEntity::getHighPrice))
+                .orElse(CandleStoreEntity.builder()
+                        .tradePrice(0D)
+                        .build());
 
         double startX = 1;
         double startY = candleResponses.get(1).getTradePrice();
 
 
-        double endX = candleResponses.indexOf(mostHighPrice) + 1;
+        double endX = candleResponses.indexOf(mostHighPrice) + 1D;
         double endY = mostHighPrice.getHighPrice();
 
         if(startY >= endY){
@@ -70,7 +73,7 @@ public class WaveBuyCore implements IBuyPolicy {
 
         double angle = Math.atan(dy / dx) * (180.0 / Math.PI);
 
-        System.out.println(candleResponses.get(1).getDateKst() + "::" + angle);
+        System.out.println("시작: " + candleResponses.get(1).getDateKst() + ",  끝: " + mostHighPrice.getDateKst() + ",  각도: " + angle);
         return angle <= -45 && angle >= -46;
     }
 }

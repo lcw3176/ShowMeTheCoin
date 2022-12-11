@@ -5,10 +5,6 @@ import com.joebrooks.showmethecoin.repository.tradeinfo.TradeInfoEntity;
 import com.joebrooks.showmethecoin.trade.strategy.IStrategy;
 import com.joebrooks.showmethecoin.trade.strategy.policy.PolicyService;
 import com.joebrooks.showmethecoin.trade.strategy.policy.rising.buy.RisingBuyUsingBollingerBands;
-import com.joebrooks.showmethecoin.trade.strategy.policy.rising.buy.RisingBuyUsingMacd;
-import com.joebrooks.showmethecoin.trade.strategy.policy.rising.buy.RisingBuyUsingRmi;
-import com.joebrooks.showmethecoin.trade.strategy.policy.rising.buy.RisingBuyUsingRsi;
-import com.joebrooks.showmethecoin.trade.strategy.policy.rising.sell.RisingSellUsingBollingerBands;
 import com.joebrooks.showmethecoin.trade.strategy.policy.rising.sell.RisingSellUsingMacd;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +20,7 @@ public class RisingStrategy implements IStrategy {
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
 
         return policyService
-                .getBuyPolicy(RisingBuyUsingMacd.class, RisingBuyUsingRsi.class, RisingBuyUsingRmi.class, RisingBuyUsingBollingerBands.class)
+                .getBuyPolicy(RisingBuyUsingBollingerBands.class)
                 .stream()
                 .allMatch(i -> i.isProperToBuy(candleResponses, tradeInfo));
     }
@@ -33,14 +29,13 @@ public class RisingStrategy implements IStrategy {
     public boolean isProperToSellWithBenefit(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
 
         return policyService
-                .getSellPolicy(RisingSellUsingBollingerBands.class)
+                .getSellPolicy(RisingSellUsingMacd.class)
                 .stream()
                 .allMatch(i -> i.isProperToSellWithBenefit(candleResponses, tradeInfo));
     }
 
     @Override
     public boolean isProperToSellWithLoss(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
-
         return policyService
                 .getSellPolicy(RisingSellUsingMacd.class)
                 .stream()

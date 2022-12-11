@@ -6,7 +6,9 @@ import com.joebrooks.showmethecoin.repository.tradeinfo.TradeInfoEntity;
 import com.joebrooks.showmethecoin.trade.strategy.IStrategy;
 import com.joebrooks.showmethecoin.trade.strategy.policy.PolicyService;
 import com.joebrooks.showmethecoin.trade.strategy.policy.grid.GirdSellCore;
-import com.joebrooks.showmethecoin.trade.strategy.policy.grid.GridBuyCore;
+import com.joebrooks.showmethecoin.trade.strategy.policy.grid.GridBuyUsingMacd;
+import com.joebrooks.showmethecoin.trade.strategy.policy.grid.GridBuyUsingRsi;
+import com.joebrooks.showmethecoin.trade.strategy.policy.grid.GridSellUsingMacd;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,7 +23,7 @@ public class GridStrategy implements IStrategy {
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
 
         return policyService
-                .getBuyPolicy(GridBuyCore.class)
+                .getBuyPolicy(GridBuyUsingRsi.class, GridBuyUsingMacd.class)
                 .stream()
                 .allMatch(i -> i.isProperToBuy(candleResponses, tradeInfo));
     }
@@ -30,7 +32,7 @@ public class GridStrategy implements IStrategy {
     public boolean isProperToSellWithBenefit(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
 
         return policyService
-                .getSellPolicy(GirdSellCore.class)
+                .getSellPolicy(GridSellUsingMacd.class)
                 .stream()
                 .allMatch(i -> i.isProperToSellWithBenefit(candleResponses, tradeInfo));
     }

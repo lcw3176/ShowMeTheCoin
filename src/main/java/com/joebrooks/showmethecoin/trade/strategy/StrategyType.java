@@ -11,7 +11,8 @@ public enum StrategyType {
     SHORT("단타 전략", ShortStrategy.class, CandleMinute.FIFTH_M),
     RESISTANCE("변곡점 전략", ResistanceStrategy.class, CandleMinute.FIVE_M),
     RISING("상승 전략", RisingStrategy.class, CandleMinute.FIVE_M),
-    WAVE("파동 전략", WaveStrategy.class, CandleMinute.FIVE_M);
+    WAVE("파동 전략", WaveStrategy.class, CandleMinute.FIVE_M),
+    GRID("그리드 전략", GridStrategy.class, CandleMinute.FIVE_M);
 
 
     private String description;

@@ -12,22 +12,23 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class GirdSellCore implements ISellPolicy {
 
-    private static final double GAIN = 0.005;
-    private static final double LOSS = 0.01;
+//    private static final double GAIN = 0.005;
+    private static final double LOSS = 0.03;
 
     @Override
     public boolean isProperToSellWithBenefit(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
-        if(tradeInfo.isEmpty()){
-            return false;
-        }
-
-        double averageBuyPrice = getAverageBuyPrice(tradeInfo);
-        double paidFee = getPaidFee(tradeInfo);
-        double averageSellPrice = getAverageSellPrice(candleResponses, tradeInfo);
-        double payingFee = getPayingFee(candleResponses, tradeInfo);
-
-
-        return (averageBuyPrice + paidFee + payingFee) * (1 + GAIN) < averageSellPrice;
+//        if(tradeInfo.isEmpty()){
+//            return false;
+//        }
+//
+//        double averageBuyPrice = getAverageBuyPrice(tradeInfo);
+//        double paidFee = getPaidFee(tradeInfo);
+//        double averageSellPrice = getAverageSellPrice(candleResponses, tradeInfo);
+//        double payingFee = getPayingFee(candleResponses, tradeInfo);
+//
+//
+//        return (averageBuyPrice + paidFee + payingFee) * (1 + GAIN) < averageSellPrice;
+        return true;
     }
 
     @Override

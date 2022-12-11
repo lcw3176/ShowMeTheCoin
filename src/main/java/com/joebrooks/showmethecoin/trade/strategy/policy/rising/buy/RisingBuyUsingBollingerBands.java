@@ -21,7 +21,6 @@ public class RisingBuyUsingBollingerBands implements IBuyPolicy {
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         List<BollingerBandsResponse> lst = bollingerBandsIndicator.getBollingerBands(candleResponses);
 
-        return lst.get(HEAD_INDEX).getLower() <= candleResponses.get(HEAD_INDEX).getTradePrice()
-                && lst.get(HEAD_INDEX).getMiddle() >= candleResponses.get(HEAD_INDEX).getTradePrice();
+        return lst.get(HEAD_INDEX).getLower() > candleResponses.get(HEAD_INDEX).getTradePrice();
     }
 }

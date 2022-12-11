@@ -7,25 +7,23 @@ import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreEntity;
 import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreService;
 import com.joebrooks.showmethecoin.repository.tradeinfo.TradeInfoEntity;
 import com.joebrooks.showmethecoin.trade.CompanyType;
-import com.joebrooks.showmethecoin.trade.indicator.bollingerbands.BollingerBandsIndicator;
 import com.joebrooks.showmethecoin.trade.strategy.IStrategy;
 import com.joebrooks.showmethecoin.trade.strategy.StrategyService;
 import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
 import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import com.joebrooks.showmethecoin.trade.upbit.UpbitUtil;
 import com.joebrooks.showmethecoin.trade.upbit.candles.CandleService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
-
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +34,6 @@ public class BackTestService {
     private final CandleStoreService candleStoreService;
     private final StrategyService strategyService;
     private final ObjectMapper mapper;
-    private final BollingerBandsIndicator bollingerBandsIndicator;
 
 
     public void start(BackTestRequest request, WebSocketSession session){
@@ -56,10 +53,10 @@ public class BackTestService {
             Calendar startDate = Calendar.getInstance();
             startDate.setTime(request.getStartDate().getTime());
             startDate.add(Calendar.DATE, -1);
-            int per = 0;
 
+            int per = 0;
             while(true){  // fixme 날짜 관련 에러 수정할 것 (시작 시간 정각부터 불러와야함)
-                candleService.getCandles(coinType, format.format(startDate.getTime()), minute);
+                candleService.saveCandles(coinType, format.format(startDate.getTime()), minute);
                 startDate.add(Calendar.MINUTE, minute.getValue() * 200);
 
                 session.sendMessage(new TextMessage(mapper.writeValueAsString(BackTestResponse.builder()
@@ -80,22 +77,21 @@ public class BackTestService {
 
                 double minCash = cashToBuy;
                 Calendar temp = Calendar.getInstance();
-                temp.setTime(startDate.getTime());
+                temp.setTime(request.getStartDate().getTime());
 
 
                 temp.add(Calendar.MINUTE, minute.getValue() * 199);
                 List<CandleStoreEntity> tempCandles = candleStoreService.getCandles(coinType,
                         minute,
-                        tempFormat.format(startDate.getTime()),
+                        tempFormat.format(request.getStartDate().getTime()),
                         tempFormat.format(temp.getTime()));
 
-                startDate.add(Calendar.MINUTE, minute.getValue());
+                request.getStartDate().add(Calendar.MINUTE, minute.getValue());
 
                 if(temp.getTime().after(request.getEndDate().getTime())){
                     break;
                 }
 
-//                List<BollingerBandsResponse> bollingerBandsResponseList = bollingerBandsIndicator.getBollingerBands(tempCandles);
                 CandleStoreEntity nowCandle = tempCandles.get(0);
                 BackTestResponse response = BackTestResponse.builder()
                         .open(nowCandle.getOpeningPrice())
@@ -104,9 +100,6 @@ public class BackTestService {
                         .high(nowCandle.getHighPrice())
                         .time(format.parse(nowCandle.getDateKst().replace('T', ' ')))
                         .traded(false)
-//                        .upperBollingers(bollingerBandsResponseList.get(0).getUpper())
-//                        .middleBollingers(bollingerBandsResponseList.get(0).getMiddle())
-//                        .lowerBollingers(bollingerBandsResponseList.get(0).getLower())
                         .build();
 
                 // 구매
@@ -250,13 +243,6 @@ public class BackTestService {
 
 
         return averageSellPrice - payingFee;
-    }
-
-    private double getPrice(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo){
-        double averageBuyPrice = getAverageBuyPrice(tradeInfo);
-        double paidFee = getPaidFee(tradeInfo);
-
-        return averageBuyPrice + paidFee;
     }
 
 

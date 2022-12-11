@@ -15,31 +15,14 @@ import java.util.List;
 public class RisingBuyUsingMacd implements IBuyPolicy {
 
     private final MacdIndicator macdIndicator;
-    private final int START_INDEX = 2;
-    private final int WATCH_COUNT = 5;
-    private final int HEAD_INDEX = 1;
 
     @Override
     public boolean isProperToBuy(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         List<MacdResponse> macdResponseList = macdIndicator.getMacd(candleResponses);
 
-        int risingCount = 0;
-        int fallingCount = 0;
 
-        for(int i = START_INDEX; i < WATCH_COUNT + START_INDEX; i++){
-            if (macdResponseList.get(i).getMacd() < 0
-                    && macdResponseList.get(i).getSignal() < 0
-                    && macdResponseList.get(i).getMacd() > macdResponseList.get(i + 1).getMacd()
-                    && macdResponseList.get(i).getSignal() < macdResponseList.get(i + 1).getSignal()){
-                risingCount += WATCH_COUNT + START_INDEX - i;
-            } else {
-                fallingCount  += WATCH_COUNT + START_INDEX - i;
-            }
-
-        }
-
-
-        return macdResponseList.get(HEAD_INDEX).getMacd() > macdResponseList.get(HEAD_INDEX + 1).getMacd()
-                && risingCount > fallingCount;
+        return  macdResponseList.get(1).getMacd() < macdResponseList.get(1).getSignal()
+                && macdResponseList.get(0).getMacd() > macdResponseList.get(0).getSignal();
     }
+
 }
