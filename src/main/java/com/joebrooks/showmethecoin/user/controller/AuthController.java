@@ -1,4 +1,4 @@
-package com.joebrooks.showmethecoin.auth;
+package com.joebrooks.showmethecoin.user.controller;
 
 import com.joebrooks.showmethecoin.repository.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +23,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String checkUser(@RequestParam("id") String id,
-                            @RequestParam("pw") String pw,
-                            HttpSession session) {
+    public String checkUser(@RequestParam("id") String id, @RequestParam("pw") String pw, HttpSession session) {
 
-        userService.login(id, pw);
-        session.setAttribute("userId", id);
+        boolean result = userService.login(id, pw);
+
+        if(result){
+            session.setAttribute("userId", id);
+        }
 
         return "redirect:/home";
     }

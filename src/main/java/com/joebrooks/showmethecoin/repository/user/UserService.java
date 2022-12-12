@@ -15,10 +15,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserEntity login(String id, String pw) {
-        return userRepository.findByUserIdAndUserPw(id, SHA256.encrypt(pw)).orElseThrow(() -> {
-            throw new AuthException("id: " + id + "  pw:" + pw);
-        });
+    public boolean login(String id, String pw) {
+        return userRepository.existsByUserIdAndUserPw(id, SHA256.encrypt(pw));
     }
 
     public UserEntity getUser(String id) {
