@@ -14,13 +14,13 @@ import java.util.Arrays;
 public class QuoteService {
 
     private final UpBitClient upBitClient;
+    private static final String PATH = "/orderbook";
+    private static final String QUERY_NAME = "markets";
 
     public QuoteResponse getQuote(CoinType coinType) {
-        String path = "/orderbook";
-
         UriComponents uri = UriComponentsBuilder.newInstance()
-                .path(path)
-                .queryParam("markets", coinType.getName())
+                .path(PATH)
+                .queryParam(QUERY_NAME, coinType.getName())
                 .build();
 
 
@@ -28,11 +28,9 @@ public class QuoteService {
     }
 
     public QuoteResponse getQuote(String coinType){
-        String path = "/orderbook";
-
         UriComponents uri = UriComponentsBuilder.newInstance()
-                .path(path)
-                .queryParam("markets", coinType)
+                .path(PATH)
+                .queryParam(QUERY_NAME, coinType)
                 .build();
 
         return Arrays.asList(upBitClient.get(uri.toString(), QuoteResponse[].class)).get(0);
