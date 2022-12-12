@@ -3,6 +3,7 @@ package com.joebrooks.showmethecoin.trade.upbit.account;
 import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 import com.joebrooks.showmethecoin.trade.upbit.client.UpBitClient;
 import com.joebrooks.showmethecoin.repository.userkey.UserKeyEntity;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class AccountService {
                 .filter(data -> data.getCurrency().equals("KRW"))
                 .findFirst()
                 .orElseThrow(() ->{
-                    throw new RuntimeException("계좌 정보가 없습니다");
+                    throw new NoSuchElementException("계좌 정보가 없습니다");
                 });
     }
 
@@ -34,6 +35,8 @@ public class AccountService {
         return Arrays.stream(getAccountData(userKey))
                 .filter(data -> data.getCurrency().equals(coinType.toString()))
                 .findFirst()
-                .orElse(AccountResponse.builder().balance("0").build());
+                .orElseThrow(() ->{
+                    throw new NoSuchElementException("코인 정보가 없습니다");
+                });
     }
 }
