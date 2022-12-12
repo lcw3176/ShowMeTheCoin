@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.util.concurrent.TimeUnit;
 
 @UtilityClass
-public class UpbitUtil {
+public class UpBitUtil {
 
 
     public double getTickSize(double price){

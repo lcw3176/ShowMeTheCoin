@@ -1,35 +1,21 @@
 package com.joebrooks.showmethecoin.global.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class TimeFormatter {
 
-    private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private final SimpleDateFormat parseFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    public Date convert(String target){
+    private final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("yyyyMMddHHmmss", Locale.KOREA);
+
+    public LocalDateTime parseTime(String date, String time){
         try{
-            return format.parse(target);
+            return LocalDateTime.parse(date + time, timeFormat);
         } catch (Exception e){
-            throw new RuntimeException("타임 포맷 변환 에러");
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
-    public Date parse(String target){
-        try{
-            return parseFormat.parse(target);
-        } catch (Exception e){
-            throw new RuntimeException("타임 포맷 변환 에러");
-        }
-    }
-
-    public String convert(Date target){
-        try{
-            return format.format(target);
-        } catch (Exception e){
-            throw new RuntimeException("타임 포맷 변환 에러");
-        }
-    }
 }

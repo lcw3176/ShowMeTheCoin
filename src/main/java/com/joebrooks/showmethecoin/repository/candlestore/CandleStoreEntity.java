@@ -23,9 +23,6 @@ public class CandleStoreEntity {
     @Enumerated(EnumType.STRING)
     private CompanyType companyType;
 
-    @Column(name = "candle_minute")
-    @Enumerated(EnumType.STRING)
-    private CandleMinute candleMinute;
 
     @Column(name = "market")
     private String market;

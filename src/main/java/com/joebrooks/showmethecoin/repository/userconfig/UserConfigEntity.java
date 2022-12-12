@@ -1,8 +1,6 @@
 package com.joebrooks.showmethecoin.repository.userconfig;
 
-import com.joebrooks.showmethecoin.repository.candlestore.CandleMinute;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
-import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,13 +19,6 @@ public class UserConfigEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "strategy")
-    @Enumerated(EnumType.STRING)
-    private StrategyType strategy;
-
-    @Column(name = "candle_minute")
-    @Enumerated(EnumType.STRING)
-    private CandleMinute candleMinute;
 
     @Column(name = "allow_sell_with_loss")
     private boolean allowSellWithLoss;
@@ -59,9 +50,6 @@ public class UserConfigEntity {
         this.betMoney = money;
     }
 
-    public void changeStrategy(StrategyType strategy){
-        this.strategy = strategy;
-    }
 
     public void changeMaxBetCount(int maxBetCount){
         this.maxBetCount = maxBetCount;
@@ -71,9 +59,6 @@ public class UserConfigEntity {
         this.maxTradeCoinCount = maxTradeCoinCount;
     }
 
-    public void changeCandleMinute(CandleMinute candleMinute){
-        this.candleMinute = candleMinute;
-    }
 
     public void changeOrderCancelMinute(int orderCancelMinute){
         this.orderCancelMinute = orderCancelMinute;

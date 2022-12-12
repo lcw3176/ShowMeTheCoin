@@ -30,7 +30,8 @@ public class UpBitClient {
                     .accept(MediaType.APPLICATION_JSON)
                     .acceptCharset(StandardCharsets.UTF_8)
                     .retrieve()
-                    .onStatus(HttpStatus::isError, response -> Mono.error(new UpBitException("failed get")))
+                    .onStatus(HttpStatus::isError, response -> response.bodyToMono(String.class)
+                            .flatMap(errorBody -> Mono.error(new UpBitException(errorBody))))
                     .bodyToMono(clazz)
                     .timeout(Duration.ofMillis(READ_TIMEOUT), Mono.error(new UpBitException("Read Timeout: " + path)))
                     .block();
