@@ -5,8 +5,8 @@
 //import com.joebrooks.showmethecoin.repository.tradelog.TradeResult;
 //import com.joebrooks.showmethecoin.trade.upbit.CoinType;
 //import com.joebrooks.showmethecoin.trade.upbit.client.Side;
-//import com.joebrooks.showmethecoin.trade.upbit.order.CheckOrderRequest;
-//import com.joebrooks.showmethecoin.trade.upbit.order.CheckOrderResponse;
+//import com.joebrooks.showmethecoin.trade.upbit.order.model.CheckOrderRequest;
+//import com.joebrooks.showmethecoin.trade.upbit.order.model.CheckOrderResponse;
 //import com.joebrooks.showmethecoin.trade.upbit.order.OrderService;
 //import com.joebrooks.showmethecoin.trade.upbit.order.OrderStatus;
 //import com.joebrooks.showmethecoin.trade.CompanyType;

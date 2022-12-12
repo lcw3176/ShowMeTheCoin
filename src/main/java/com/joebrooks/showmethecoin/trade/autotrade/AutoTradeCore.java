@@ -14,8 +14,8 @@
 //import com.joebrooks.showmethecoin.trade.upbit.account.AccountService;
 //import com.joebrooks.showmethecoin.trade.upbit.client.OrderType;
 //import com.joebrooks.showmethecoin.trade.upbit.client.Side;
-//import com.joebrooks.showmethecoin.trade.upbit.order.OrderRequest;
-//import com.joebrooks.showmethecoin.trade.upbit.order.OrderResponse;
+//import com.joebrooks.showmethecoin.trade.upbit.order.model.OrderRequest;
+//import com.joebrooks.showmethecoin.trade.upbit.order.model.OrderResponse;
 //import com.joebrooks.showmethecoin.trade.upbit.order.OrderService;
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;

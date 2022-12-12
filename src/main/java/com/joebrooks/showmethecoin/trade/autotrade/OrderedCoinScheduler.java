@@ -11,9 +11,9 @@
 //import com.joebrooks.showmethecoin.trade.upbit.account.AccountResponse;
 //import com.joebrooks.showmethecoin.trade.upbit.account.AccountService;
 //import com.joebrooks.showmethecoin.trade.upbit.client.Side;
-//import com.joebrooks.showmethecoin.trade.upbit.order.CancelOrderRequest;
-//import com.joebrooks.showmethecoin.trade.upbit.order.CheckOrderRequest;
-//import com.joebrooks.showmethecoin.trade.upbit.order.CheckOrderResponse;
+//import com.joebrooks.showmethecoin.trade.upbit.order.model.CancelOrderRequest;
+//import com.joebrooks.showmethecoin.trade.upbit.order.model.CheckOrderRequest;
+//import com.joebrooks.showmethecoin.trade.upbit.order.model.CheckOrderResponse;
 //import com.joebrooks.showmethecoin.trade.upbit.order.OrderService;
 //import com.joebrooks.showmethecoin.trade.upbit.order.OrderStatus;
 //import java.time.LocalDateTime;

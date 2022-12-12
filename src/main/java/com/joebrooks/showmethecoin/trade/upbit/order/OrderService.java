@@ -2,6 +2,11 @@ package com.joebrooks.showmethecoin.trade.upbit.order;
 
 import com.joebrooks.showmethecoin.trade.upbit.client.UpBitClient;
 import com.joebrooks.showmethecoin.repository.userkey.UserKeyEntity;
+import com.joebrooks.showmethecoin.trade.upbit.order.model.CancelOrderRequest;
+import com.joebrooks.showmethecoin.trade.upbit.order.model.CheckOrderRequest;
+import com.joebrooks.showmethecoin.trade.upbit.order.model.CheckOrderResponse;
+import com.joebrooks.showmethecoin.trade.upbit.order.model.OrderRequest;
+import com.joebrooks.showmethecoin.trade.upbit.order.model.OrderResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
