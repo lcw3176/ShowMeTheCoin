@@ -16,14 +16,16 @@ public class TickerService {
 
 
     private final UpBitClient upBitClient;
+    private static final String PATH = "/ticker";
+    private static final String QUERY_NAME = "markets";
 
     public List<TickerResponse> getTicker(CoinType... coinTypes){
         List<String> types = Arrays.stream(coinTypes).map(CoinType::getName).collect(Collectors.toList());
 
 
         UriComponents uri = UriComponentsBuilder.newInstance()
-                .path("/ticker")
-                .queryParam("markets", types)
+                .path(PATH)
+                .queryParam(QUERY_NAME, types)
                 .build();
 
 
