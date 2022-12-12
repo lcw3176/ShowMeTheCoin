@@ -1,12 +1,12 @@
-package com.joebrooks.showmethecoin.repository.candlestore;
+package com.joebrooks.showmethecoin.repository.pricestore;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface CandleStoreRepository extends JpaRepository<CandleStoreEntity, Long> {
+public interface PriceStoreRepository extends JpaRepository<PriceStoreEntity, Long> {
 
-    @Query("SELECT DISTINCT market FROM candle_store")
+    @Query("SELECT DISTINCT market FROM price_store")
     List<String> findDistinctMarket();
 
     void deleteAllByMarket(String market);
