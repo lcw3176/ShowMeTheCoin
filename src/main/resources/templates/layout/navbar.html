@@ -1,102 +1,105 @@
-<html xmlns:th="http://www.thymeleaf.org">
-    <div th:fragment="layout_navBar">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:fragment="layout_navBar">
 
-        <nav class="navbar has-background-light" role="navigation" aria-label="main navigation">
-            <div class="container" th:if="${session.userId == null}">
-                <div class="navbar-brand">
-                    <a class="navbar-item" href="/home">
-                        <img th:src="@{/img/logo.png}" class="mr-2" height="28"/>
-                        <p class="subtitle">Rich Shrimp</p>
-                    </a>
+    <nav class="navbar has-background-light" role="navigation" aria-label="main navigation">
+        <div class="container" sec:authorize="!isAuthenticated()">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="/home">
+                    <img th:src="@{/img/logo.png}" class="mr-2" height="28"/>
+                    <p class="subtitle">Rich Shrimp</p>
+                </a>
 
-                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                        <span aria-hidden="true"></span>
-                    </a>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+                   data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div th:id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-end">
+                    <a class="navbar-item" href="/user/login"> 로그인 </a>
                 </div>
+            </div>
+        </div>
 
-                <div th:id="navbarBasicExample" class="navbar-menu">
-                    <div class="navbar-end">
-                        <a class="navbar-item" href="/login"> 로그인 </a>
-                    </div>
+
+        <div class="container" sec:authorize="isAuthenticated()">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="/home">
+                    <img th:src="@{/img/logo.png}" class="mr-2" height="28"/>
+                    <p class="subtitle">Rich Shrimp</p>
+                </a>
+
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+                   data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div th:id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-end">
+                    <a class="navbar-item" href="/user/revenue"> 수익 내역 </a>
+                    <a class="navbar-item" href="/user/trade-log"> 거래 현황 </a>
+                    <a class="navbar-item" href="/user/user-config"> 내 설정 </a>
+                    <a class="navbar-item" href="/user/logout"> 로그아웃 </a>
                 </div>
             </div>
 
+        </div>
+    </nav>
 
-            <div class="container" th:unless="${session.userId == null}">
-                <div class="navbar-brand">
-                    <a class="navbar-item" href="/home">
-                        <img th:src="@{/img/logo.png}" class="mr-2" height="28"/>
-                        <p class="subtitle">Rich Shrimp</p>
-                    </a>
+    <!--        <nav id="navbar-main" class="navbar is-fixed-top">-->
+    <!--            <div class="navbar-brand">-->
+    <!--                <a class="navbar-item is-hidden-desktop jb-aside-mobile-toggle">-->
+    <!--                    <span class="icon"><i class="mdi mdi-forwardburger mdi-24px"></i></span>-->
+    <!--                </a>-->
+    <!--            </div>-->
+    <!--            <div class="navbar-brand is-right">-->
+    <!--                <a class="navbar-item is-hidden-desktop jb-navbar-menu-toggle" data-target="navbar-menu">-->
+    <!--                    <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>-->
+    <!--                </a>-->
+    <!--            </div>-->
+    <!--            <div class="navbar-menu fadeIn animated faster" id="navbar-menu">-->
+    <!--                <div class="navbar-end">-->
+    <!--                    <div class="navbar-item has-dropdown has-dropdown-with-icons has-divider has-user-avatar is-hoverable">-->
+    <!--                        <a class="navbar-link is-arrowless">-->
+    <!--                            <div class="is-user-avatar">-->
+    <!--                                <img th:src="'https://avatars.dicebear.com/v2/initials/' + ${session.userId} + '.svg'">-->
+    <!--                            </div>-->
+    <!--                            <div class="is-user-name"><span th:text="${session.userId}"></span></div>-->
+    <!--                            <span class="icon"><i class="mdi mdi-chevron-down"></i></span>-->
+    <!--                        </a>-->
+    <!--                        <div class="navbar-dropdown">-->
+    <!--                            <hr class="navbar-divider">-->
+    <!--                            <a class="navbar-item" href="/logout">-->
+    <!--                                <span class="icon"><i class="mdi mdi-logout"></i></span>-->
+    <!--                                <span>로그아웃</span>-->
+    <!--                            </a>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </nav>-->
 
-                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                    </a>
-                </div>
-
-                <div th:id="navbarBasicExample" class="navbar-menu">
-                    <div class="navbar-end">
-                        <a class="navbar-item" href="/revenue"> 수익 내역 </a>
-                        <a class="navbar-item" href="/trade-log"> 거래 현황 </a>
-                        <a class="navbar-item" href="/user-config"> 내 설정 </a>
-                        <a class="navbar-item" href="/backtest"> 백테스트 </a>
-                        <a class="navbar-item" href="/logout"> 로그아웃 </a>
-                    </div>
-                </div>
-
-            </div>
-        </nav>
-
-<!--        <nav id="navbar-main" class="navbar is-fixed-top">-->
-<!--            <div class="navbar-brand">-->
-<!--                <a class="navbar-item is-hidden-desktop jb-aside-mobile-toggle">-->
-<!--                    <span class="icon"><i class="mdi mdi-forwardburger mdi-24px"></i></span>-->
-<!--                </a>-->
-<!--            </div>-->
-<!--            <div class="navbar-brand is-right">-->
-<!--                <a class="navbar-item is-hidden-desktop jb-navbar-menu-toggle" data-target="navbar-menu">-->
-<!--                    <span class="icon"><i class="mdi mdi-dots-vertical"></i></span>-->
-<!--                </a>-->
-<!--            </div>-->
-<!--            <div class="navbar-menu fadeIn animated faster" id="navbar-menu">-->
-<!--                <div class="navbar-end">-->
-<!--                    <div class="navbar-item has-dropdown has-dropdown-with-icons has-divider has-user-avatar is-hoverable">-->
-<!--                        <a class="navbar-link is-arrowless">-->
-<!--                            <div class="is-user-avatar">-->
-<!--                                <img th:src="'https://avatars.dicebear.com/v2/initials/' + ${session.userId} + '.svg'">-->
-<!--                            </div>-->
-<!--                            <div class="is-user-name"><span th:text="${session.userId}"></span></div>-->
-<!--                            <span class="icon"><i class="mdi mdi-chevron-down"></i></span>-->
-<!--                        </a>-->
-<!--                        <div class="navbar-dropdown">-->
-<!--                            <hr class="navbar-divider">-->
-<!--                            <a class="navbar-item" href="/logout">-->
-<!--                                <span class="icon"><i class="mdi mdi-logout"></i></span>-->
-<!--                                <span>로그아웃</span>-->
-<!--                            </a>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </nav>-->
-
-        <script>
-            // Hamburger menu functionality
-            document.addEventListener('DOMContentLoaded', () => {
-                const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-                if ($navbarBurgers.length > 0) {
-                    $navbarBurgers.forEach(el => {
-                        el.addEventListener('click', () => {
-                            const target = el.dataset.target;
-                            const $target = document.getElementById(target);
-                            el.classList.toggle('is-active');
-                            $target.classList.toggle('is-active');
-                        });
+    <script>
+        // Hamburger menu functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+            if ($navbarBurgers.length > 0) {
+                $navbarBurgers.forEach(el => {
+                    el.addEventListener('click', () => {
+                        const target = el.dataset.target;
+                        const $target = document.getElementById(target);
+                        el.classList.toggle('is-active');
+                        $target.classList.toggle('is-active');
                     });
-                }
-            });
-        </script>
-    </div>>
+                });
+            }
+        });
+    </script>
+</div>
+>
 </html>

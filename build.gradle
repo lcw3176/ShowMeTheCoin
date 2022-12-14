@@ -19,11 +19,11 @@ repositories {
 }
 
 dependencies {
-    implementation ('org.springframework.boot:spring-boot-starter-web')  {
+    implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude module: 'spring-boot-starter-tomcat'
     }
 
-    implementation ('org.springframework.boot:spring-boot-starter-websocket')  {
+    implementation('org.springframework.boot:spring-boot-starter-websocket') {
         exclude module: 'spring-boot-starter-tomcat'
     }
 
@@ -32,17 +32,20 @@ dependencies {
     implementation 'org.projectreactor:reactor-spring:1.0.1.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     // 타임리프 레이아웃
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
-
+    // 타임리프에서 스프링시큐리티의 문법이나 형식을 지원하는 확장팩 라이브러리
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+    
     // upbit
     implementation 'com.google.code.gson:gson:2.7'
     implementation 'com.auth0:java-jwt:3.18.2'
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
     // 데이터베이스
-    implementation  'com.h2database:h2'
+    implementation 'com.h2database:h2'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // https://mvnrepository.com/artifact/org.ta4j/ta4j-core
