@@ -1,6 +1,6 @@
 package com.joebrooks.showmethecoin.global.fee;
 
-import com.joebrooks.showmethecoin.trade.CompanyType;
+import com.joebrooks.showmethecoin.exchange.CompanyType;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass

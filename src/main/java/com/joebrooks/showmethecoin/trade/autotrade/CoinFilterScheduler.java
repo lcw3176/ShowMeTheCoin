@@ -3,8 +3,8 @@
 //import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreService;
 //import com.joebrooks.showmethecoin.repository.tradeinfo.TradeInfoService;
 //import com.joebrooks.showmethecoin.repository.userconfig.UserConfigService;
-//import com.joebrooks.showmethecoin.trade.upbit.CoinType;
-//import com.joebrooks.showmethecoin.trade.upbit.ticker.TickerService;
+//import com.joebrooks.showmethecoin.exchange.upbit.CoinType;
+//import com.joebrooks.showmethecoin.exchange.upbit.ticker.TickerService;
 //import javax.annotation.PostConstruct;
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;

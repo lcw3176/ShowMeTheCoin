@@ -2,102 +2,107 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layout/layout">
 <th:block layout:fragment="layout_content">
-  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 
-  <div class="container is-max-desktop">
-    <section class="section is-title-bar">
-      <div class="notification">
-        <div class="level">
-          <div class="level-left">
-            <div class="level-item">
-              <ul>
-                <li th:if="${status.equals(true)}" class="title is-5">거래 진행 중</li>
-                <li th:unless="${status.equals(true)}" class="title is-5">거래 중지됨</li>
-              </ul>
+    <div class="container is-max-desktop">
+        <section class="section is-title-bar">
+            <div class="notification">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <ul>
+                                <li th:if="${status.equals(true)}" class="title is-5">거래 진행 중</li>
+                                <li th:unless="${status.equals(true)}" class="title is-5">거래 중지됨</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="level-right">
+                        <div class="level-item">
+                            <div class="buttons has-addons">
+                                <a href="/trade-log?command=start" type="button" class="button is-danger">거래 시작</a>
+                            </div>
+                        </div>
+
+                        <div class="level-item">
+                            <div class="buttons has-addons">
+                                <a href="/trade-log?command=stop" type="button" class="button">거래 중지</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+        </section>
 
-          <div class="level-right">
-            <div class="level-item">
-              <div class="buttons has-addons">
-                <a href="/trade-log?command=start" type="button" class="button is-danger">거래 시작</a>
-              </div>
+        <section class="section is-main-section">
+            <div class="card has-table">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <span class="icon"><i class="mdi mdi-cash-multiple"></i></span>
+                        거래내역
+                    </p>
+                </header>
+
+                <div class="card-content">
+                    <div class="b-table has-pagination">
+                        <div class="table-wrapper has-mobile-cards">
+                            <table class="table is-fullwidth is-striped is-hoverable is-fullwidth">
+                                <thead>
+                                <tr>
+                                    <th>코인 이름</th>
+                                    <th>거래 결과</th>
+                                    <th>수익</th>
+                                    <th>구매 가격</th>
+                                    <th>판매 가격</th>
+                                    <th>거래 완료 시간</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="data : ${posts}">
+                                    <td th:text="${data.upBitCoinType.koreanName}"></td>
+                                    <td th:if="${data.tradeResult.toString().equals('BENEFIT')}"
+                                        th:class="has-text-danger"
+                                        th:text="이득"></td>
+
+                                    <td th:unless="${data.tradeResult.toString().equals('BENEFIT')}"
+                                        th:class="has-text-link"
+                                        th:text="손해"></td>
+                                    <td th:text="${#numbers.formatInteger(data.sellPrice - data.buyPrice, 0, 'COMMA')}"></td>
+                                    <td th:text="${#numbers.formatInteger(data.buyPrice, 0, 'COMMA')}"></td>
+                                    <td th:text="${#numbers.formatInteger(data.sellPrice, 0, 'COMMA')}"></td>
+                                    <td data-label="Created">
+                                        <small class="has-text-grey is-abbr-like"
+                                               th:text="${data.orderEndDate}"></small>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="container is-fluid mt-5 mb-5">
+                            <div class="pagination is-centered" role="navigation" aria-label="pagination">
+                                <a class="pagination-previous"
+                                   th:href="@{'/trade-log?page=' + ${pageResponse.previousPage}}">
+                                    <i class="fas fa-arrow-left"></i>
+                                </a>
+                                <a class="pagination-next" th:href="@{'/trade-log?page=' + ${pageResponse.nextPage}}">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                                <ul class="pagination-list">
+                                    <li th:each="num : ${#numbers.sequence(pageResponse.startPage, pageResponse.lastPage)}">
+                                        <a class="pagination-link" th:href="@{'/trade-log?page=' + ${num}}"
+                                           th:text="${num}"
+                                           th:classappend="${pageResponse.nowPage == num} ? 'is-current': ''"></a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="level-item">
-              <div class="buttons has-addons">
-                <a href="/trade-log?command=stop" type="button" class="button">거래 중지</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section is-main-section">
-      <div class="card has-table">
-        <header class="card-header">
-          <p class="card-header-title">
-            <span class="icon"><i class="mdi mdi-cash-multiple"></i></span>
-            거래내역
-          </p>
-        </header>
-
-        <div class="card-content">
-          <div class="b-table has-pagination">
-            <div class="table-wrapper has-mobile-cards">
-              <table class="table is-fullwidth is-striped is-hoverable is-fullwidth">
-                <thead>
-                <tr>
-                  <th>코인 이름</th>
-                  <th>거래 결과</th>
-                  <th>수익</th>
-                  <th>구매 가격</th>
-                  <th>판매 가격</th>
-                  <th>거래 완료 시간</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="data : ${posts}">
-                  <td th:text="${data.coinType.koreanName}"></td>
-                  <td th:if="${data.tradeResult.toString().equals('BENEFIT')}" th:class="has-text-danger"
-                      th:text="이득"></td>
-
-                  <td th:unless="${data.tradeResult.toString().equals('BENEFIT')}" th:class="has-text-link"
-                      th:text="손해"></td>
-                  <td th:text="${#numbers.formatInteger(data.sellPrice - data.buyPrice, 0, 'COMMA')}"></td>
-                  <td th:text="${#numbers.formatInteger(data.buyPrice, 0, 'COMMA')}"></td>
-                  <td th:text="${#numbers.formatInteger(data.sellPrice, 0, 'COMMA')}"></td>
-                  <td data-label="Created">
-                    <small class="has-text-grey is-abbr-like" th:text="${data.orderEndDate}"></small>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="container is-fluid mt-5 mb-5">
-              <div class="pagination is-centered" role="navigation" aria-label="pagination">
-                <a class="pagination-previous" th:href="@{'/trade-log?page=' + ${pageResponse.previousPage}}">
-                  <i class="fas fa-arrow-left"></i>
-                </a>
-                <a class="pagination-next" th:href="@{'/trade-log?page=' + ${pageResponse.nextPage}}">
-                  <i class="fas fa-arrow-right"></i>
-                </a>
-                <ul class="pagination-list">
-                  <li th:each="num : ${#numbers.sequence(pageResponse.startPage, pageResponse.lastPage)}">
-                    <a class="pagination-link" th:href="@{'/trade-log?page=' + ${num}}" th:text="${num}"
-                       th:classappend="${pageResponse.nowPage == num} ? 'is-current': ''"></a>
-                  </li>
-                </ul>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
+        </section>
+    </div>
 
 </th:block>

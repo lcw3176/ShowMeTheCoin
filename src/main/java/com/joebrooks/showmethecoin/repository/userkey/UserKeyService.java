@@ -1,6 +1,6 @@
 package com.joebrooks.showmethecoin.repository.userkey;
 
-import com.joebrooks.showmethecoin.trade.CompanyType;
+import com.joebrooks.showmethecoin.exchange.CompanyType;
 import com.joebrooks.showmethecoin.repository.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ public class UserKeyService {
 
     private final UserKeyRepository userKeyRepository;
 
-    public UserKeyEntity getKeySet(UserEntity user, CompanyType companyType){
+    public UserKeyEntity getKeySet(UserEntity user, CompanyType companyType) {
         return userKeyRepository.findByUserAndCompanyType(user, companyType);
     }
 }

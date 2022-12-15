@@ -3,9 +3,9 @@
 //import com.joebrooks.showmethecoin.repository.candlestore.CandleStoreEntity;
 //import com.joebrooks.showmethecoin.repository.userconfig.UserConfigService;
 //import com.joebrooks.showmethecoin.trade.strategy.StrategyType;
-//import com.joebrooks.showmethecoin.trade.upbit.CoinType;
-//import com.joebrooks.showmethecoin.trade.upbit.UpbitUtil;
-//import com.joebrooks.showmethecoin.trade.upbit.candles.CandleService;
+//import com.joebrooks.showmethecoin.exchange.upbit.CoinType;
+//import com.joebrooks.showmethecoin.exchange.upbit.UpbitUtil;
+//import com.joebrooks.showmethecoin.exchange.upbit.candles.CandleService;
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
 //import org.springframework.scheduling.annotation.Scheduled;
