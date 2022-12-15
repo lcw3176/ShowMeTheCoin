@@ -4,7 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum CompanyType {
-    UPBIT,
-    COIN_ONE;
+	UPBIT,
+	COIN_ONE,
+	BITHUMB;
 
 }
