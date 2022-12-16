@@ -1,15 +1,15 @@
 package com.joebrooks.showmethecoin.repository.pricestore;
 
+import com.joebrooks.showmethecoin.exchange.CommonCoinType;
+import com.joebrooks.showmethecoin.exchange.CompanyType;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 public interface PriceStoreRepository extends JpaRepository<PriceStoreEntity, Long> {
 
-    @Query("SELECT DISTINCT market FROM price_store")
-    List<String> findDistinctMarket();
+    Optional<PriceStoreEntity> findByCoinTypeAndCompanyType(CommonCoinType coinType, CompanyType companyType);
 
-    void deleteAllByMarket(String market);
-
+    List<PriceStoreEntity> findAllByCompanyType(CompanyType companyType);
 
 }

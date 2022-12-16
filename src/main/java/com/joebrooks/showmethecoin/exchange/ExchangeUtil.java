@@ -2,6 +2,8 @@ package com.joebrooks.showmethecoin.exchange;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import lombok.experimental.UtilityClass;
 
@@ -16,6 +18,21 @@ public class ExchangeUtil {
     }
 
     public String priceFormatter(double price) {
+        return convert(price);
+    }
+
+    public Map<CompanyType, String> priceFormatter(Map<CompanyType, Double> companyTypeDoubleMap) {
+        Map<CompanyType, String> map = new HashMap<>();
+
+        for (CompanyType key : companyTypeDoubleMap.keySet()) {
+            String value = convert(companyTypeDoubleMap.get(key));
+            map.put(key, value);
+        }
+
+        return map;
+    }
+
+    private String convert(double price) {
         String numbers = numberFormat.format(price);
 
         if (!numbers.contains("\\.")) {
@@ -27,6 +44,7 @@ public class ExchangeUtil {
         String point = temp[1];
 
         if (Long.parseLong(point) <= 0) {
+
             return number;
         } else {
 

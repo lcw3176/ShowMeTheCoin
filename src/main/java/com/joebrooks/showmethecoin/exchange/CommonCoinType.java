@@ -56,6 +56,6 @@ public enum CommonCoinType {
     MBL("무비블록"),
     XEC("이캐시");
 
-    private String name;
+    private String koreanName;
 
 }

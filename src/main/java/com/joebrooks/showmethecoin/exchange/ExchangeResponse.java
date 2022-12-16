@@ -1,6 +1,7 @@
 package com.joebrooks.showmethecoin.exchange;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,9 +15,7 @@ public class ExchangeResponse {
 
     private String coinId;
     private String coinKoreanName;
-    private String upBitPrice;
-    private String coinOnePrice;
-    private String biThumbPrice;
-    private double difference;
+    private Map<CompanyType, String> prices;
     private LocalDateTime lastModified;
+    private double difference;
 }

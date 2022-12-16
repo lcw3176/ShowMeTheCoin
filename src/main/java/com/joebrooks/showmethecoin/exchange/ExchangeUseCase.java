@@ -1,13 +1,14 @@
 package com.joebrooks.showmethecoin.exchange;
 
-import com.joebrooks.showmethecoin.exchange.bithumb.BiThumbService;
-import com.joebrooks.showmethecoin.exchange.coinone.CoinOneService;
-import com.joebrooks.showmethecoin.exchange.upbit.UpBitPrice;
-import com.joebrooks.showmethecoin.exchange.upbit.UpBitService;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import com.joebrooks.showmethecoin.repository.pricestore.PriceStoreEntity;
+import com.joebrooks.showmethecoin.repository.pricestore.PriceStoreRepository;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,60 +17,40 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ExchangeUseCase {
 
-    private final UpBitService upBitService;
-    private final CoinOneService coinOneService;
-    private final BiThumbService biThumbService;
+    private final PriceStoreRepository priceStoreRepository;
 
     public List<ExchangeResponse> getDuplicatedCoinPrices() {
-        List<PriceResponse> upBitPrices = upBitService.getCommonPrices();
-        List<PriceResponse> coinOnePrices = coinOneService.getAllPrices();
-//        List<PriceResponse> biThumbPrices = biThumbService.getAllPrices();
-
-        List<ExchangeResponse> priceResponses = new ArrayList<>();
+        List<PriceStoreEntity> entities = priceStoreRepository.findAll();
+        Map<CommonCoinType, Map<CompanyType, Double>> prices = new HashMap<>();
 
         for (CommonCoinType coinType : CommonCoinType.values()) {
-            PriceResponse upBit = upBitPrices.stream()
-                    .filter(i -> i.getMarket().equals(coinType.toString().toLowerCase()))
-                    .findFirst().orElse(UpBitPrice.builder()
-                            .market(coinType.toString())
-                            .companyType(CompanyType.UPBIT)
-                            .tradePrice(0D)
-                            .tradeDateKst(LocalDateTime.now().toString())
-                            .build());
-
-            PriceResponse coinOne = coinOnePrices.stream()
-                    .filter(i -> i.getMarket().equals(coinType.toString().toLowerCase()))
-                    .findFirst().orElse(UpBitPrice.builder()
-                            .market(coinType.toString())
-                            .companyType(CompanyType.COIN_ONE)
-                            .tradePrice(0D)
-                            .tradeDateKst(LocalDateTime.now().toString())
-                            .build());
-
-//            PriceResponse biThumb = biThumbPrices.stream()
-//                    .filter(i -> i.getMarket().equals(coinType.toString()))
-//                    .findFirst().orElse(BiThumbPrice.builder()
-//                            .market(coinType.toString())
-//                            .companyType(CompanyType.BITHUMB)
-//                            .tradePrice(0D)
-//                            .build());
-
-            priceResponses.add(
-                    ExchangeResponse.builder()
-                            .coinId(coinType.toString())
-                            .coinKoreanName(coinType.getName())
-                            .coinOnePrice(ExchangeUtil.priceFormatter(coinOne.getTradePrice()))
-//                            .biThumbPrice(ExchangeUtil.priceFormatter(biThumb.getTradePrice()))
-                            .upBitPrice(ExchangeUtil.priceFormatter(upBit.getTradePrice()))
-                            .difference((1 - coinOne.getTradePrice()
-                                    / upBit.getTradePrice()) * 100)
-                            .lastModified(LocalDateTime.now())
-                            .build());
+            prices.put(coinType, new HashMap<>());
         }
 
-        return priceResponses.stream()
+        for (PriceStoreEntity entity : entities) {
+            prices.get(entity.getCoinType())
+                    .put(entity.getCompanyType(), entity.getLastTradePrice());
+        }
+
+        return entities.stream()
+                .filter(distinctByKey(PriceStoreEntity::getCoinType))
+                .map(entity ->
+                        ExchangeResponse.builder()
+                                .coinId(entity.getCoinType().toString())
+                                .coinKoreanName(entity.getCoinType().getKoreanName())
+                                .prices(ExchangeUtil.priceFormatter(prices.get(entity.getCoinType())))
+                                .difference(
+                                        (1 - prices.get(entity.getCoinType()).get(CompanyType.COIN_ONE) / prices.get(
+                                                entity.getCoinType()).get(CompanyType.UPBIT)) * 100)
+                                .lastModified(entity.getLastModified())
+                                .build())
                 .sorted(Comparator.comparing(ExchangeResponse::getDifference, Comparator.reverseOrder()))
                 .collect(Collectors.toList());
+    }
 
+    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 }

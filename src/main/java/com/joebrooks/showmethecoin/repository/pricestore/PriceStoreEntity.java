@@ -1,6 +1,8 @@
 package com.joebrooks.showmethecoin.repository.pricestore;
 
+import com.joebrooks.showmethecoin.exchange.CommonCoinType;
 import com.joebrooks.showmethecoin.exchange.CompanyType;
+import com.joebrooks.showmethecoin.repository.BaseTimeEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,7 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity(name = "price_store")
-public class PriceStoreEntity {
+public class PriceStoreEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,20 +31,16 @@ public class PriceStoreEntity {
     private CompanyType companyType;
 
 
-    @Column(name = "market")
-    private String market;
-
-    @Column(name = "candle_date_time_kst")
-    private String dateKst;
-
-    @Column(name = "high_price")
-    private Double highPrice;
-
-    @Column(name = "low_price")
-    private Double lowPrice;
-
-    @Column(name = "trade_price")
-    private Double tradePrice;
+    @Column(name = "coin_type")
+    @Enumerated(EnumType.STRING)
+    private CommonCoinType coinType;
 
 
+    @Column(name = "last_trade_price")
+    private double lastTradePrice;
+
+
+    public void changeLastTradePrice(double lastTradePrice) {
+        this.lastTradePrice = lastTradePrice;
+    }
 }
