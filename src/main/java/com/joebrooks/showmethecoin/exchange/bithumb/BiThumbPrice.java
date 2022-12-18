@@ -2,7 +2,6 @@ package com.joebrooks.showmethecoin.exchange.bithumb;
 
 import com.joebrooks.showmethecoin.exchange.CompanyType;
 import com.joebrooks.showmethecoin.exchange.PriceResponse;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,8 +15,17 @@ import lombok.ToString;
 @ToString
 public class BiThumbPrice implements PriceResponse {
 
-	private CompanyType companyType;
-	private String market;
-	private double tradePrice;
+    private CompanyType companyType;
+    private String market;
+    private double tradePrice;
 
+    @Override
+    public double getAvailableSellPrice() {
+        return 0;
+    }
+
+    @Override
+    public double getAvailableBuyPrice() {
+        return 0;
+    }
 }

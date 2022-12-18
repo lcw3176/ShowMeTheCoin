@@ -19,7 +19,7 @@ public class ExchangeUseCase {
 
     private final PriceStoreRepository priceStoreRepository;
 
-    public List<ExchangeResponse> getDuplicatedCoinPrices() {
+    public List<ExchangeResponse> getPriceWhenBuyFromCoinOne() {
         List<PriceStoreEntity> entities = priceStoreRepository.findAll();
         Map<CommonCoinType, Map<CompanyType, Double>> prices = new HashMap<>();
 
@@ -28,8 +28,14 @@ public class ExchangeUseCase {
         }
 
         for (PriceStoreEntity entity : entities) {
-            prices.get(entity.getCoinType())
-                    .put(entity.getCompanyType(), entity.getLastTradePrice());
+            if (entity.getCompanyType() == CompanyType.COIN_ONE) {
+                prices.get(entity.getCoinType())
+                        .put(entity.getCompanyType(), entity.getAvailableBuy());
+            } else {
+                prices.get(entity.getCoinType())
+                        .put(entity.getCompanyType(), entity.getLastTradePrice());
+            }
+
         }
 
         return entities.stream()
@@ -42,6 +48,40 @@ public class ExchangeUseCase {
                                 .difference(
                                         (1 - prices.get(entity.getCoinType()).get(CompanyType.COIN_ONE) / prices.get(
                                                 entity.getCoinType()).get(CompanyType.UPBIT)) * 100)
+                                .lastModified(entity.getLastModified())
+                                .build())
+                .sorted(Comparator.comparing(ExchangeResponse::getDifference, Comparator.reverseOrder()))
+                .collect(Collectors.toList());
+    }
+
+    public List<ExchangeResponse> getPriceWhenBuyFromUpBit() {
+        List<PriceStoreEntity> entities = priceStoreRepository.findAll();
+        Map<CommonCoinType, Map<CompanyType, Double>> prices = new HashMap<>();
+
+        for (CommonCoinType coinType : CommonCoinType.values()) {
+            prices.put(coinType, new HashMap<>());
+        }
+
+        for (PriceStoreEntity entity : entities) {
+            if (entity.getCompanyType() == CompanyType.COIN_ONE) {
+                prices.get(entity.getCoinType())
+                        .put(entity.getCompanyType(), entity.getAvailableSell());
+            } else {
+                prices.get(entity.getCoinType())
+                        .put(entity.getCompanyType(), entity.getLastTradePrice());
+            }
+        }
+
+        return entities.stream()
+                .filter(distinctByKey(PriceStoreEntity::getCoinType))
+                .map(entity ->
+                        ExchangeResponse.builder()
+                                .coinId(entity.getCoinType().toString())
+                                .coinKoreanName(entity.getCoinType().getKoreanName())
+                                .prices(ExchangeUtil.priceFormatter(prices.get(entity.getCoinType())))
+                                .difference(
+                                        (1 - prices.get(entity.getCoinType()).get(CompanyType.UPBIT) / prices.get(
+                                                entity.getCoinType()).get(CompanyType.COIN_ONE)) * 100)
                                 .lastModified(entity.getLastModified())
                                 .build())
                 .sorted(Comparator.comparing(ExchangeResponse::getDifference, Comparator.reverseOrder()))

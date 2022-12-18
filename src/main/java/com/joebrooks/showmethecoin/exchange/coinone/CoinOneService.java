@@ -20,8 +20,10 @@ public class CoinOneService {
                 CoinOnePrice.builder()
                         .market(i.getTargetCurrency())
                         .companyType(CompanyType.COIN_ONE)
-                        .tradePrice(i.getLast())
+                        .tradePrice(i.getBestAsks().get(0).getPrice())
                         .timeStamp(i.getTimestamp())
+                        .availableBuyPrice(i.getBestAsks().get(0).getPrice())
+                        .availableSellPrice(i.getBestBids().get(0).getPrice())
                         .build()
         ).collect(Collectors.toList());
     }

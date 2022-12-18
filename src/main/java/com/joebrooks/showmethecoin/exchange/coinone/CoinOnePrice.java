@@ -19,5 +19,7 @@ public class CoinOnePrice implements PriceResponse {
     private String market;
     private long timeStamp;
     private double tradePrice;
-    
+    private double availableSellPrice;
+    private double availableBuyPrice;
+
 }

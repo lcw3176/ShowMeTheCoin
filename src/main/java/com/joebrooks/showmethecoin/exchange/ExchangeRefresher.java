@@ -1,5 +1,6 @@
 package com.joebrooks.showmethecoin.exchange;
 
+import com.joebrooks.showmethecoin.exchange.coinone.CoinOnePrice;
 import com.joebrooks.showmethecoin.exchange.coinone.CoinOneService;
 import com.joebrooks.showmethecoin.exchange.upbit.UpBitService;
 import com.joebrooks.showmethecoin.repository.pricestore.PriceStoreEntity;
@@ -27,22 +28,31 @@ public class ExchangeRefresher {
                     continue;
                 }
 
-                double price = priceResponses.stream()
+                PriceResponse temp = priceResponses.stream()
                         .filter(i -> i.getMarket().equals(coinType.toString().toLowerCase())
                                 && i.getCompanyType() == companyType)
-                        .mapToDouble(PriceResponse::getTradePrice)
                         .findFirst()
-                        .orElse(0D);
+                        .orElse(CoinOnePrice.builder()
+                                .companyType(CompanyType.COIN_ONE)
+                                .tradePrice(1D)
+                                .availableBuyPrice(1D)
+                                .availableSellPrice(1D)
+                                .market(coinType.toString().toLowerCase())
+                                .build());
 
                 PriceStoreEntity priceStoreEntity = priceStoreRepository
                         .findByCoinTypeAndCompanyType(coinType, companyType)
                         .orElse(PriceStoreEntity.builder()
                                 .companyType(companyType)
                                 .coinType(coinType)
-                                .lastTradePrice(0D)
+                                .lastTradePrice(1D)
+                                .availableBuy(1D)
+                                .availableSell(1D)
                                 .build());
 
-                priceStoreEntity.changeLastTradePrice(price);
+                priceStoreEntity.changeLastTradePrice(temp.getTradePrice());
+                priceStoreEntity.changeAvailableBuy(temp.getAvailableBuyPrice());
+                priceStoreEntity.changeAvailableSell(temp.getAvailableSellPrice());
                 priceStoreRepository.save(priceStoreEntity);
             }
 

@@ -10,22 +10,30 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @RequiredArgsConstructor
-public class HomeController {
+public class PriceComparingController {
 
     private final ExchangeUseCase exchangeUseCase;
 
     @GetMapping("/")
     public String redirectDashboard() {
 
-        return "redirect:/home";
+        return "redirect:/from-coinone";
     }
 
-    @GetMapping("/home")
-    public String showDashboard(Model model) {
-        List<ExchangeResponse> responses = exchangeUseCase.getDuplicatedCoinPrices();
+    @GetMapping("/from-coinone")
+    public String showCoinOne(Model model) {
+        List<ExchangeResponse> responses = exchangeUseCase.getPriceWhenBuyFromCoinOne();
         model.addAttribute("response", responses);
 
-        return "home";
+        return "from-coinone";
+    }
+
+    @GetMapping("/from-upbit")
+    public String showUpBit(Model model) {
+        List<ExchangeResponse> responses = exchangeUseCase.getPriceWhenBuyFromUpBit();
+        model.addAttribute("response", responses);
+
+        return "from-upbit";
     }
 
 }

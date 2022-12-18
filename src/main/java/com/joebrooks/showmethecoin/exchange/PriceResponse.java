@@ -6,4 +6,8 @@ public interface PriceResponse {
     String getMarket();
 
     double getTradePrice();
+
+    double getAvailableSellPrice();
+
+    double getAvailableBuyPrice();
 }

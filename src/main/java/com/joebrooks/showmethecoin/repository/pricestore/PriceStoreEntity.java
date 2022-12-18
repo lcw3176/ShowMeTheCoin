@@ -36,11 +36,24 @@ public class PriceStoreEntity extends BaseTimeEntity {
     private CommonCoinType coinType;
 
 
+    private double availableBuy;
+
+    private double availableSell;
+
+
     @Column(name = "last_trade_price")
     private double lastTradePrice;
 
 
     public void changeLastTradePrice(double lastTradePrice) {
         this.lastTradePrice = lastTradePrice;
+    }
+
+    public void changeAvailableBuy(double availableBuy) {
+        this.availableBuy = availableBuy;
+    }
+
+    public void changeAvailableSell(double availableSell) {
+        this.availableSell = availableSell;
     }
 }

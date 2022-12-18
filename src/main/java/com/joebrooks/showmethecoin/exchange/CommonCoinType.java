@@ -2,10 +2,13 @@ package com.joebrooks.showmethecoin.exchange;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public enum CommonCoinType {
+
     BTC("비트코인"),
     ETH("이더리움"),
     DOGE("도지"),

@@ -16,8 +16,8 @@
 
                 <div class="tabs is-centered">
                     <ul>
-                        <li class="is-active"><a>코인원 구매 -> 업비트 판매</a></li>
-                        <li><a>업비트 구매 -> 코인원 판매</a></li>
+                        <li class="is-active"><a href="/from-coinone">코인원 구매 -> 업비트 판매</a></li>
+                        <li><a href="/from-upbit">업비트 구매 -> 코인원 판매</a></li>
                     </ul>
                 </div>
 
@@ -26,8 +26,8 @@
                     <tr>
                         <th>id</th>
                         <th>코인 이름</th>
-                        <th>업비트</th>
                         <th>코인원</th>
+                        <th>업비트</th>
                         <th>차이</th>
                         <th>수정 시각</th>
                     </tr>
@@ -36,8 +36,8 @@
                     <tr th:each="coin, coinStat : ${response}">
                         <th th:text="${coinStat.count}"></th>
                         <td th:text="${coin.getCoinKoreanName() + ' / ' + coin.getCoinId()}"></td>
-                        <td th:text="${coin.getPrices()['UPBIT'] + ' ₩'}"></td>
                         <td th:text="${coin.getPrices()['COIN_ONE'] + ' ₩'}"></td>
+                        <td th:text="${coin.getPrices()['UPBIT'] + ' ₩'}"></td>
                         <td th:text="${#numbers.formatDecimal(coin.getDifference(), 1, 'COMMA', 2, 'POINT')} + ' %'"
                             th:classappend="${coin.getDifference()} < 0 ? 'has-text-link': 'has-text-danger'"></td>
                         <td th:text="${#temporals.format(coin.getLastModified(), 'MM/dd HH:mm:ss')}"></td>
