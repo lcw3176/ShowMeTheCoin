@@ -2,26 +2,38 @@
   <img src="https://user-images.githubusercontent.com/59993347/188344529-460d6deb-2bad-49c2-a43d-2cddc0e38671.png" height="250">
 </p>
 
+<p align="center">
+  <a href="#서비스-소개">서비스 소개</a> •
+  <a href="#서비스-미리보기">서비스 미리보기</a>
+</p>  
 
 ## 서비스 소개
 
-적절한 가격에 코인을 사고 파는 자동매매 서비스입니다.
-사용자는 성향에 따라 다양한 투자 전략을 선택할 수 있습니다.
+적절한 가격에 코인을 사고 파는 자동매매 서비스입니다. 사용자는 성향에 따라 다양한 투자 전략을 선택할 수 있습니다.
 
-## Todo
-- 계정 별 권한 부여
-  - 게스트, 회원, 관리자 계정 만들기
-- 회원 관리 시스템 만들기
-  - 현재 인스턴스 중지 후 DB 수정하는 방식으로 회원 추가중
-  - 관리자 계정에서 신규 회원 관리 기능 만들기
-- 프로젝트 리팩토링
-  - 추상화
-    - 현재 업비트에 너무 종속적
-    - 다른 거래소 대비하기
-  - 매매 구조 변경
-    - 프로젝트 방향이 크게 바뀜 (개인 사용 -> 다중 유저 사용)
-    - 알맞은 구조 생각 후 반영할 것
-  - 백테스트 및 난잡한 코드 전부 변경
-    - 이 프로젝트를 솔직히 이렇게 오래 할줄 몰랐다
-    - 진짜 돌아만 가게 짠 코드들이 꽤 있다
-    - 리팩토링에 한참 시간 할애해야 할듯
+## 서비스 미리보기
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/59993347/190082632-fd06ae73-4d1f-4b5b-a1b1-0fccb7d4f762.png" height="450">
+  <p>메인 홈 화면</p>
+</div>
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/59993347/190082644-721c5c1d-8995-42f1-8615-b6823d8b45ac.png" height="450">
+  <p>유저 옵션 설정</p>
+</div>
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/59993347/190082646-f3f25db9-bf89-4858-8408-dbafd875f792.png" height="450">
+  <p>거래 내역</p>
+</div>
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/59993347/190082647-5ad3c0f7-5dfd-4475-a109-388be9924df5.png" height="450">
+  <p>일일 정산</p>
+</div>
+
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/59993347/191407659-f91baf17-ccca-4487-8046-45046560ae3a.gif" height="450">
+  <p>백테스트</p>
+</div>
