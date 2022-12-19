@@ -36,8 +36,8 @@ public class BackTestService {
     private final ObjectMapper mapper;
 
 
-    public void start(BackTestRequest request, WebSocketSession session){
-        try{
+    public void start(BackTestRequest request, WebSocketSession session) {
+        try {
             List<TradeInfoEntity> tradeInfoList = new LinkedList<>();
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -55,7 +55,7 @@ public class BackTestService {
             startDate.add(Calendar.DATE, -1);
 
             int per = 0;
-            while(true){  // fixme 날짜 관련 에러 수정할 것 (시작 시간 정각부터 불러와야함)
+            while (true) {  // fixme 날짜 관련 에러 수정할 것 (시작 시간 정각부터 불러와야함)
                 candleService.saveCandles(coinType, format.format(startDate.getTime()), minute);
                 startDate.add(Calendar.MINUTE, minute.getValue() * 200);
 
@@ -64,7 +64,7 @@ public class BackTestService {
                         .percentage(per++)
                         .build())));
 
-                if(startDate.getTime().after(request.getEndDate().getTime())){
+                if (startDate.getTime().after(request.getEndDate().getTime())) {
                     startDate.setTime(request.getStartDate().getTime());
                     break;
                 }
@@ -73,12 +73,11 @@ public class BackTestService {
             }
 
             SimpleDateFormat tempFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            while(true){
+            while (true) {
 
                 double minCash = cashToBuy;
                 Calendar temp = Calendar.getInstance();
                 temp.setTime(request.getStartDate().getTime());
-
 
                 temp.add(Calendar.MINUTE, minute.getValue() * 199);
                 List<CandleStoreEntity> tempCandles = candleStoreService.getCandles(coinType,
@@ -88,7 +87,7 @@ public class BackTestService {
 
                 request.getStartDate().add(Calendar.MINUTE, minute.getValue());
 
-                if(temp.getTime().after(request.getEndDate().getTime())){
+                if (temp.getTime().after(request.getEndDate().getTime())) {
                     break;
                 }
 
@@ -104,27 +103,33 @@ public class BackTestService {
 
                 // 구매
                 if (strategy.stream().allMatch(st -> st.isProperToBuy(tempCandles, tradeInfoList))
-                        && tradeInfoList.isEmpty()){
+                        && tradeInfoList.isEmpty()) {
 //
                     // 잔고 체크
                     if (myBalance >= minCash) {
-                        double coinVolume = cashToBuy / nowCandle.getTradePrice();
+//                        double tempPrice = strategy.stream()
+//                                .mapToDouble(i -> i.getProperToBuyPrice(tempCandles, tradeInfoList))
+//                                .sum();
+                        double tempPrice = nowCandle.getTradePrice();
+
+                        double coinVolume = cashToBuy / tempPrice;
                         TradeInfoEntity tradeInfo = TradeInfoEntity.builder()
-                                .tradePrice(nowCandle.getTradePrice())
+                                .tradePrice(tempPrice)
                                 .coinVolume(coinVolume)
-                                .orderedAt(LocalDateTime.ofInstant(format.parse(nowCandle.getDateKst().replace("T", " ")).toInstant(), ZoneId.systemDefault()))
+                                .orderedAt(LocalDateTime.ofInstant(
+                                        format.parse(nowCandle.getDateKst().replace("T", " ")).toInstant(),
+                                        ZoneId.systemDefault()))
                                 .companyType(CompanyType.UPBIT)
                                 .build();
 
                         tradeInfoList.add(tradeInfo);
 
                         coinBalance += coinVolume;
-                        myBalance -= coinVolume * nowCandle.getTradePrice();
+                        myBalance -= coinVolume * tempPrice;
 
                         response.setBuy(true);
                         response.setTraded(true);
-                        response.setTradedPrice(nowCandle.getTradePrice());
-
+                        response.setTradedPrice(tempPrice);
 
                         log.info("구매: 시각 {} 구매 횟수 {} 구매 단가 {} 구매량 {} 잔고 {}",
                                 nowCandle.getDateKst(),
@@ -140,14 +145,15 @@ public class BackTestService {
                         && strategy.stream().allMatch(st -> st.isProperToSellWithLoss(tempCandles, tradeInfoList))
                         && tradeInfoList.size() < maxBetCount) {
 
-
                     // 잔고 체크
                     if (myBalance >= minCash) {
                         double coinVolume = cashToBuy / nowCandle.getTradePrice();
                         TradeInfoEntity tradeInfo = TradeInfoEntity.builder()
                                 .tradePrice(nowCandle.getTradePrice())
                                 .coinVolume(coinVolume)
-                                .orderedAt(LocalDateTime.ofInstant(format.parse(nowCandle.getDateKst().replace("T", " ")).toInstant(), ZoneId.systemDefault()))
+                                .orderedAt(LocalDateTime.ofInstant(
+                                        format.parse(nowCandle.getDateKst().replace("T", " ")).toInstant(),
+                                        ZoneId.systemDefault()))
                                 .companyType(CompanyType.UPBIT)
                                 .build();
 
@@ -160,8 +166,6 @@ public class BackTestService {
                         response.setTraded(true);
                         response.setTradedPrice(nowCandle.getTradePrice());
 
-
-
                         log.info("구매: 시각 {} 구매 횟수 {} 구매 단가 {} 구매량 {} 잔고 {}",
                                 nowCandle.getDateKst(),
                                 tradeInfoList.size(),
@@ -171,7 +175,6 @@ public class BackTestService {
 
                     }
                 }
-
 
                 // 익절 조건
                 else if (!tradeInfoList.isEmpty()
@@ -198,7 +201,7 @@ public class BackTestService {
                         && strategy.stream().allMatch(st -> st.isProperToSellWithLoss(tempCandles, tradeInfoList))
                         && tradeInfoList.size() >= maxBetCount) {
 
-                    if(coinBalance > 0) {
+                    if (coinBalance > 0) {
                         myBalance += getGain(tempCandles, tradeInfoList);
                         accumulatedGain = myBalance;
                         coinBalance = 0D;
@@ -215,13 +218,11 @@ public class BackTestService {
                     }
                 }
 
-                if(session.isOpen()){
+                if (session.isOpen()) {
                     session.sendMessage(new TextMessage(mapper.writeValueAsString(response)));
                 }
 
             }
-
-
 
             log.info("최종 잔고 {}, 잔여 코인{}, 누적 이득 {}", myBalance, coinBalance, accumulatedGain);
 
@@ -232,58 +233,58 @@ public class BackTestService {
 
             candleStoreService.deleteAll();
 
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("백테스팅 에러", e);
         }
     }
 
-    private double getGain(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo){
+    private double getGain(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         double averageSellPrice = getAverageSellPrice(candleResponses, tradeInfo);
         double payingFee = getPayingFee(candleResponses, tradeInfo);
-
 
         return averageSellPrice - payingFee;
     }
 
 
-    private double getAverageBuyPrice(List<TradeInfoEntity> tradeInfo){
+    private double getAverageBuyPrice(List<TradeInfoEntity> tradeInfo) {
         double price = 0;
 
-        for(TradeInfoEntity i : tradeInfo){
+        for (TradeInfoEntity i : tradeInfo) {
             price += i.getTradePrice() * i.getCoinVolume();
         }
 
         return price;
     }
 
-    private double getPaidFee(List<TradeInfoEntity> tradeInfo){
+    private double getPaidFee(List<TradeInfoEntity> tradeInfo) {
         double fee = 0;
 
-        for(TradeInfoEntity i : tradeInfo){
+        for (TradeInfoEntity i : tradeInfo) {
             fee += FeeCalculator.calculate(i.getTradePrice(), i.getCoinVolume(), i.getCompanyType());
         }
 
         return fee;
     }
 
-    private double getAverageSellPrice(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo){
+    private double getAverageSellPrice(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         double volume = 0;
 
-        for(TradeInfoEntity i : tradeInfo){
+        for (TradeInfoEntity i : tradeInfo) {
             volume += i.getCoinVolume();
         }
 
         return volume * candleResponses.get(0).getTradePrice();
     }
 
-    private double getPayingFee(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo){
+    private double getPayingFee(List<CandleStoreEntity> candleResponses, List<TradeInfoEntity> tradeInfo) {
         double volume = 0;
 
-        for(TradeInfoEntity i : tradeInfo){
+        for (TradeInfoEntity i : tradeInfo) {
             volume += i.getCoinVolume();
         }
 
-        return FeeCalculator.calculate(candleResponses.get(0).getTradePrice(), volume, tradeInfo.get(0).getCompanyType());
+        return FeeCalculator.calculate(candleResponses.get(0).getTradePrice(), volume,
+                tradeInfo.get(0).getCompanyType());
     }
 
 }
