@@ -27,7 +27,6 @@ public enum CoinType {
     SBD("KRW-SBD", "스팀달러"),
     GAS("KRW-GAS", "가스"),
     FLOW("KRW-FLOW", "플로우"),
-    WEMIX("KRW-WEMIX", "위믹스"),
     OMG("KRW-OMG", "오미세고"),
     KAVA("KRW-KAVA", "카바"),
     TON("KRW-TON", "톤"),
@@ -71,7 +70,7 @@ public enum CoinType {
     ONT("KRW-ONT", "온톨로지"),
     STEEM("KRW-STEEM", "스팀"),
     POWR("KRW-POWR", "파워렛저"),
-    POLY("KRW-POLY", "폴리매쓰"),
+    POLYX("KRW-POLYX", "폴리매쓰"),
     CHZ("KRW-CHZ", "칠리즈"),
     CVC("KRW-CVC", "시빅"),
     HUM("KRW-HUM", "휴먼스케이프"),
@@ -116,11 +115,10 @@ public enum CoinType {
     XEC("KRW-XEC", "이캐시");
 
 
-
     private String name;
     private String koreanName;
 
-    private CoinType(String name, String koreanName){
+    private CoinType(String name, String koreanName) {
         this.name = name;
         this.koreanName = koreanName;
     }
